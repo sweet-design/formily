@@ -66,6 +66,6 @@ export const generateComponentList = (data: any, filterNode: string[]) => {
  * @param {string} obj - function code
  * @returns {boolean} - return state
  */
-export const executeStr = (obj: string, ...agrs: any[]) => {
+export const executeStr = (obj: string, ...agrs: any[]): boolean => {
   return Function('"use strict";return (' + obj + ')')()(agrs);
 };
