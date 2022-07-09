@@ -1,4 +1,36 @@
-const gridModel = {
+export type GridModel = {
+  fieldProperties: {
+    type: string;
+    name: string;
+    title: string;
+    titleLangKey: string;
+    description: string;
+    descriptionLangKey: string;
+    display: string;
+    reactions: {
+      dependencies: {
+        source: string;
+        property: string;
+        name: string;
+        type: string;
+      }[];
+      fulfill: {
+        state: {
+          display: string;
+          title: string;
+        };
+      };
+    };
+  };
+  componentProperties: {
+    columns: { span: number; list: any[] }[];
+    gutter: number;
+    justify: string;
+    align: string;
+  };
+};
+
+const gridModel: GridModel = {
   /**
    * 字段属性
    */
