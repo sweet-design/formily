@@ -1,0 +1,53 @@
+user  nginx;
+worker_processes  1;
+error_log  /var/log/nginx/error.log warn;
+pid        /var/run/nginx.pid;
+events {
+  worker_connections  1024;
+}
+http {
+  include       /etc/nginx/mime.types;
+  default_type  application/octet-stream;
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+  access_log  /var/log/nginx/access.log  main;
+  sendfile        on;
+  keepalive_timeout  65;
+
+  # 用户的ip地址 $binary_remote_addr 作为key，每个IP地址最多有50个并发连接
+  # 超过 50个链接，直接返回503错误，不处理你的请求
+  limit_conn_zone $binary_remote_addr zone=TotalConnLimitZone:10m;
+  limit_conn TotalConnLimitZone 50;
+  limit_conn_log_level notice;
+
+  # 用户的ip地址 $binary_remote_addr 作为key，每个IP地址每秒处理10个请求
+  # 高于10个每秒，直接返回503错误
+  limit_req_zone $binary_remote_addr zone=ConnLimitZone:10m rate=10r/s;
+  limit_req_log_level notice;
+
+  # 负载均衡策略配置
+  upstream linuxidc {
+	least_conn;
+	server 192.168.1.178:7890 weight=2;
+	server 192.168.1.178:7891 weight=10;
+  }
+  server {
+    listen       80;
+    server_name  192.168.1.178;
+    location / {
+	  proxy_pass http://linuxidc;
+      root   /app;
+      index  index.html;
+      try_files $uri $uri/ /index.html;
+    }
+	# 静态资源代理服务
+	location ~ .*\.(js|css|ioc|gif|svg|png|jpg|jpeg|eto|ttf|woff|woff2)$ {
+		proxy_pass http://linuxidc;
+	}
+    error_page   500 502 503 504  /50x.html;
+    location = /50x.html {
+      root   /usr/share/nginx/html;
+    }
+  }
+}

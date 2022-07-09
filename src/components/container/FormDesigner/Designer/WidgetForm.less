@@ -1,0 +1,87 @@
+.widget-form-container {
+	height: 100%;
+	position: relative;
+
+	&.custom-horizontal-wrapper {
+		.ant-form-horizontal {
+			.ant-form-item {
+				> .ant-form-item-label {
+					line-height: 32px;
+				}
+
+				.ant-form-item-control {
+					line-height: 32px;
+				}
+			}
+		}
+	}
+
+	.empty {
+		margin: 0;
+		position: absolute;
+		top: 50%;
+		transform: translateY(-50%);
+		width: 100%;
+		z-index: 1;
+	}
+
+	.ant-form {
+		position: relative;
+		z-index: 2;
+	}
+
+	.widget-form-list {
+		height: 100%;
+
+		// 左侧拖拽过来的元素在放下之前不显示
+		.ghost {
+			display: none;
+		}
+
+		.widget-col {
+			border: 2px solid #ffffff;
+			padding: 10px;
+
+			&.active {
+				border: 2px solid @primary-color;
+			}
+		}
+
+		.widget-view {
+			border: 2px solid #ffffff;
+			position: relative;
+
+			&.active {
+				border: 2px solid @primary-color;
+			}
+
+			&.is_required {
+				.ant-form-item-label::before {
+					color: #f5222d;
+					content: '*';
+					font-family: SimSun, sans-serif;
+					font-size: 14px;
+					margin-right: 4px;
+				}
+			}
+
+			&-drag,
+			&-action {
+				background-color: @primary-color;
+				color: #ffffff;
+				font-size: 16px;
+				height: 28px;
+				line-height: 28px;
+				padding: 0 6px;
+				position: absolute;
+				right: 0;
+				z-index: 9;
+			}
+		}
+
+		.widget-col-list {
+			border: 1px dashed #cccccc;
+			min-height: 50px;
+		}
+	}
+}

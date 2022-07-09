@@ -1,0 +1,317 @@
+{
+	"list": [
+		{
+			"type": "html",
+			"name": "当年累计申请",
+			"icon": "",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "<div>标题</div>",
+				"customClass": "",
+				"remote": true,
+				"remoteFunc": "lebrons",
+				"remoteOptions": []
+			},
+			"key": 1621157006630,
+			"model": "html",
+			"rules": []
+		},
+		{
+			"type": "radio",
+			"name": "申请模式",
+			"icon": "icon-radio-active",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"inline": true,
+				"defaultValue": "1",
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"showLabel": true,
+				"options": [
+					{
+						"value": "1",
+						"label": "全天模式"
+					},
+					{
+						"value": "0",
+						"label": "非全天模式"
+					}
+				],
+				"required": false,
+				"width": "",
+				"remote": false,
+				"remoteOptions": [],
+				"props": {
+					"value": "value",
+					"label": "label"
+				},
+				"remoteFunc": "func_1621157036116",
+				"disabled": false
+			},
+			"key": 1621157036116,
+			"model": "applyMode",
+			"rules": []
+		},
+		{
+			"type": "date",
+			"name": "日期范围",
+			"icon": "icon-date",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": [],
+				"readonly": false,
+				"disabled": false,
+				"clearable": true,
+				"placeholder": "",
+				"startPlaceholder": "开始日期",
+				"endPlaceholder": "结束日期",
+				"type": "daterange",
+				"advanceRuleType": "",
+				"driveList": [],
+				"rangeRuleObj": {
+					"field": "",
+					"condition": "",
+					"target": 0,
+					"unit": "default",
+					"message": ""
+				},
+				"customRuleFunc": "",
+				"format": "YYYY-MM-DD",
+				"hourStep": 1,
+				"minuteStep": 1,
+				"secondStep": 1,
+				"required": true,
+				"width": "50%",
+				"remoteFunc": "func_1621157097465",
+				"filterable": true
+			},
+			"key": 1621157097465,
+			"model": "date",
+			"rules": [
+				{
+					"required": true,
+					"message": "日期范围不能为空",
+					"trigger": ["blur", "change"]
+				}
+			]
+		},
+		{
+			"type": "number",
+			"name": "循环天数",
+			"icon": "icon-number",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": true,
+				"controlCondition": "(obj) => {\n    return obj.applyMode === '0'\n}",
+				"required": true,
+				"defaultValue": 1,
+				"min": 1,
+				"max": 10,
+				"step": 1,
+				"disabled": false,
+				"controlsPosition": "",
+				"advanceRuleType": "",
+				"driveList": [],
+				"rangeRuleObj": {
+					"field": "",
+					"condition": "",
+					"target": 0,
+					"unit": "default",
+					"message": ""
+				},
+				"customRuleFunc": "",
+				"remoteFunc": "func_1621157151319"
+			},
+			"key": 1621157151319,
+			"model": "loopDyas",
+			"rules": [
+				{
+					"required": true,
+					"message": "循环天数不能为空",
+					"trigger": ["blur", "change"]
+				}
+			]
+		},
+		{
+			"type": "grid",
+			"name": "栅格布局",
+			"icon": "icon-grid-",
+			"columns": [
+				{
+					"span": 3,
+					"list": []
+				},
+				{
+					"span": 5,
+					"list": [
+						{
+							"type": "button",
+							"name": "按钮",
+							"title": "计算天数与时长",
+							"icon": "",
+							"options": {
+								"labelControl": false,
+								"labelCol": 6,
+								"isControl": false,
+								"inline": true,
+								"float": "left",
+								"justify": "left",
+								"controlCondition": "",
+								"type": "link",
+								"icon": "",
+								"handleEvent": "updateDays",
+								"group": false,
+								"groupList": [
+									{
+										"title": "默认",
+										"icon": "appstore",
+										"handleEvent": ""
+									}
+								],
+								"disabled": false,
+								"customStyle": "margin-bottom: 24px;",
+								"remoteFunc": "func_1621157237891"
+							},
+							"key": 1621157237891,
+							"model": "button_1621157237891",
+							"rules": []
+						}
+					]
+				},
+				{
+					"span": 16,
+					"list": [
+						{
+							"type": "html",
+							"name": "",
+							"icon": "",
+							"options": {
+								"labelControl": false,
+								"labelCol": 6,
+								"isControl": false,
+								"controlCondition": "",
+								"defaultValue": "<div></div>",
+								"customClass": "",
+								"remote": true,
+								"remoteFunc": "func_1621157281726",
+								"remoteOptions": []
+							},
+							"key": 1621157281726,
+							"model": "desc",
+							"rules": []
+						}
+					]
+				}
+			],
+			"options": {
+				"gutter": 0,
+				"justify": "start",
+				"align": "top",
+				"remoteFunc": "func_1621157205668"
+			},
+			"key": 1621157205668,
+			"model": "grid_1621157205668",
+			"rules": []
+		},
+		{
+			"type": "select",
+			"name": "原因类型",
+			"icon": "icon-select",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "1",
+				"multiple": false,
+				"disabled": false,
+				"clearable": false,
+				"placeholder": "",
+				"required": true,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"showLabel": true,
+				"width": "50%",
+				"options": [
+					{
+						"value": "1",
+						"label": "个人原因"
+					},
+					{
+						"value": "2",
+						"label": "公司原因"
+					},
+					{
+						"value": "3",
+						"label": "其他原因"
+					}
+				],
+				"remote": false,
+				"filterable": false,
+				"remoteOptions": [],
+				"props": {
+					"value": "value",
+					"label": "label"
+				},
+				"remoteFunc": "func_1621157332940"
+			},
+			"key": 1621157332940,
+			"model": "reasonType",
+			"rules": [
+				{
+					"required": true,
+					"message": "原因类型不能为空",
+					"trigger": ["blur", "change"]
+				}
+			]
+		},
+		{
+			"type": "textarea",
+			"name": "具体原因",
+			"icon": "icon-diy-com-textarea",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "",
+				"required": true,
+				"disabled": false,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"pattern": "",
+				"placeholder": "请输入",
+				"remoteFunc": "func_1621157402655"
+			},
+			"key": 1621157402655,
+			"model": "textarea",
+			"rules": [
+				{
+					"required": true,
+					"message": "具体原因不能为空",
+					"trigger": ["blur", "change"]
+				}
+			]
+		}
+	],
+	"config": {
+		"labelCol": 6,
+		"labelAlign": "right",
+		"size": "default"
+	}
+}

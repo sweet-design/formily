@@ -1,0 +1,74 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+
+.form-model-config-wrapper {
+  height: 100%;
+  overflow: auto;
+  padding: 16px 10px 20px;
+
+  .feild-item {
+    margin: 0 auto;
+    text-align: center;
+    width: 70%;
+  }
+
+  .form-model-config {
+    height: 408px;
+    margin-top: 10px;
+
+    .ant-col {
+      height: 100%;
+    }
+
+    &-left,
+    &-right {
+      background-color: white;
+      height: 100%;
+      overflow: auto;
+    }
+
+    &-right {
+      padding: 10px 10px 0 0;
+    }
+
+    &-left {
+      padding: 10px 0;
+
+      &-item {
+        height: 30px;
+        line-height: 30px;
+        padding: 0 10px;
+        transition: all 0.3s;
+
+        &.selected {
+          background-color: @primary-1;
+        }
+
+        & + .form-model-config-left-item {
+          margin-top: 5px;
+        }
+
+        &-opt {
+          display: none;
+          float: right;
+          height: 30px;
+          line-height: 30px;
+
+          i {
+            &:hover {
+              color: @primary-color;
+            }
+          }
+        }
+
+        &:hover {
+          background-color: @primary-1;
+          cursor: pointer;
+
+          .form-model-config-left-item-opt {
+            display: block;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,115 @@
+@import '../index';
+
+.component-nav-tab {
+	position: relative;
+	transition: all 0.2s ease-in-out;
+
+	&-main {
+		display: flex;
+		margin: 0 16px;
+		padding: 6px 0;
+
+		.panes {
+			flex: 1;
+			overflow: hidden;
+			white-space: nowrap;
+
+			&-container {
+				overflow: hidden;
+				position: relative;
+
+				&.padding {
+					padding: 0 38px;
+				}
+
+				.prev,
+				.next {
+					background-color: #ffffff;
+					border-radius: 2px;
+					color: #808695;
+					cursor: pointer;
+					line-height: 32px;
+					position: absolute;
+					text-align: center;
+					width: 32px;
+
+					&:hover {
+						color: rgba(0, 0, 0, 0.85);
+					}
+
+					&.disabled {
+						cursor: not-allowed;
+
+						&:hover {
+							color: #808695;
+						}
+					}
+				}
+
+				.prev {
+					left: 0;
+				}
+
+				.next {
+					right: 0;
+				}
+
+				.scroll {
+					overflow: hidden;
+					white-space: nowrap;
+
+					.content {
+						float: left;
+						position: relative;
+						transition: transform 0.5s ease-in-out;
+						white-space: nowrap;
+
+						.tab {
+							cursor: pointer;
+							display: inline-block;
+							padding-right: 6px;
+							transition: all 0.3s ease-in-out;
+
+							.item {
+								background-color: #ffffff;
+								border-radius: 2px;
+								color: #808695;
+								height: 32px;
+								line-height: 32px;
+								padding: 0 10px;
+
+								.close {
+									&:hover {
+										color: rgba(0, 0, 0, 0.85);
+									}
+								}
+							}
+
+							&.selected,
+							&:hover {
+								.item {
+									span {
+										color: @primary-color;
+									}
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
+		.panes-opts {
+			cursor: pointer;
+			flex: none;
+			height: 32px;
+			line-height: 32px;
+			text-align: center;
+			width: 32px;
+
+			&:hover {
+				color: rgba(0, 0, 0, 0.85);
+			}
+		}
+	}
+}

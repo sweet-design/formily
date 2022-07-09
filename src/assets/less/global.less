@@ -1,0 +1,91 @@
+html,
+body,
+#app,
+#root {
+	height: 100%;
+	user-select: none;
+}
+
+canvas {
+	display: block;
+}
+
+.colorWeak {
+	filter: invert(80%);
+}
+
+ul,
+ol {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.ant-divider {
+	&::before,
+	&::after {
+		top: 0 !important;
+	}
+}
+
+// 数据列表 搜索条件
+.table-page-search-wrapper {
+	.ant-form-inline {
+		.ant-form-item {
+			display: flex;
+			margin-bottom: 24px;
+			margin-right: 0;
+
+			.ant-form-item-control-wrapper {
+				display: inline-block;
+				flex: 1 1;
+				vertical-align: middle;
+			}
+
+			> .ant-form-item-label {
+				line-height: 32px;
+				padding-right: 8px;
+				width: auto;
+			}
+
+			.ant-form-item-control {
+				height: 32px;
+				line-height: 32px;
+			}
+		}
+	}
+
+	.table-page-search-submitButtons {
+		display: block;
+		margin-bottom: 24px;
+		white-space: nowrap;
+	}
+}
+
+// 数据列表 操作
+.table-operator {
+	margin-bottom: 18px;
+
+	button {
+		margin-right: 8px;
+	}
+}
+
+@media (max-width: @screen-xs) {
+	.ant-table {
+		overflow-x: auto;
+		width: 100%;
+
+		&-thead > tr,
+		&-tbody > tr {
+			> th,
+			> td {
+				white-space: pre;
+
+				> span {
+					display: block;
+				}
+			}
+		}
+	}
+}

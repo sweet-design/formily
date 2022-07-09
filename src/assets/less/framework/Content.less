@@ -1,0 +1,15 @@
+@import '../mixins/scrollbar';
+
+.framework-content {
+	background-color: #ffffff;
+	margin: 16px;
+	overflow: hidden;
+
+	.scrollbarLight();
+
+	&-layout {
+		height: 100%;
+		overflow-y: auto;
+		position: relative;
+	}
+}

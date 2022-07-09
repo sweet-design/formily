@@ -1,0 +1,76 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+@import '@/assets/less/mixins/scrollbar';
+
+.form-designer {
+  position: relative;
+
+  &-wrapper {
+    height: 100vh;
+
+    &-sider {
+      .scrollbarLight();
+
+      &.left {
+        box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+      }
+
+      &.right {
+        box-shadow: -1px 0 8px 0 rgba(29, 35, 41, 0.05);
+
+        .ant-tabs-content {
+          height: calc(100% - 44px);
+        }
+      }
+    }
+
+    &-center {
+      .header-toolbar {
+        background-color: #f0f2f5;
+        padding: 0 20px;
+
+        .ant-btn {
+          margin-right: 8px;
+        }
+      }
+
+      .content-config {
+        padding: 0 20px 20px;
+
+        .scrollbarLight();
+
+        &-container {
+          background-color: #ffffff;
+          height: 100%;
+          overflow: auto;
+          position: relative;
+        }
+      }
+    }
+
+    .components-list {
+      height: 100%;
+      overflow: auto;
+      padding: 0 10px 10px;
+
+      ul {
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        position: relative;
+
+        .component-template {
+          float: left;
+          line-height: 26px;
+          margin: 0 1% 5px;
+          overflow: hidden;
+          white-space: nowrap;
+          width: 48%;
+
+          & > .ant-btn {
+            cursor: grab;
+          }
+        }
+      }
+    }
+  }
+}

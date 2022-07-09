@@ -1,0 +1,216 @@
+{
+	"list": [
+		{
+			"type": "date",
+			"name": "时间范围",
+			"icon": "icon-date",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": [],
+				"readonly": false,
+				"disabled": false,
+				"clearable": true,
+				"placeholder": "请选择",
+				"startPlaceholder": "开始时间",
+				"endPlaceholder": "结束时间",
+				"type": "datetimerange",
+				"advanceRuleType": "",
+				"driveList": [],
+				"rangeRuleObj": {
+					"field": "",
+					"condition": "",
+					"target": 0,
+					"unit": "default",
+					"message": ""
+				},
+				"customRuleFunc": "",
+				"format": "HH-mm",
+				"required": true,
+				"width": "50%",
+				"remoteFunc": "func_1620875052127",
+				"filterable": true
+			},
+			"key": 1620875052127,
+			"model": "timeRange",
+			"rules": [
+				{
+					"required": true,
+					"message": "时间范围不能为空",
+					"trigger": "blur"
+				}
+			]
+		},
+		{
+			"type": "textarea",
+			"name": "出差地点",
+			"icon": "icon-diy-com-textarea",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "",
+				"required": false,
+				"disabled": false,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"pattern": "",
+				"placeholder": "请输入",
+				"remoteFunc": "func_1620887777240"
+			},
+			"key": 1620887809030,
+			"model": "address",
+			"rules": []
+		},
+		{
+			"type": "textarea",
+			"name": "交通工具",
+			"icon": "icon-diy-com-textarea",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "",
+				"required": false,
+				"disabled": false,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"pattern": "",
+				"placeholder": "请输入",
+				"remoteFunc": "func_1620887777240"
+			},
+			"key": 1620887777240,
+			"model": "trans",
+			"rules": []
+		},
+		{
+			"type": "number",
+			"name": "预支费用",
+			"icon": "icon-number",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": false,
+				"controlCondition": "",
+				"required": false,
+				"defaultValue": null,
+				"min": 1,
+				"max": 1000,
+				"step": 10,
+				"disabled": false,
+				"controlsPosition": "",
+				"advanceRuleType": "",
+				"driveList": [],
+				"rangeRuleObj": {
+					"field": "",
+					"condition": "",
+					"target": 0,
+					"unit": "default",
+					"message": ""
+				},
+				"customRuleFunc": "",
+				"remoteFunc": "func_1620887864831"
+			},
+			"key": 1620887864831,
+			"model": "number_1620887864831",
+			"rules": []
+		},
+		{
+			"type": "select",
+			"name": "原因类型",
+			"icon": "icon-select",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "",
+				"multiple": false,
+				"disabled": false,
+				"clearable": false,
+				"placeholder": "",
+				"required": true,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"showLabel": true,
+				"width": "50%",
+				"options": [
+					{
+						"value": "0",
+						"label": "私人原因"
+					},
+					{
+						"value": "1",
+						"label": "公司原因"
+					},
+					{
+						"value": "2",
+						"label": "其他原因"
+					}
+				],
+				"remote": false,
+				"filterable": false,
+				"remoteOptions": [],
+				"props": {
+					"value": "value",
+					"label": "label"
+				},
+				"remoteFunc": "func_1620875247627"
+			},
+			"key": 1620875247627,
+			"model": "reasonType",
+			"rules": [
+				{
+					"required": true,
+					"message": "原因类型不能为空",
+					"trigger": "blur"
+				}
+			]
+		},
+		{
+			"type": "textarea",
+			"name": "具体原因",
+			"icon": "icon-diy-com-textarea",
+			"options": {
+				"labelControl": false,
+				"labelCol": 6,
+				"width": "50%",
+				"isControl": false,
+				"controlCondition": "",
+				"defaultValue": "",
+				"required": true,
+				"disabled": false,
+				"advanceRuleType": "",
+				"driveList": [],
+				"customRuleFunc": "",
+				"pattern": "",
+				"placeholder": "请输入",
+				"remoteFunc": "func_1620875359138"
+			},
+			"key": 1620875359138,
+			"model": "specificReason",
+			"rules": [
+				{
+					"required": true,
+					"message": "具体原因不能为空",
+					"trigger": "blur"
+				}
+			]
+		}
+	],
+	"config": {
+		"labelCol": 6,
+		"labelAlign": "right",
+		"size": "default"
+	}
+}
