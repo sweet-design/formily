@@ -1,0 +1,27 @@
+.widget-config-wrapper {
+	height: 100%;
+	overflow: auto;
+	padding: 16px 10px 20px;
+
+	.feild-item {
+		margin: 0 auto;
+		text-align: center;
+		width: 70%;
+	}
+
+	.drag-sort {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
+		margin: 0;
+
+		li {
+			cursor: move;
+			margin-bottom: 10px;
+
+			&:last-child {
+				margin-bottom: 0;
+			}
+		}
+	}
+}

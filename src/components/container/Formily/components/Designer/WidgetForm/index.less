@@ -1,0 +1,60 @@
+// 表单设计器最顶层容器
+.widget-form-wrapper {
+  height: 100%;
+  position: relative;
+
+  &.active {
+    border: 2px solid @primary-color;
+  }
+
+  &.custom-horizontal-wrapper {
+    .ant-form-horizontal {
+      .ant-form-item {
+        // 在配置层面将默认边距清除
+        margin-bottom: 0;
+
+        &.default {
+          .ant-form-item-label,
+          .ant-form-item-control,
+          .control-text {
+            line-height: 32px;
+          }
+        }
+
+        &.large {
+          .ant-form-item-label,
+          .ant-form-item-control,
+          .control-text {
+            line-height: 40px;
+          }
+        }
+
+        &.small {
+          .ant-form-item-label,
+          .ant-form-item-control,
+          .control-text {
+            line-height: 24px;
+          }
+        }
+      }
+    }
+  }
+
+  .empty {
+    margin: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    z-index: 1;
+  }
+
+  .ant-form {
+    position: relative;
+    z-index: 2;
+  }
+
+  .widget-form-wrapper-list {
+    height: 100%;
+  }
+}

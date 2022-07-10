@@ -1,0 +1,24 @@
+@import '../../index';
+@import '@/assets/less/mixins/scrollbar';
+
+.component-tree-package {
+	width: 200px;
+
+	.scrollbarLight();
+
+	.tree-content {
+		height: 300px;
+		overflow: auto;
+	}
+}
+
+.component-tree-package-pop {
+	.ant-modal-content {
+		.scrollbarLight();
+
+		.ant-modal-body {
+			height: 300px;
+			overflow: auto;
+		}
+	}
+}
