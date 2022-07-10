@@ -1,36 +1,36 @@
 {
-	"compilerOptions": {
-		"target": "esnext",
-		"module": "esnext",
-		"strict": true,
-		"jsx": "preserve",
-		"importHelpers": true,
-		"moduleResolution": "node",
-		"experimentalDecorators": true,
-		"skipLibCheck": true,
-		"esModuleInterop": true,
-		"allowSyntheticDefaultImports": true,
-		"sourceMap": true,
-		"baseUrl": ".",
-		"types": ["webpack-env"],
-		"paths": {
-			"@/*": ["src/*"],
-			"COMPONENTS/*": ["src/components/*"],
-			"VIEWS/*": ["src/views/*"],
-			"REQUEST/*": ["src/request/*"],
-			"ASSETS/*": ["src/assets/*"],
-			"UTILS/*": ["src/utils/*"]
-		},
-		"lib": ["esnext", "dom", "dom.iterable", "scripthost"]
-	},
-	"include": [
-		"src/**/*.ts",
-		"src/**/*.tsx",
-		"src/**/*.jsx",
-		"src/**/*.vue",
-		"tests/**/*.ts",
-		"tests/**/*.tsx",
-		"node_modules/vue-tsx-support/enable-check.d.ts"
-	],
-	"exclude": ["node_modules", "dist", "doc"]
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "esnext",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "baseUrl": ".",
+    "types": ["webpack-env"],
+    "paths": {
+      "@/*": ["src/*"],
+      "COMPONENTS/*": ["src/components/*"],
+      "VIEWS/*": ["src/views/*"],
+      "REQUEST/*": ["src/request/*"],
+      "ASSETS/*": ["src/assets/*"],
+      "UTILS/*": ["src/utils/*"]
+    },
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.jsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "node_modules/vue-tsx-support/enable-check.d.ts"
+  ],
+  "exclude": ["node_modules", "dist", "doc"]
 }
