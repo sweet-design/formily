@@ -119,7 +119,13 @@ export default class Grid extends Vue {
         >
           {this.data.componentProperties.columns.map((col: any, colIndex: number) => {
             return (
-              <a-col key={colIndex} span={col.span}>
+              <a-col
+                key={colIndex}
+                span={col.span}
+                style={{
+                  opacity: this.data.fieldProperties.display === 'visible' ? '100%' : '0',
+                }}
+              >
                 <Draggable
                   vModel={col.list}
                   group="people"

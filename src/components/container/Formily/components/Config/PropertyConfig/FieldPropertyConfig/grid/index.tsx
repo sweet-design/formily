@@ -44,10 +44,6 @@ export default class InputConfig extends Vue {
             key={this.select.key}
             rules={[
               {
-                required: true,
-                message: '字段标识不能为空',
-              },
-              {
                 pattern: /^[a-z]+$/i,
                 message: '只能使用英文字母',
               },

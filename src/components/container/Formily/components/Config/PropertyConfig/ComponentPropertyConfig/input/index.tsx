@@ -91,7 +91,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="改值动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="改值动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   改值动作
                 </a-tooltip>
@@ -111,7 +111,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   获取焦点动作
                 </a-tooltip>
@@ -131,7 +131,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   失去焦点动作
                 </a-tooltip>

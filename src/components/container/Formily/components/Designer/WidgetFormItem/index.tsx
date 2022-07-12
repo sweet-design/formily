@@ -162,7 +162,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
         >
           <a-form-item
             style={{
-              visibility: this.fieldProperties.display === 'visible' ? 'visible' : 'hidden',
+              opacity: this.fieldProperties.display === 'visible' ? '100%' : '0',
             }}
             required={this.fieldProperties.required}
             class={classnames([
