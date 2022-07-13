@@ -6,7 +6,7 @@ import { ValidatorInterface } from '../../../../../Models/Widget/input';
 import ControlCenter from '../../../../ControlCenter';
 
 @Component
-export default class Input extends Vue {
+export default class Textarea extends Vue {
   /**
    * 所有配置数据
    */

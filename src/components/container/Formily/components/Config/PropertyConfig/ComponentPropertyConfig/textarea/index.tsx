@@ -1,7 +1,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class Input extends Vue {
+export default class Textarea extends Vue {
   /**
    * 所有配置数据
    */
@@ -33,35 +33,8 @@ export default class Input extends Vue {
         wrapper-col={{ span: 14, offset: 1 }}
         labelAlign="left"
       >
-        <a-form-model-item
-          label="尺寸"
-          scopedSlots={{
-            label: () => {
-              return (
-                <a-tooltip placement="left" title="配置控件大小，默认继承表单配置中的尺寸设置">
-                  尺寸
-                </a-tooltip>
-              );
-            },
-          }}
-        >
-          <a-select vModel={this.componentProperties.size} placeholder="请选择" allowClear>
-            <a-select-option value="large">大</a-select-option>
-            <a-select-option value="default">默认</a-select-option>
-            <a-select-option value="small">小</a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item label="前缀标签">
-          <a-input vModel={this.componentProperties.addonBefore} placeholder="请输入" />
-        </a-form-model-item>
-        <a-form-model-item label="后缀标签">
-          <a-input vModel={this.componentProperties.addonAfter} placeholder="请输入" />
-        </a-form-model-item>
-        <a-form-model-item label="前缀">
-          <a-input vModel={this.componentProperties.prefix} placeholder="请输入" />
-        </a-form-model-item>
-        <a-form-model-item label="后缀">
-          <a-input vModel={this.componentProperties.suffix} placeholder="请输入" />
+        <a-form-model-item label="自适应高度">
+          <a-switch vModel={this.componentProperties.autoSize} />
         </a-form-model-item>
         <a-form-model-item label="允许清除内容">
           <a-switch vModel={this.componentProperties.allowClear} />

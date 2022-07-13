@@ -2,7 +2,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import ControlCenter from '../../../../ControlCenter';
 
 @Component
-export default class InputConfig extends Vue {
+export default class Input extends Vue {
   /**
    * 所有配置数据
    */

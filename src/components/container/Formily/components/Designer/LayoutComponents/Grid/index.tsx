@@ -1,7 +1,6 @@
 import { Component, Prop, Vue, Emit } from 'vue-property-decorator';
 import classnames from 'classnames';
 import Draggable from 'vuedraggable';
-import Dayjs from 'dayjs';
 import WidgetFormItem from '../../WidgetFormItem';
 import { createHash } from '../../../../utils/format';
 import './index.less';

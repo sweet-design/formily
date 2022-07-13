@@ -247,7 +247,7 @@ const inputModel: InputModel = {
      * @param {number|null} validator[].exclusiveMaximum - 长度/数值小于等于-----即字符的长度或者数值的值要小于等于指定值 @default null
      * @param {number|null} validator[].exclusiveMinimum - 长度/数值大于等于-----即字符的长度或者数值的值要大于等于指定值 @default null
      * @param {boolean} validator[].whitespace - 不允许有空格-----即字符中不允许出现空格 @default false
-     * @default ''
+     * @default undefined
      */
     validator: undefined,
   },
