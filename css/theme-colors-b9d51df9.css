@@ -8,6 +8,7 @@
 .form-model-config-wrapper .form-model-config-left-item:hover{ background-color: #e6f7ff}
 .property-config-wrapper__close-drawer:hover{ color: #1890ff}
 .property-config-wrapper__check-rule-advance-item .ant-col svg:hover{ color: #1890ff}
+.data-generator-wrapper__content-col-data .draggable-tree__title .delete-icon:hover{ color: #1890ff}
 .layout-component-grid__row.active{ border: 2px solid #1890ff}
 .layout-component-grid__row-action,.layout-component-grid__row-drag{ background-color: #1890ff}
 .widget-form-wrapper.active{ border: 2px solid #1890ff}
