@@ -314,7 +314,7 @@ export default class GenerateFormItem extends Vue {
               widget.options.dataType == 'float' ? (
                 <a-input-number
                   vModel={this.current}
-                  placeholder={widget.options.placeholder}
+                  placeholder={this.$t(widget.options.placeholder)}
                   style={{ width: widget.options.width }}
                   disabled={widget.options.disabled}
                   size={this.globalConfig.size}
@@ -328,7 +328,7 @@ export default class GenerateFormItem extends Vue {
               ) : (
                 <a-input
                   vModel={this.current}
-                  placeholder={widget.options.placeholder}
+                  placeholder={this.$t(widget.options.placeholder)}
                   style={{ width: widget.options.width }}
                   disabled={widget.options.disabled}
                   size={this.globalConfig.size}
@@ -356,7 +356,7 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'textarea' && (
               <a-input
                 vModel={this.current}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 disabled={widget.options.disabled}
                 style={{ width: widget.options.width }}
                 size={this.globalConfig.size}
@@ -373,7 +373,7 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'number' && (
               <a-input-number
                 vModel={this.current}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 style={{ width: widget.options.width }}
                 disabled={widget.options.disabled}
                 step={widget.options.step}
@@ -420,10 +420,10 @@ export default class GenerateFormItem extends Vue {
                     >
                       {widget.options.remote
                         ? widget.options.showLabel
-                          ? item.label
+                          ? this.$t(item.label)
                           : item.value
                         : widget.options.showLabel
-                        ? item.label
+                        ? this.$t(item.label)
                         : item.value}
                     </a-radio>
                   );
@@ -456,10 +456,10 @@ export default class GenerateFormItem extends Vue {
                     >
                       {widget.options.remote
                         ? widget.options.showLabel
-                          ? item.label
+                          ? this.$t(item.label)
                           : item.value
                         : widget.options.showLabel
-                        ? item.label
+                        ? this.$t(item.label)
                         : item.value}
                     </a-checkbox>
                   );
@@ -476,7 +476,7 @@ export default class GenerateFormItem extends Vue {
                 hourStep={widget.options.hourStep}
                 minuteStep={widget.options.minuteStep}
                 secondStep={widget.options.secondStep}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 style={{ width: widget.options.width }}
                 size={this.globalConfig.size}
                 format={widget.options.format}
@@ -497,7 +497,10 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'time' && widget.options.isRange && (
               <TimePickerRange
                 vModel={this.current}
-                placeholder={[widget.options.startPlaceholder, widget.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(widget.options.startPlaceholder),
+                  this.$t(widget.options.endPlaceholder),
+                ]}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 hourStep={widget.options.hourStep}
@@ -524,7 +527,7 @@ export default class GenerateFormItem extends Vue {
               <a-date-picker
                 vModel={this.current}
                 mode="year"
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -554,7 +557,7 @@ export default class GenerateFormItem extends Vue {
                 vModel={this.current}
                 mode="month"
                 getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -582,7 +585,7 @@ export default class GenerateFormItem extends Vue {
               <a-date-picker
                 vModel={this.current}
                 getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -613,7 +616,7 @@ export default class GenerateFormItem extends Vue {
                   secondStep: widget.options.secondStep,
                 }}
                 getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -643,7 +646,10 @@ export default class GenerateFormItem extends Vue {
                   minuteStep: widget.options.minuteStep,
                   secondStep: widget.options.secondStep,
                 }}
-                placeholder={[widget.options.startPlaceholder, widget.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(widget.options.startPlaceholder),
+                  this.$t(widget.options.endPlaceholder),
+                ]}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -667,7 +673,10 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'date' && widget.options.type == 'daterange' && (
               <a-range-picker
                 vModel={this.current}
-                placeholder={[widget.options.startPlaceholder, widget.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(widget.options.startPlaceholder),
+                  this.$t(widget.options.endPlaceholder),
+                ]}
                 inputReadOnly={widget.options.readonly}
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
@@ -691,7 +700,7 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'select' && (
               <a-select
                 vModel={this.current}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 mode={widget.options.multiple ? 'multiple' : 'default'}
                 disabled={widget.options.disabled}
                 showSearch={widget.options.filterable}
@@ -722,19 +731,19 @@ export default class GenerateFormItem extends Vue {
                       title={
                         widget.options.remote
                           ? widget.options.showLabel
-                            ? item.label
+                            ? this.$t(item.label)
                             : item.value
                           : widget.options.showLabel
-                          ? item.label
+                          ? this.$t(item.label)
                           : item.value
                       }
                     >
                       {widget.options.remote
                         ? widget.options.showLabel
-                          ? item.label
+                          ? this.$t(item.label)
                           : item.value
                         : widget.options.showLabel
-                        ? item.label
+                        ? this.$t(item.label)
                         : item.value}
                     </a-select-option>
                   );
@@ -748,9 +757,14 @@ export default class GenerateFormItem extends Vue {
                 multiple={widget.options.multiple}
                 style={{ width: widget.options.width }}
                 disabled={widget.options.disabled}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 allowClear={widget.options.clearable}
                 searchType={widget.options.searchType}
+                searchParams={
+                  widget.options.searchParams.trim() !== ''
+                    ? JSON.parse(widget.options.searchParams)
+                    : {}
+                }
                 autoSearch={widget.options.autoSearch}
                 count={widget.options.count}
                 size={this.globalConfig.size}
@@ -760,7 +774,7 @@ export default class GenerateFormItem extends Vue {
             {widget.type == 'treeSelect' && (
               <a-tree-select
                 vModel={this.current}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 multiple={widget.options.multiple}
                 treeCheckable={widget.options.multiple}
                 tree-data-simple-mode={widget.options.asyncLoad}
@@ -801,7 +815,7 @@ export default class GenerateFormItem extends Vue {
                 getPopupContainer={() => document.querySelector('.generate-form-item')}
                 mode={widget.options.multiple ? 'multiple' : 'default'}
                 disabled={widget.options.disabled}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 allowClear={widget.options.clearable}
                 size={this.globalConfig.size}
                 options={this.options}
@@ -849,7 +863,7 @@ export default class GenerateFormItem extends Vue {
                 del={widget.options.isDelete}
                 disabled={widget.options.disabled}
                 multiple={widget.options.multiple}
-                alise={widget.options.alise}
+                alise={this.$t(widget.options.alise)}
                 onSuccess={(data: any[]) => {
                   this.current = data.map(file => ({
                     key: widget.model,
@@ -943,7 +957,7 @@ export default class GenerateFormItem extends Vue {
                 disabled={widget.options.disabled}
                 allowClear={widget.options.clearable}
                 getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={widget.options.placeholder}
+                placeholder={this.$t(widget.options.placeholder)}
                 fieldNames={widget.options.props}
                 style={{ width: widget.options.width }}
                 options={widget.options.remoteOptions}

@@ -266,7 +266,7 @@ export default class WidgetFormItem extends Vue {
               <a-input
                 vModel={element.options.defaultValue}
                 style={{ width: element.options.width }}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 disabled={element.options.disabled}
                 size={this.globalConfig.size}
               />
@@ -277,7 +277,7 @@ export default class WidgetFormItem extends Vue {
                 type="textarea"
                 vModel={element.options.defaultValue}
                 style={{ width: element.options.width }}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 disabled={element.options.disabled}
                 size={this.globalConfig.size}
               />
@@ -320,7 +320,7 @@ export default class WidgetFormItem extends Vue {
                 getPopupContainer={() => document.querySelector('.widget-form-item')}
                 mode={element.options.multiple ? 'multiple' : 'default'}
                 disabled={element.options.disabled}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 allowClear={element.options.clearable}
                 size={this.globalConfig.size}
               />
@@ -332,9 +332,10 @@ export default class WidgetFormItem extends Vue {
                 multiple={element.options.multiple}
                 style={{ width: element.options.width }}
                 disabled={element.options.disabled}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 allowClear={element.options.clearable}
                 searchType={element.options.searchType}
+                searchParams={JSON.parse(element.options.searchParams)}
                 autoSearch={element.options.autoSearch}
                 count={element.options.count}
                 size={this.globalConfig.size}
@@ -357,7 +358,7 @@ export default class WidgetFormItem extends Vue {
                       value={item.value}
                       key={item.value + index}
                     >
-                      {element.options.showLabel ? item.label : item.value}
+                      {element.options.showLabel ? this.$t(item.label) : item.value}
                     </a-radio>
                   );
                 })}
@@ -378,7 +379,7 @@ export default class WidgetFormItem extends Vue {
                       value={item.value}
                       key={item.value + index}
                     >
-                      {element.options.showLabel ? item.label : item.value}
+                      {element.options.showLabel ? this.$t(item.label) : item.value}
                     </a-checkbox>
                   );
                 })}
@@ -394,7 +395,7 @@ export default class WidgetFormItem extends Vue {
                 hourStep={element.options.hourStep}
                 minuteStep={element.options.minuteStep}
                 secondStep={element.options.secondStep}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 style={{ width: element.options.width }}
                 size={this.globalConfig.size}
                 format={element.options.format}
@@ -405,7 +406,10 @@ export default class WidgetFormItem extends Vue {
             {this.element.type == 'time' && element.options.isRange && (
               <TimePickerRange
                 vModel={element.options.defaultValue}
-                placeholder={[element.options.startPlaceholder, element.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(element.options.startPlaceholder),
+                  this.$t(element.options.endPlaceholder),
+                ]}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 hourStep={element.options.hourStep}
@@ -421,7 +425,7 @@ export default class WidgetFormItem extends Vue {
             {this.element.type == 'date' && element.options.type == 'date' && (
               <a-date-picker
                 vModel={element.options.defaultValue}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -436,7 +440,7 @@ export default class WidgetFormItem extends Vue {
               <a-date-picker
                 vModel={element.options.defaultValue}
                 mode="year"
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -454,7 +458,7 @@ export default class WidgetFormItem extends Vue {
               <a-date-picker
                 vModel={element.options.defaultValue}
                 mode="month"
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -477,7 +481,7 @@ export default class WidgetFormItem extends Vue {
                   minuteStep: element.options.minuteStep,
                   secondStep: element.options.secondStep,
                 }}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -497,7 +501,10 @@ export default class WidgetFormItem extends Vue {
                   minuteStep: element.options.minuteStep,
                   secondStep: element.options.secondStep,
                 }}
-                placeholder={[element.options.startPlaceholder, element.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(element.options.startPlaceholder),
+                  this.$t(element.options.endPlaceholder),
+                ]}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -511,7 +518,10 @@ export default class WidgetFormItem extends Vue {
             {this.element.type == 'date' && element.options.type == 'daterange' && (
               <a-range-picker
                 vModel={element.options.defaultValue}
-                placeholder={[element.options.startPlaceholder, element.options.endPlaceholder]}
+                placeholder={[
+                  this.$t(element.options.startPlaceholder),
+                  this.$t(element.options.endPlaceholder),
+                ]}
                 inputReadOnly={element.options.readonly}
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
@@ -525,7 +535,7 @@ export default class WidgetFormItem extends Vue {
             {this.element.type == 'select' && (
               <a-select
                 vModel={element.options.defaultValue}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 mode={element.options.multiple ? 'multiple' : 'default'}
                 disabled={element.options.disabled}
                 showSearch={element.options.filterable}
@@ -539,9 +549,9 @@ export default class WidgetFormItem extends Vue {
                     <a-select-option
                       key={item.value}
                       value={item.value}
-                      title={element.options.showLabel ? item.label : item.value}
+                      title={element.options.showLabel ? this.$t(item.label) : item.value}
                     >
-                      {element.options.showLabel ? item.label : item.value}
+                      {element.options.showLabel ? this.$t(item.label) : item.value}
                     </a-select-option>
                   );
                 })}
@@ -569,7 +579,7 @@ export default class WidgetFormItem extends Vue {
                 length={element.options.length}
                 multiple={element.options.multiple}
                 disabled={true}
-                alise={element.options.alise}
+                alise={this.$t(element.options.alise)}
                 onSuccess={(data: any[]) => {
                   console.log(data);
                 }}
@@ -582,7 +592,7 @@ export default class WidgetFormItem extends Vue {
                 disabled={element.options.disabled}
                 allowClear={element.options.clearable}
                 fieldNames={element.options.props}
-                placeholder={element.options.placeholder}
+                placeholder={this.$t(element.options.placeholder)}
                 style={{ width: element.options.width }}
                 options={element.options.remoteOptions}
                 size={this.globalConfig.size}

@@ -588,7 +588,11 @@ export default class Textarea extends Vue {
                   </a-form-model-item>,
                 ]}
 
-                <a-form-model-item label="不允许有空格">
+                <a-form-model-item
+                  label="不允许有空格"
+                  labelCol={{ span: 14 }}
+                  wrapperCol={{ span: 9, offset: 1 }}
+                >
                   <a-switch vModel={this.currentCheckRule.whitespace} />
                 </a-form-model-item>
               </a-form-model>

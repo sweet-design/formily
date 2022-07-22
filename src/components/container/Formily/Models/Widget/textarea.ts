@@ -73,7 +73,7 @@ export type ValidatorInterface = {
   validator: string;
   message: string;
   messageLangKey: string;
-  format: string;
+  format: string | undefined;
   pattern: string;
   len: number | null;
   max: number | null;

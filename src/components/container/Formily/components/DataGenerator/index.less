@@ -1,0 +1,51 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+
+.data-generator-wrapper {
+  &__content {
+    border: solid 1px rgb(232 232 232);
+
+    &-col {
+      & + & {
+        border-left: solid 1px rgb(232 232 232);
+      }
+
+      &-top {
+        border-bottom: solid 1px rgb(232 232 232);
+        min-height: 53px;
+        padding: 10px;
+      }
+
+      &-data {
+        height: 300px;
+        max-height: 300px;
+        overflow-y: auto;
+        padding: 10px;
+
+        .draggable-tree {
+          &__title {
+            .delete-icon {
+              display: none;
+              transition: all 0.15s ease-in-out;
+
+              &:hover {
+                color: @primary-color;
+              }
+            }
+
+            &:hover {
+              .delete-icon {
+                display: block;
+              }
+            }
+          }
+        }
+
+        .draggable-tree-detail {
+          & + .draggable-tree-detail {
+            margin-top: 10px;
+          }
+        }
+      }
+    }
+  }
+}

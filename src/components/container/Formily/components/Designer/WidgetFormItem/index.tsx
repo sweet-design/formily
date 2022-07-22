@@ -232,7 +232,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
                 <this.InputComponent
                   config={this.data}
                   allConfig={this.allConfig}
-                  style={{ width: this.wrapperWidth }}
+                  style={this.wrapperWidth !== '' && { width: this.wrapperWidth }}
                 />
               }
             </div>
