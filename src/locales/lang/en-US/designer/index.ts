@@ -53,4 +53,5 @@ export default {
   'pageDesign.config.form.labelPosition.left': 'Left',
   'pageDesign.config.form.labelPosition.right': 'Right',
   'pageDesign.config.widget.title': 'Field Attr',
+  'pageDesign.check.null': 'can not be empty',
 };

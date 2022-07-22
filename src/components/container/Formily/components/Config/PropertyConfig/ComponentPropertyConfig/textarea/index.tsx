@@ -33,10 +33,18 @@ export default class Textarea extends Vue {
         wrapper-col={{ span: 14, offset: 1 }}
         labelAlign="left"
       >
-        <a-form-model-item label="自适应高度">
+        <a-form-model-item
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+          label="自适应高度"
+        >
           <a-switch vModel={this.componentProperties.autoSize} />
         </a-form-model-item>
-        <a-form-model-item label="允许清除内容">
+        <a-form-model-item
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+          label="允许清除内容"
+        >
           <a-switch vModel={this.componentProperties.allowClear} />
         </a-form-model-item>
         <a-form-model-item

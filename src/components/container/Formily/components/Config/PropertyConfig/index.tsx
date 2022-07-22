@@ -27,6 +27,12 @@ export default class PropertyConfig extends Vue {
     this.updateComponent(newVal);
   }
 
+  // 当选选中的组件改变时，需要更新折叠面板的展开状态，方便查看
+  @Watch('select')
+  private selectChangeHanle() {
+    this.collapseList = ['field', 'component'];
+  }
+
   private updateComponent(type: string) {
     this.FieldPropertyConfig = () => import(`./FieldPropertyConfig/${type}`);
     this.ComponentPropertyConfig = () => import(`./ComponentPropertyConfig/${type}`);
@@ -42,6 +48,9 @@ export default class PropertyConfig extends Vue {
     return false;
   }
 
+  // 当前展开的折叠面板标识列表
+  private collapseList = ['field', 'component'];
+
   // 根据组件类型，动态加载指定的字段属性配置组件
   private FieldPropertyConfig: any = null;
   // 根据组件类型，动态加载指定的组件属性配置组件
@@ -52,29 +61,32 @@ export default class PropertyConfig extends Vue {
   render() {
     // 容器属性
     const decoratorProperties = this.show && this.select.decoratorProperties;
+    const componentProperties = this.show && this.select.componentProperties;
 
     return (
       <div class="property-config-wrapper">
         {this.show && (
           <a-collapse
-            default-active-key="1"
+            vModel={this.collapseList}
             scopedSlots={{
               expandIcon: (props: any) => {
                 return <a-icon type="caret-right" rotate={props.isActive ? 90 : 0} />;
               },
             }}
           >
-            <a-collapse-panel key="1" header="字段属性">
+            <a-collapse-panel key="field" header="字段属性">
               <this.FieldPropertyConfig select={this.select} data={this.data} />
             </a-collapse-panel>
 
-            <a-collapse-panel key="2" header="组件属性">
-              <this.ComponentPropertyConfig select={this.select} data={this.data} />
-            </a-collapse-panel>
+            {componentProperties && (
+              <a-collapse-panel key="component" header="组件属性">
+                <this.ComponentPropertyConfig select={this.select} data={this.data} />
+              </a-collapse-panel>
+            )}
 
             {/* 布局组件是没有容器属性的 */}
             {decoratorProperties && (
-              <a-collapse-panel key="3" header="容器属性">
+              <a-collapse-panel key="decorator" header="容器属性">
                 <this.DecoratorPropertyConfig select={this.select} data={this.data} />
               </a-collapse-panel>
             )}

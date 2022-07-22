@@ -26,16 +26,17 @@ export default class Textarea extends Mixins(mixin) {
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
 
+    if (fieldProperties.defaultValue.trim() === '') {
+      return 'N/A';
+    }
+
     if (fieldProperties.valueFormatter.trim() !== '') {
       try {
         return executeStr(fieldProperties.valueFormatter, fieldProperties.defaultValue);
       } catch (e) {
         this.$message.error((e as any).message);
+        return 'N/A';
       }
-    }
-
-    if (fieldProperties.defaultValue.trim() === '') {
-      return 'N/A';
     }
 
     return fieldProperties.defaultValue;

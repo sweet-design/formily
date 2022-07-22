@@ -34,7 +34,6 @@ export default class Input extends Vue {
         labelAlign="left"
       >
         <a-form-model-item
-          label="尺寸"
           scopedSlots={{
             label: () => {
               return (
@@ -63,7 +62,11 @@ export default class Input extends Vue {
         <a-form-model-item label="后缀">
           <a-input vModel={this.componentProperties.suffix} placeholder="请输入" />
         </a-form-model-item>
-        <a-form-model-item label="允许清除内容">
+        <a-form-model-item
+          label="允许清除内容"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
           <a-switch vModel={this.componentProperties.allowClear} />
         </a-form-model-item>
         <a-form-model-item

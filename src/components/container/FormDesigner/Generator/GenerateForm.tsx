@@ -377,6 +377,7 @@ export default class GenerateForm extends Vue {
             dayjs,
             this.models,
             this.value,
+            this.$i18n,
           ),
           trigger: 'change',
         },

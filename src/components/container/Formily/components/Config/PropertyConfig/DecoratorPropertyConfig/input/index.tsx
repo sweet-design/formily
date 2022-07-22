@@ -66,6 +66,7 @@ export default class Input extends Vue {
         >
           <a-input-number
             style="width: 100%"
+            placeholder="请输入"
             vModel={this.decoratorProperties.labelCol}
             min={1}
             max={24}
@@ -87,6 +88,7 @@ export default class Input extends Vue {
         >
           <a-input-number
             style="width: 100%"
+            placeholder="请输入"
             vModel={this.decoratorProperties.wrapperCol}
             min={1}
             max={24}
@@ -141,10 +143,18 @@ export default class Input extends Vue {
             <a-select-option value="right">右对齐</a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="是否隐藏标签">
+        <a-form-model-item
+          label="是否隐藏标签"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
           <a-switch vModel={this.decoratorProperties.hideLabel} />
         </a-form-model-item>
-        <a-form-model-item label="是否有冒号">
+        <a-form-model-item
+          label="是否有冒号"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
           <a-switch vModel={this.decoratorProperties.colon} />
         </a-form-model-item>
         <a-form-model-item
