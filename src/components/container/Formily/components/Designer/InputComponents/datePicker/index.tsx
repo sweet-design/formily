@@ -26,7 +26,7 @@ export default class DatePicker extends Mixins(mixin) {
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
 
-    if (fieldProperties.defaultValue.trim() === '') {
+    if (fieldProperties.defaultValue == null || fieldProperties.defaultValue.trim() === '') {
       return 'N/A';
     }
 
@@ -46,7 +46,7 @@ export default class DatePicker extends Mixins(mixin) {
   get disabledDateFun() {
     try {
       if (this.config.componentProperties.disabledDate.trim() === '') {
-        return null;
+        return undefined;
       }
 
       return Function(
@@ -54,7 +54,7 @@ export default class DatePicker extends Mixins(mixin) {
       )();
     } catch (e) {
       this.$message.error('禁用时间代码校验错误，请修改正确或者清空');
-      return null;
+      return undefined;
     }
   }
 
@@ -62,7 +62,7 @@ export default class DatePicker extends Mixins(mixin) {
   get disabledTimeFun() {
     try {
       if (this.config.componentProperties.disabledTime.trim() === '') {
-        return null;
+        return undefined;
       }
 
       return Function(
@@ -70,12 +70,12 @@ export default class DatePicker extends Mixins(mixin) {
       )();
     } catch (e) {
       this.$message.error('禁用时间代码校验错误，请修改正确或者清空');
-      return null;
+      return undefined;
     }
   }
 
   // 是否显示年选择框
-  private isopen = false;
+  private isOpen = false;
 
   render() {
     const fieldProperties = this.config.fieldProperties;
@@ -90,6 +90,7 @@ export default class DatePicker extends Mixins(mixin) {
       <a-date-picker
         mode="time"
         style="width: 100%"
+        vModel={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
         placeholder={this.getLangResult(
@@ -113,11 +114,14 @@ export default class DatePicker extends Mixins(mixin) {
         showToday={componentProperties.showToday}
         disabled={fieldProperties.pattern === 'disabled'}
         disabledTime={this.disabledTimeFun}
-      />
+      >
+        <a-icon slot="suffixIcon" type="clock-circle" />
+      </a-date-picker>
     );
 
     const date = (
       <a-date-picker
+        vModel={fieldProperties.defaultValue}
         style="width: 100%"
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
@@ -149,6 +153,7 @@ export default class DatePicker extends Mixins(mixin) {
     const week = (
       <a-week-picker
         style="width: 100%"
+        vModel={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
         placeholder={this.getLangResult(
@@ -161,12 +166,15 @@ export default class DatePicker extends Mixins(mixin) {
         valueFormat={componentProperties.format || 'YYYY-w'}
         disabled={fieldProperties.pattern === 'disabled'}
         disabledDate={this.disabledDateFun}
-      />
+      >
+        <a-icon slot="suffixIcon" type="calendar" />
+      </a-week-picker>
     );
 
     const month = (
       <a-month-picker
         style="width: 100%"
+        vModel={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
         placeholder={this.getLangResult(
@@ -192,7 +200,7 @@ export default class DatePicker extends Mixins(mixin) {
           componentProperties.placeholderLangKey,
           componentProperties.placeholder,
         )}
-        open={this.isopen}
+        open={this.isOpen}
         size={componentProperties.size ?? formConfig.size}
         inputReadOnly={componentProperties.inputReadOnly}
         format="YYYY"
@@ -203,14 +211,14 @@ export default class DatePicker extends Mixins(mixin) {
         disabledDate={this.disabledDateFun}
         disabledTime={this.disabledTimeFun}
         onOpenChange={(status: boolean) => {
-          this.isopen = status;
+          this.isOpen = status;
         }}
         onPanelChange={(value: any) => {
-          this.isopen = false;
+          this.isOpen = false;
           fieldProperties.defaultValue = value.format('YYYY');
         }}
-        onChange={() => {
-          fieldProperties.defaultValue = '';
+        onChange={(value: any) => {
+          fieldProperties.defaultValue = value;
         }}
       />
     );
@@ -225,7 +233,7 @@ export default class DatePicker extends Mixins(mixin) {
           componentProperties.placeholderLangKey,
           componentProperties.placeholder,
         )}
-        open={this.isopen}
+        open={this.isOpen}
         size={componentProperties.size ?? formConfig.size}
         inputReadOnly={componentProperties.inputReadOnly}
         format="YYYY-YYYY"
@@ -236,16 +244,16 @@ export default class DatePicker extends Mixins(mixin) {
         disabledDate={this.disabledDateFun}
         disabledTime={this.disabledTimeFun}
         onOpenChange={(status: boolean) => {
-          this.isopen = status;
+          this.isOpen = status;
         }}
         onPanelChange={(value: any) => {
-          this.isopen = false;
+          this.isOpen = false;
           fieldProperties.defaultValue = `${value.format('YYYY')}-${value
             .add(9, 'year')
             .format('YYYY')}`;
         }}
-        onChange={() => {
-          fieldProperties.defaultValue = '';
+        onChange={(value: any) => {
+          fieldProperties.defaultValue = value;
         }}
       />
     );

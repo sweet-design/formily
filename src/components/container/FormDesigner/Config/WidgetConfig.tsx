@@ -1197,6 +1197,7 @@ export default class WidgetConfig extends Vue {
               </a-form-model-item>,
               <a-divider>附件示例</a-divider>,
               <this.plugins.Upload
+                key={this.data.key}
                 accept={this.data.options.accept}
                 showType="1"
                 maxSize={this.data.options.maxSize * 1024 * 1024}

@@ -2,7 +2,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import CustomEditor from '../../../../CustomEditor';
 
 @Component
-export default class DatePicker extends Vue {
+export default class DateRangePicker extends Vue {
   /**
    * 所有配置数据
    */
@@ -58,10 +58,8 @@ export default class DatePicker extends Vue {
           <a-select vModel={this.componentProperties.picker} placeholder="请选择">
             <a-select-option value="time">时间</a-select-option>
             <a-select-option value="date">日期</a-select-option>
-            <a-select-option value="week">周</a-select-option>
             <a-select-option value="month">月份</a-select-option>
             <a-select-option value="year">年</a-select-option>
-            <a-select-option value="decade">财年</a-select-option>
           </a-select>
         </a-form-model-item>
 
@@ -87,7 +85,7 @@ export default class DatePicker extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="不可选择时间：格式 (currentDate: moment) => Record<string, number[]>"
+                  title="不可选择时间：(dates: [moment, moment], partial: 'start'|'end') => Record<string, number[]>"
                 >
                   不可选择时间
                 </a-tooltip>
@@ -171,12 +169,20 @@ export default class DatePicker extends Vue {
           </a-popover>
         </a-form-model-item>
 
-        <a-form-model-item label="占位提示">
-          <a-input vModel={this.componentProperties.placeholder} placeholder="请输入" />
+        <a-form-model-item label="开始占位提示">
+          <a-input vModel={this.componentProperties.startPlaceholder} placeholder="请输入" />
         </a-form-model-item>
 
-        <a-form-model-item label="占位提示国际化标识">
-          <a-input vModel={this.componentProperties.placeholderLangKey} placeholder="请输入" />
+        <a-form-model-item label="开始占位提示国际化标识">
+          <a-input vModel={this.componentProperties.startPlaceholderLangKey} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item label="结束占位提示">
+          <a-input vModel={this.componentProperties.endPlaceholder} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item label="结束占位提示国际化标识">
+          <a-input vModel={this.componentProperties.endPlaceholderLangKey} placeholder="请输入" />
         </a-form-model-item>
 
         <a-form-model-item
@@ -293,14 +299,6 @@ export default class DatePicker extends Vue {
           }}
         >
           <a-input vModel={this.componentProperties.timeFormat} />
-        </a-form-model-item>
-
-        <a-form-model-item
-          label-col={{ span: 14 }}
-          wrapper-col={{ span: 9, offset: 1 }}
-          label="显示今天/此刻"
-        >
-          <a-switch vModel={this.componentProperties.showToday} />
         </a-form-model-item>
 
         <a-form-model-item

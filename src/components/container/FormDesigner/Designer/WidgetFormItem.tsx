@@ -335,7 +335,11 @@ export default class WidgetFormItem extends Vue {
                 placeholder={this.$t(element.options.placeholder)}
                 allowClear={element.options.clearable}
                 searchType={element.options.searchType}
-                searchParams={JSON.parse(element.options.searchParams)}
+                searchParams={
+                  element.options.searchParams && element.options.searchParams.trim() !== ''
+                    ? JSON.parse(element.options.searchParams)
+                    : {}
+                }
                 autoSearch={element.options.autoSearch}
                 count={element.options.count}
                 size={this.globalConfig.size}

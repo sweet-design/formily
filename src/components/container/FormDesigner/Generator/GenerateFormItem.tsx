@@ -761,7 +761,7 @@ export default class GenerateFormItem extends Vue {
                 allowClear={widget.options.clearable}
                 searchType={widget.options.searchType}
                 searchParams={
-                  widget.options.searchParams.trim() !== ''
+                  widget.options.searchParams && widget.options.searchParams.trim() !== ''
                     ? JSON.parse(widget.options.searchParams)
                     : {}
                 }
