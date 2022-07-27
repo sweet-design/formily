@@ -41,7 +41,7 @@ import {
   Popover,
   Progress,
   Radio,
-  // Rate,
+  Rate,
   Row,
   Select,
   // Slider,
@@ -107,7 +107,7 @@ Vue.use(Popconfirm);
 Vue.use(Popover);
 Vue.use(Progress);
 Vue.use(Radio);
-// Vue.use(Rate);
+Vue.use(Rate);
 Vue.use(Row);
 Vue.use(Select);
 // Vue.use(Slider);
