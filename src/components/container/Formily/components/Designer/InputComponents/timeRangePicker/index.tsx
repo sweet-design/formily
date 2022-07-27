@@ -129,10 +129,6 @@ export default class TimeRangePicker extends Mixins(mixin) {
         minuteStep={componentProperties.minuteStep}
         secondStep={componentProperties.secondStep}
         showNow={componentProperties.showNow}
-        clearText={this.getLangResult(
-          componentProperties.clearTextLangKey,
-          componentProperties.clearText,
-        )}
       />
     );
   }

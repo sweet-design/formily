@@ -63,14 +63,6 @@ export default class TimePicker extends Vue {
           <a-switch vModel={this.componentProperties.autoFocus} />
         </a-form-model-item>
 
-        <a-form-model-item label="清除提示">
-          <a-input vModel={this.componentProperties.clearText} placeholder="请输入" />
-        </a-form-model-item>
-
-        <a-form-model-item label="清除提示国际化标识">
-          <a-input vModel={this.componentProperties.clearTextLangKey} placeholder="请输入" />
-        </a-form-model-item>
-
         <a-form-model-item
           scopedSlots={{
             label: () => {

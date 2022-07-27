@@ -36,8 +36,6 @@ export type TimeRangePickerModel = {
   componentProperties: {
     allowClear: boolean;
     autoFocus: boolean;
-    clearText: string;
-    clearTextLangKey: string;
     disabledHours: string;
     disabledMinutes: string;
     disabledSeconds: string;
@@ -280,20 +278,6 @@ const TimeRangePickerModel: TimeRangePickerModel = {
      * @default false
      */
     autoFocus: false,
-    /**
-     * @name 清除提示
-     * @type {string}
-     * @param {string} - 清除按钮的提示文案
-     * @default 'clear'
-     */
-    clearText: 'clear',
-    /**
-     * @name 清除提示国际化标识
-     * @type {string}
-     * @param {string} - 清除按钮的提示文案
-     * @default ''
-     */
-    clearTextLangKey: '',
     /**
      * @name 禁止小时
      * @description 禁止使用的小时选项处理函数

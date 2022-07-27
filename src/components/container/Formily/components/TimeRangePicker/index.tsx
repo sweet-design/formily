@@ -139,15 +139,6 @@ export default class TimeRangePicker extends Vue {
   showNow!: boolean;
 
   /**
-   * 清除按钮的提示文案
-   */
-  @Prop({
-    type: String,
-    default: 'clear',
-  })
-  clearText!: string;
-
-  /**
    * 大小
    */
   @Prop({
@@ -313,7 +304,6 @@ export default class TimeRangePicker extends Vue {
           placeholder={this.placeholder[1]}
           open={this.openEnd}
           allowClear={this.allowClear}
-          clearText={this.clearText}
           format={this.format || (this.use12Hours ? 'h:mm:ss a' : 'HH:mm:ss')}
           valueFormat={this.format || (this.use12Hours ? 'h:mm:ss a' : 'HH:mm:ss')}
           use12Hours={this.use12Hours}
