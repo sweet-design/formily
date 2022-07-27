@@ -27,7 +27,7 @@ export default class DateRangePicker extends Mixins(mixin) {
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
 
-    if (fieldProperties.defaultValue == null || fieldProperties.defaultValue.length === 0) {
+    if (!fieldProperties.defaultValue || fieldProperties.defaultValue.length === 0) {
       return 'N/A';
     }
 
@@ -152,7 +152,7 @@ export default class DateRangePicker extends Mixins(mixin) {
     const time = (
       <a-range-picker
         mode={['time', 'time']}
-        style="width: 100%"
+        style="width: 100% !important"
         vModel={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
@@ -197,7 +197,7 @@ export default class DateRangePicker extends Mixins(mixin) {
     const date = (
       <a-range-picker
         vModel={fieldProperties.defaultValue}
-        style="width: 100%"
+        style="width: 100% !important"
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
         placeholder={[
@@ -241,7 +241,7 @@ export default class DateRangePicker extends Mixins(mixin) {
     const month = (
       <a-range-picker
         mode={this.mode}
-        style="width: 100%"
+        style="width: 100% !important"
         value={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}
         autoFocus={componentProperties.autoFocus}
@@ -288,7 +288,7 @@ export default class DateRangePicker extends Mixins(mixin) {
 
     const year = (
       <a-range-picker
-        style="width: 100%"
+        style="width: 100% !important"
         mode={['year', 'year']}
         value={fieldProperties.defaultValue}
         allowClear={componentProperties.allowClear}

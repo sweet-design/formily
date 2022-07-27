@@ -2,7 +2,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import CustomEditor from '../../../../CustomEditor';
 
 @Component
-export default class DateRangePicker extends Vue {
+export default class TimePicker extends Vue {
   /**
    * 所有配置数据
    */
@@ -26,14 +26,17 @@ export default class DateRangePicker extends Vue {
     return this.select.componentProperties;
   }
 
-  // 是否显示不可选择日期气泡框
-  private disabledDateVisible = false;
-  // 是否显示不可选择时间气泡框
-  private disabledTimeVisible = false;
+  // 是否显示禁止小时气泡框
+  private disabledHoursVisible = false;
+  // 是否显示禁止分钟气泡框
+  private disabledMinutesVisible = false;
+  // 是否显示禁止秒气泡框
+  private disabledSecondsVisible = false;
 
   $refs!: {
-    disableddate: CustomEditor;
-    disabledtime: CustomEditor;
+    disabledhours: CustomEditor;
+    disabledminutes: CustomEditor;
+    disabledseconds: CustomEditor;
   };
 
   render() {
@@ -44,25 +47,6 @@ export default class DateRangePicker extends Vue {
         wrapper-col={{ span: 14, offset: 1 }}
         labelAlign="left"
       >
-        <a-form-model-item
-          scopedSlots={{
-            label: () => {
-              return (
-                <a-tooltip placement="left" title="选择器类型：当选择时间类型时，请开启时间选择">
-                  选择器类型
-                </a-tooltip>
-              );
-            },
-          }}
-        >
-          <a-select vModel={this.componentProperties.picker} placeholder="请选择">
-            <a-select-option value="time">时间</a-select-option>
-            <a-select-option value="date">日期</a-select-option>
-            <a-select-option value="month">月份</a-select-option>
-            <a-select-option value="year">年</a-select-option>
-          </a-select>
-        </a-form-model-item>
-
         <a-form-model-item
           label="允许清除内容"
           labelCol={{ span: 14 }}
@@ -79,15 +63,23 @@ export default class DateRangePicker extends Vue {
           <a-switch vModel={this.componentProperties.autoFocus} />
         </a-form-model-item>
 
+        <a-form-model-item label="清除提示">
+          <a-input vModel={this.componentProperties.clearText} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item label="清除提示国际化标识">
+          <a-input vModel={this.componentProperties.clearTextLangKey} placeholder="请输入" />
+        </a-form-model-item>
+
         <a-form-model-item
           scopedSlots={{
             label: () => {
               return (
                 <a-tooltip
                   placement="left"
-                  title="不可选择时间：(dates: [moment, moment], partial: 'start'|'end') => Record<string, number[]>"
+                  title="禁止小时：禁止选择部分小时选项，格式 () => number[]"
                 >
-                  不可选择时间
+                  禁止小时
                 </a-tooltip>
               );
             },
@@ -97,11 +89,11 @@ export default class DateRangePicker extends Vue {
             trigger="click"
             placement="bottomRight"
             arrow-point-at-center
-            visible={this.disabledTimeVisible}
+            visible={this.disabledHoursVisible}
             onVisibleChange={(visible: boolean) => {
-              this.disabledTimeVisible = visible;
+              this.disabledHoursVisible = visible;
               if (!visible) {
-                this.componentProperties.disabledTime = this.$refs.disabledtime.getValue();
+                this.componentProperties.disabledHours = this.$refs.disabledhours.getValue();
               }
             }}
             scopedSlots={{
@@ -111,8 +103,8 @@ export default class DateRangePicker extends Vue {
                     <CustomEditor
                       height="200"
                       theme="chrome"
-                      ref="disabledtime"
-                      value={this.componentProperties.disabledTime}
+                      ref="disabledhours"
+                      value={this.componentProperties.disabledHours}
                       lang="javascript"
                     ></CustomEditor>
                   </div>
@@ -130,9 +122,9 @@ export default class DateRangePicker extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="不可选择日期：格式 (currentDate: moment) => boolean"
+                  title="禁止分钟：禁止选择部分分钟选项，格式 (selectedHour: number) => number[]"
                 >
-                  不可选择日期
+                  禁止分钟
                 </a-tooltip>
               );
             },
@@ -142,11 +134,11 @@ export default class DateRangePicker extends Vue {
             trigger="click"
             placement="bottomRight"
             arrow-point-at-center
-            visible={this.disabledDateVisible}
+            visible={this.disabledMinutesVisible}
             onVisibleChange={(visible: boolean) => {
-              this.disabledDateVisible = visible;
+              this.disabledMinutesVisible = visible;
               if (!visible) {
-                this.componentProperties.disabledDate = this.$refs.disableddate.getValue();
+                this.componentProperties.disabledMinutes = this.$refs.disabledminutes.getValue();
               }
             }}
             scopedSlots={{
@@ -156,8 +148,8 @@ export default class DateRangePicker extends Vue {
                     <CustomEditor
                       height="200"
                       theme="chrome"
-                      ref="disableddate"
-                      value={this.componentProperties.disabledDate}
+                      ref="disabledminutes"
+                      value={this.componentProperties.disabledMinutes}
                       lang="javascript"
                     ></CustomEditor>
                   </div>
@@ -169,72 +161,57 @@ export default class DateRangePicker extends Vue {
           </a-popover>
         </a-form-model-item>
 
-        <a-form-model-item label="开始占位提示">
-          <a-input vModel={this.componentProperties.startPlaceholder} placeholder="请输入" />
-        </a-form-model-item>
-
-        <a-form-model-item label="开始占位提示国际化标识">
-          <a-input vModel={this.componentProperties.startPlaceholderLangKey} placeholder="请输入" />
-        </a-form-model-item>
-
-        <a-form-model-item label="结束占位提示">
-          <a-input vModel={this.componentProperties.endPlaceholder} placeholder="请输入" />
-        </a-form-model-item>
-
-        <a-form-model-item label="结束占位提示国际化标识">
-          <a-input vModel={this.componentProperties.endPlaceholderLangKey} placeholder="请输入" />
-        </a-form-model-item>
-
-        <a-form-model-item
-          scopedSlots={{
-            label: () => {
-              return (
-                <a-tooltip placement="left" title="配置控件大小，默认继承表单配置中的尺寸设置">
-                  尺寸
-                </a-tooltip>
-              );
-            },
-          }}
-        >
-          <a-select vModel={this.componentProperties.size} placeholder="请选择" allowClear>
-            <a-select-option value="large">大</a-select-option>
-            <a-select-option value="default">默认</a-select-option>
-            <a-select-option value="small">小</a-select-option>
-          </a-select>
-        </a-form-model-item>
-
         <a-form-model-item
           scopedSlots={{
             label: () => {
               return (
                 <a-tooltip
                   placement="left"
-                  scopedSlots={{
-                    title: () => {
-                      return (
-                        <span>
-                          <span>
-                            回填到选择框中的显示格式和数据格式，请正确设置格式，配置参考：
-                          </span>
-                          <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank">
-                            moment.js
-                          </a>
-                          ，
-                          <span>
-                            如果为空字符串，显示格式默认为YYYY-MM-DD，数据格式默认为moment对象，一般情况下日期类型为YYYY-MM-DD，时间类型为HH:mm:ss，月份类型为YYYY-MM，注意：年和财年格式已内置好，不支持自定义
-                          </span>
-                        </span>
-                      );
-                    },
-                  }}
+                  title="禁止秒：禁止选择部分秒选项，格式 (selectedHour: number, selectedMinute: number) => number[]"
                 >
-                  格式
+                  禁止秒
                 </a-tooltip>
               );
             },
           }}
         >
-          <a-input vModel={this.componentProperties.format} placeholder="请输入" />
+          <a-popover
+            trigger="click"
+            placement="bottomRight"
+            arrow-point-at-center
+            visible={this.disabledSecondsVisible}
+            onVisibleChange={(visible: boolean) => {
+              this.disabledSecondsVisible = visible;
+              if (!visible) {
+                this.componentProperties.disabledSeconds = this.$refs.disabledseconds.getValue();
+              }
+            }}
+            scopedSlots={{
+              content: () => {
+                return (
+                  <div style="width: 300px">
+                    <CustomEditor
+                      height="200"
+                      theme="chrome"
+                      ref="disabledseconds"
+                      value={this.componentProperties.disabledSeconds}
+                      lang="javascript"
+                    ></CustomEditor>
+                  </div>
+                );
+              },
+            }}
+          >
+            <a-button block>表达式</a-button>
+          </a-popover>
+        </a-form-model-item>
+
+        <a-form-model-item
+          label="隐藏禁止选项"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
+          <a-switch vModel={this.componentProperties.hideDisabledOptions} />
         </a-form-model-item>
 
         <a-form-model-item
@@ -246,22 +223,19 @@ export default class DateRangePicker extends Vue {
         </a-form-model-item>
 
         <a-form-model-item
-          label-col={{ span: 14 }}
-          wrapper-col={{ span: 9, offset: 1 }}
-          scopedSlots={{
-            label: () => {
-              return (
-                <a-tooltip
-                  placement="left"
-                  title="在选择器类型为时间或者日期时，可开启此选项以支持时间选择功能"
-                >
-                  时间选择
-                </a-tooltip>
-              );
-            },
-          }}
+          label="显示此刻"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
         >
-          <a-switch vModel={this.componentProperties.showTime} />
+          <a-switch vModel={this.componentProperties.showNow} />
+        </a-form-model-item>
+
+        <a-form-model-item
+          label="12小时制"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
+          <a-switch vModel={this.componentProperties.use12Hours} />
         </a-form-model-item>
 
         <a-form-model-item label="小时间隔">
@@ -290,15 +264,53 @@ export default class DateRangePicker extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="时间格式：设置此格式会影响时间选择的项，不影响最终数据值"
+                  scopedSlots={{
+                    title: () => {
+                      return (
+                        <span>
+                          展示的时间格式，默认值为HH:mm:ss，使用12小时制时，默认值为h:mm:ss
+                          a，可参考：
+                          <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank">
+                            moment.js
+                          </a>
+                        </span>
+                      );
+                    },
+                  }}
                 >
-                  时间格式
+                  格式
                 </a-tooltip>
               );
             },
           }}
         >
-          <a-input vModel={this.componentProperties.timeFormat} />
+          <a-input vModel={this.componentProperties.format} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item label="占位提示">
+          <a-input vModel={this.componentProperties.placeholder} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item label="占位提示国际化标识">
+          <a-input vModel={this.componentProperties.placeholderLangKey} placeholder="请输入" />
+        </a-form-model-item>
+
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip placement="left" title="配置控件大小，默认继承表单配置中的尺寸设置">
+                  尺寸
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.size} placeholder="请选择" allowClear>
+            <a-select-option value="large">大</a-select-option>
+            <a-select-option value="default">默认</a-select-option>
+            <a-select-option value="small">小</a-select-option>
+          </a-select>
         </a-form-model-item>
 
         <a-form-model-item

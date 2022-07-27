@@ -210,7 +210,7 @@ export default class DatePicker extends Vue {
                           <span>
                             回填到选择框中的显示格式和数据格式，请正确设置格式，配置参考：
                           </span>
-                          <a href="https://momentjs.com/" target="_blank">
+                          <a href="https://momentjs.com/docs/#/displaying/format/" target="_blank">
                             moment.js
                           </a>
                           ，

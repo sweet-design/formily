@@ -274,9 +274,9 @@ const DateRangePickerModel: DateRangePickerModel = {
     /**
      * @name 允许清除内容
      * @type {boolean}
-     * @default false
+     * @default true
      */
-    allowClear: false,
+    allowClear: true,
     /**
      * @name 自动获取焦点
      * @description 是否挂载时就获取焦点
