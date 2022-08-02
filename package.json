@@ -26,6 +26,7 @@
   "dependencies": {
     "ant-design-vue": "1.7.3",
     "axios": "^0.21.1",
+    "china-division": "^2.5.0",
     "classnames": "^2.2.6",
     "core-js": "^3.6.5",
     "cui-page-designer": "^1.2.9",

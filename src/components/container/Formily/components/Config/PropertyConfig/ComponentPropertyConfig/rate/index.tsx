@@ -38,24 +38,24 @@ export default class Rate extends Vue {
         labelAlign="left"
       >
         <a-form-model-item
+          label="是否允许半选"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
+          <a-switch vModel={this.componentProperties.allowHalf} />
+        </a-form-model-item>
+        <a-form-model-item
           labelCol={{ span: 14 }}
           wrapperCol={{ span: 9, offset: 1 }}
           scopedSlots={{
             label: () => {
               return (
                 <a-tooltip placement="left" title="是否允许再次点击后清除">
-                  允许半选
+                  允许清除内容
                 </a-tooltip>
               );
             },
           }}
-        >
-          <a-switch vModel={this.componentProperties.allowHalf} />
-        </a-form-model-item>
-        <a-form-model-item
-          label="允许清除内容"
-          labelCol={{ span: 14 }}
-          wrapperCol={{ span: 9, offset: 1 }}
         >
           <a-switch vModel={this.componentProperties.allowClear} />
         </a-form-model-item>
@@ -64,19 +64,24 @@ export default class Rate extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <span
-                  class="property-config-wrapper__check-rule"
-                  onClick={() => {
-                    this.rotate = this.rotate === 0 ? 90 : 0;
-                  }}
+                <a-tooltip
+                  placement="left"
+                  title="自定义每项的提示信息，提示信息会按照排序进行提示"
                 >
-                  <a-icon
-                    type="right"
-                    class="property-config-wrapper__check-rule-icon"
-                    rotate={this.rotate}
-                  />
-                  <span>提示信息</span>
-                </span>
+                  <span
+                    class="property-config-wrapper__check-rule"
+                    onClick={() => {
+                      this.rotate = this.rotate === 0 ? 90 : 0;
+                    }}
+                  >
+                    <a-icon
+                      type="right"
+                      class="property-config-wrapper__check-rule-icon"
+                      rotate={this.rotate}
+                    />
+                    <span>提示信息</span>
+                  </span>
+                </a-tooltip>
               );
             },
           }}

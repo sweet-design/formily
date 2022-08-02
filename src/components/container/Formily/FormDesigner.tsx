@@ -33,6 +33,7 @@ export default class FormDesigner extends Vue {
       'rate',
       'cascader',
       'treeSelect',
+      'slider',
     ],
   })
   inputComps!: Array<string>;

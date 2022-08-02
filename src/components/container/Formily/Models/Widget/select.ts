@@ -461,9 +461,9 @@ const SelectModel: SelectModel = {
     notFoundContentLangKey: '',
     /**
      * @name 自定义字段名
-     * @description 此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式
+     * @description 此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，当数据源为静态数据时，子级值需置为children
      * @type {object}
-     * @default {label:'label',value:'value'}
+     * @default {label:'label',value:'value',lang:'lang'}
      */
     replaceField: {
       label: 'label',
@@ -511,7 +511,9 @@ const SelectModel: SelectModel = {
      */
     onBlur: undefined,
   },
-  // 容器属性
+  /**
+   * 容器属性
+   */
   decoratorProperties: {
     /**
      * @name 提示

@@ -226,6 +226,8 @@ export default class WidgetFormItem extends Mixins(mixin) {
               style={{
                 display: 'flex',
                 justifyContent: this.wrapperAlign,
+                alignItems: 'center',
+                height: '100%',
               }}
             >
               {

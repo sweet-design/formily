@@ -3,7 +3,7 @@ import { executeStr } from '../../../../utils/format';
 import mixin from '@/components/container/Formily/utils/mixin';
 
 @Component
-export default class Rate extends Mixins(mixin) {
+export default class Slider extends Mixins(mixin) {
   /**
    * 单个字段配置数据
    */
@@ -54,17 +54,41 @@ export default class Rate extends Mixins(mixin) {
     const fieldProperties = this.config.fieldProperties;
     const componentProperties = this.config.componentProperties;
 
-    return fieldProperties.pattern === 'readPretty' ? (
-      <div class="control-text">{this.transValue}</div>
-    ) : (
-      <a-rate
-        vModel={fieldProperties.defaultValue}
-        allowClear={componentProperties.allowClear}
-        allowHalf={componentProperties.allowHalf}
-        autoFocus={componentProperties.autoFocus}
+    let marks = null;
+    try {
+      marks = Function('"use strict";return (' + componentProperties.marks + ')')()();
+    } catch (e) {
+      marks = {};
+    }
+
+    if (fieldProperties.pattern === 'readPretty') {
+      return <div class="control-text">{this.transValue}</div>;
+    }
+
+    return (
+      <a-slider
         disabled={fieldProperties.pattern === 'disabled'}
-        count={componentProperties.count}
-        tooltips={this.transToolTips}
+        style="width: 100%"
+        dots={componentProperties.dots}
+        range={componentProperties.range}
+        reverse={componentProperties.reverse}
+        vertical={componentProperties.vertical}
+        tooltipVisible={
+          componentProperties.tooltipVisible === undefined
+            ? undefined
+            : componentProperties.tooltipVisible === 'true'
+            ? true
+            : false
+        }
+        tooltipPlacement={componentProperties.tooltipPlacement}
+        marks={marks}
+        included={componentProperties.included}
+        max={componentProperties.max}
+        min={componentProperties.min}
+        step={componentProperties.step || null}
+        onChange={(value: any) => {
+          console.log('数据', value);
+        }}
       />
     );
   }

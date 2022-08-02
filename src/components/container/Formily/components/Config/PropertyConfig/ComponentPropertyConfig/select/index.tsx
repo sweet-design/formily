@@ -204,7 +204,7 @@ export default class Select extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="自定义字段名：数据映射，此处的字段映射跟数据源数据结构有关，请注意设置">
+                <a-tooltip title="自定义字段名：此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，当数据源为静态数据时，子级值需置为children">
                   自定义字段名
                 </a-tooltip>
               );

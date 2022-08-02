@@ -8,7 +8,8 @@ import password from './Widget/password';
 import radio from './Widget/radio';
 import rate from './Widget/rate';
 import select from './Widget/select';
-import switcher from './Widget/switch';
+import switcher from './Widget/switcher';
+import slider from './Widget/slider';
 import textarea from './Widget/textarea';
 import timePicker from './Widget/timePicker';
 import timeRangePicker from './Widget/timeRangePicker';
@@ -32,6 +33,7 @@ export const inputComponents = [
   rate,
   cascader,
   treeSelect,
+  slider,
 ];
 
 // 导出布局组件

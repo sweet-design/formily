@@ -338,7 +338,9 @@ const CheckboxModel: CheckboxModel = {
      */
     onChange: undefined,
   },
-  // 容器属性
+  /**
+   * 容器属性
+   */
   decoratorProperties: {
     /**
      * @name 提示

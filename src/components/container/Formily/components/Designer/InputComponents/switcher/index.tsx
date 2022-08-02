@@ -3,7 +3,7 @@ import { executeStr } from '../../../../utils/format';
 import mixin from '@/components/container/Formily/utils/mixin';
 
 @Component
-export default class Rate extends Mixins(mixin) {
+export default class Switcher extends Mixins(mixin) {
   /**
    * 单个字段配置数据
    */
@@ -25,46 +25,61 @@ export default class Rate extends Mixins(mixin) {
   // 阅读模式下数据转换显示，每种控件在阅读模式下在转换成显示值时所需要的函数是不同的
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
-
-    if (!fieldProperties.defaultValue) {
-      return 'N/A';
-    }
+    const result = fieldProperties.defaultValue
+      ? this.checkedChildrenContent
+      : this.unCheckedChildrenContent;
 
     if (fieldProperties.valueFormatter.trim() !== '') {
       try {
-        return executeStr(fieldProperties.valueFormatter, fieldProperties.defaultValue);
+        return executeStr(fieldProperties.valueFormatter, result);
       } catch (e) {
         this.$message.error((e as any).message);
         return 'N/A';
       }
     }
 
-    return fieldProperties.defaultValue;
+    return result;
   }
 
-  // 提示信息
-  get transToolTips() {
+  /**
+   * 缓存选中时显示的内容
+   */
+  get checkedChildrenContent() {
     const componentProperties = this.config.componentProperties;
-    return componentProperties.tooltips.map((item: any) => {
-      return this.getLangResult(item.tipsLangKey, item.tips);
-    });
+
+    return this.getLangResult(
+      componentProperties.checkedChildrenLangKey,
+      componentProperties.checkedChildren,
+    );
+  }
+
+  /**
+   * 缓存非选中时显示的内容
+   */
+  get unCheckedChildrenContent() {
+    const componentProperties = this.config.componentProperties;
+
+    return this.getLangResult(
+      componentProperties.unCheckedChildrenLangKey,
+      componentProperties.unCheckedChildren,
+    );
   }
 
   render() {
     const fieldProperties = this.config.fieldProperties;
     const componentProperties = this.config.componentProperties;
+    const formConfig = this.allConfig.config;
 
     return fieldProperties.pattern === 'readPretty' ? (
       <div class="control-text">{this.transValue}</div>
     ) : (
-      <a-rate
+      <a-switch
         vModel={fieldProperties.defaultValue}
-        allowClear={componentProperties.allowClear}
-        allowHalf={componentProperties.allowHalf}
         autoFocus={componentProperties.autoFocus}
+        checkedChildren={this.checkedChildrenContent}
+        unCheckedChildren={this.unCheckedChildrenContent}
         disabled={fieldProperties.pattern === 'disabled'}
-        count={componentProperties.count}
-        tooltips={this.transToolTips}
+        size={componentProperties.size ?? formConfig.size}
       />
     );
   }
