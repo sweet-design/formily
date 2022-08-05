@@ -565,6 +565,8 @@ export const basicComponents = [
       customRuleFunc: '',
       width: '100%',
       searchType: 'HrEmp',
+      // 查询参数
+      searchParams: '',
       autoSearch: false,
       count: 10,
       onchange: '',

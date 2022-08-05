@@ -25,34 +25,36 @@ export type TextareaModel = {
           required: string;
           pattern: string;
           display: string;
+          title: string;
+          defaultValue: string;
+          value: string;
         };
       };
     };
-    validator: string | ValidatorInterface[];
+    validator: undefined | string | ValidatorInterface[];
   };
   componentProperties: {
-    showCount: boolean;
     maxLength: number | null;
+    allowClear: boolean;
+    autoSize: boolean;
     placeholder: string;
     placeholderLangKey: string;
-    onChange: string;
-    onFocus: string;
-    onBlur: string;
+    onChange: string | undefined;
+    onFocus: string | undefined;
+    onBlur: string | undefined;
   };
   decoratorProperties: {
     tooltip: string;
     tooltipLangKey: string;
     labelWidth: string;
     wrapperWidth: string;
-    labelAlign: string;
-    wrapperAlign: string;
+    labelAlign: string | undefined;
+    wrapperAlign: string | undefined;
     hideLabel: boolean;
     colon: boolean;
-    layout: string;
-    labelCol: number;
-    wrapperCol: number;
-    size: string;
-    customClass: string;
+    labelCol: number | null;
+    wrapperCol: number | null;
+    customClass: string[];
   };
 };
 
@@ -71,7 +73,7 @@ export type ValidatorInterface = {
   validator: string;
   message: string;
   messageLangKey: string;
-  format: string;
+  format: string | undefined;
   pattern: string;
   len: number | null;
   max: number | null;
@@ -181,18 +183,18 @@ const TextareaModel: TextareaModel = {
     reactions: {
       dependencies: [
         {
-          // 依赖的字段
-          source: 'username',
-          // 依赖字段的属性
+          // 依赖的字段，值为字段所对应生成的hash值，此值是在拖拽进入表单中时所生成的值，此数据源需要一个path系统，值为一个对象树 eg: a.b.c
+          source: '',
+          // 依赖字段的属性，即指向的是字段属性
           property: 'value',
-          // 变量名
-          name: 'usernameValue',
+          // 变量名，默认由hash生成
+          name: '',
           // 变量类型
-          type: 'any',
+          type: 'string',
         },
       ],
       fulfill: {
-        // 当前字段属性受控于依赖字段的状态
+        // 当前字段属性受控于依赖字段的状态的表达式 eg: {{$deps.v_1jotl26gt2c === 'qita' ? 'Associated String Text' : ''}}
         state: {
           // 是否必填控制
           required: '',
@@ -200,16 +202,22 @@ const TextareaModel: TextareaModel = {
           pattern: '',
           // 展示状态控制
           display: '',
+          // 标题
+          title: '',
+          // 默认值
+          defaultValue: '',
+          // 字段值
+          value: '',
         },
       },
     },
     /**
      * @name 校验规则
      * @description 自定义校验规则，支持数据格式(通过正则表达式来实现，配置中会内置)，自定义函数，范围校验等
-     * @type {('string' | Array.<Object>)} - 支持字符串或者对象数组类型，如果为字符串时，只能选择内置的数据格式校验(适合简单场景)，对象数组会相对复杂且包含了内置的数据格式校验(适合发杂场景)
+     * @type {('undefined', 'string' | Array.<Object>)} - 支持字符串或者对象数组类型，如果为字符串时，只能选择内置的数据格式校验(适合简单场景)，对象数组会相对复杂且包含了内置的数据格式校验(适合复杂场景)
      * @param {Object[]} validator - 自定义校验规则
      * @param {('self', 'drive', 'range')} validator[].strategy - 校验策略-----分别为自身校验--驱动校验--范围校验 @default 'self'
-     * @param {('onInput', 'onFocus', 'onBlur')} validator[].triggerType - 触发类型-----分别为输入时--聚焦时--失焦时 @default ''
+     * @param {('onInput', 'onFocus', 'onBlur')} validator[].triggerType - 触发类型-----分别为输入时--聚焦时--失焦时 @default 'onInput'
      *
      * @description 以下配置适合用于 validator[].strategy == 'drive'的情况
      * @param {Array.<string>} validator[].driveList - 驱动校验字段-----驱动校验的字段列表，值为所对应的字段标识 @default []
@@ -227,7 +235,7 @@ const TextareaModel: TextareaModel = {
      * @param {string} validator[].validator - 自定义校验器-----字符串类型的函数 @default ''
      * @param {string} validator[].message - 错误消息-----注：此错误消息在当前规则集中的一个内置规则生效，如需定制不同错误消息，请拆分多条规则 @default ''
      * @param {string} validator[].messageLangKey - 错误消息国际化标识-----指多语言对应的key，不限制标识格式 @default ''
-     * @param {string} validator[].format - 格式校验-----数据格式的校验，跟validator为字符串时一样 @default ''
+     * @param {string} validator[].format - 格式校验-----数据格式的校验，跟validator为字符串时一样 @default undefined
      * @param {string} validator[].pattern - 正则表达式-----自定义的正则表达式的校验 @default ''
      * @param {number|null} validator[].len - 长度限制-----即字符或者数值的长度限制 @default null
      * @param {number|null} validator[].max - 长度/数值小于-----即字符的长度或者数值的值的最大值 @default null
@@ -235,26 +243,32 @@ const TextareaModel: TextareaModel = {
      * @param {number|null} validator[].exclusiveMaximum - 长度/数值小于等于-----即字符的长度或者数值的值要小于等于指定值 @default null
      * @param {number|null} validator[].exclusiveMinimum - 长度/数值大于等于-----即字符的长度或者数值的值要大于等于指定值 @default null
      * @param {boolean} validator[].whitespace - 不允许有空格-----即字符中不允许出现空格 @default false
-     * @default ''
+     * @default undefined
      */
-    validator: '',
+    validator: undefined,
   },
   /**
    * 组件属性
    */
   componentProperties: {
     /**
-     * @name 是否展示字数
-     * @type {boolean}
-     * @default false
-     */
-    showCount: false,
-    /**
      * @name 最大长度
      * @type {number|null}
      * @default null
      */
     maxLength: null,
+    /**
+     * @name 允许清除内容
+     * @type {boolean}
+     * @default false
+     */
+    allowClear: false,
+    /**
+     * @name 自适应内容高度
+     * @type {boolean}
+     * @default false
+     */
+    autoSize: false,
     /**
      * @name 占位提示
      * @type {string}
@@ -270,24 +284,24 @@ const TextareaModel: TextareaModel = {
     /**
      * @name 改值动作
      * @description 输入框内容变化时的回调函数，函数来自formModel中的actions
-     * @type {string}
-     * @default ''
+     * @type {string|undefined}
+     * @default undefined
      */
-    onChange: '',
+    onChange: undefined,
     /**
      * @name 获取焦点动作
      * @description 输入框获取焦点时的回调函数，函数来自formModel中的actions
-     * @type {string}
-     * @default ''
+     * @type {string|undefined}
+     * @default undefined
      */
-    onFocus: '',
+    onFocus: undefined,
     /**
      * @name 失去焦点动作
      * @description 输入框失去焦点时的回调函数，函数来自formModel中的actions
-     * @type {string}
-     * @default ''
+     * @type {string|undefined}
+     * @default undefined
      */
-    onBlur: '',
+    onBlur: undefined,
   },
   // 容器属性
   decoratorProperties: {
@@ -303,6 +317,20 @@ const TextareaModel: TextareaModel = {
      * @default ''
      */
     tooltipLangKey: '',
+    /**
+     * @name 标签栅格宽度
+     * @description 采用24格栅格系统，与下面组件栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
+     * @type {number|null}
+     * @default null
+     */
+    labelCol: null,
+    /**
+     * @name 组件栅格宽度
+     * @description 采用24格栅格系统，与上面标签栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
+     * @type {number|null}
+     * @default null
+     */
+    wrapperCol: null,
     /**
      * @name 标签宽度
      * @description 全局设置标签宽度，支持数值加单位 px、%、vh、em或者auto
@@ -320,17 +348,17 @@ const TextareaModel: TextareaModel = {
     /**
      * @name 标签对齐方式
      * @param {('right', 'left')} labelAlign - 允许的对齐方式
-     * @type {string}
-     * @default 'right'
+     * @type {string|undefined}
+     * @default undefined
      */
-    labelAlign: 'right',
+    labelAlign: undefined,
     /**
      * @name 组件对齐方式
      * @param {('right', 'left')} wrapperAlign - 允许的对齐方式
-     * @type {string}
-     * @default 'left'
+     * @type {string|undefined}
+     * @default undefined
      */
-    wrapperAlign: 'left',
+    wrapperAlign: undefined,
     /**
      * @name 是否隐藏标签
      * @description 表单控件可继承此属性
@@ -345,40 +373,12 @@ const TextareaModel: TextareaModel = {
      */
     colon: true,
     /**
-     * @name 布局方式
-     * @description 水平布局--垂直布局--内联布局
-     * @type {string}
-     * @param {('horizontal', 'vertical', 'inline')} layout - 支持的布局方式
-     */
-    layout: 'horizontal',
-    /**
-     * @name 标签栅格宽度
-     * @description 采用24格栅格系统，与下面组件栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
-     * @type {number}
-     * @default 6
-     */
-    labelCol: 6,
-    /**
-     * @name 组件栅格宽度
-     * @description 采用24格栅格系统，与上面标签栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
-     * @type {number}
-     * @default 18
-     */
-    wrapperCol: 18,
-    /**
-     * @name 尺寸
-     * @type {string}
-     * @param {('large', 'default', 'small')} size - 允许的尺寸枚举值
-     * @default 'default'
-     */
-    size: 'default',
-    /**
      * @name 自定义类名
-     * @description 此className来自自定义style中的类名
-     * @type {string}
-     * @default ''
+     * @description 此className来自自定义style中的类名或者自己自定义
+     * @type {Array.<string>}
+     * @default []
      */
-    customClass: '',
+    customClass: [],
   },
 };
 

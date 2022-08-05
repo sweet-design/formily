@@ -1,0 +1,48 @@
+@import '~ant-design-vue/es/style/themes/default.less';
+
+.has-error {
+  .component-time-range-picker {
+    border-color: @error-color;
+  }
+}
+
+.component-time-range-picker {
+  border: 1px solid @normal-color;
+  border-radius: @border-radius-base;
+  display: inline-block;
+  position: relative;
+  transition: all 0.3s;
+
+  &:hover {
+    &:not(.disabled) {
+      border-color: @primary-color;
+    }
+  }
+
+  &.disabled {
+    background-color: #f5f5f5;
+    color: rgba(0, 0, 0, 0.25);
+    cursor: not-allowed;
+    opacity: 1;
+  }
+
+  .separator {
+    color: rgba(0, 0, 0, 0.45);
+    display: inline-block;
+    text-align: center;
+    width: 8%;
+  }
+
+  .ant-time-picker {
+    width: 46%;
+
+    &-input {
+      border: none;
+      text-align: center;
+
+      &:focus {
+        box-shadow: none;
+      }
+    }
+  }
+}

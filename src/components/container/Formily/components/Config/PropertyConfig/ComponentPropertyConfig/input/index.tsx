@@ -1,7 +1,7 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
-export default class InputConfig extends Vue {
+export default class Input extends Vue {
   /**
    * 所有配置数据
    */
@@ -34,7 +34,6 @@ export default class InputConfig extends Vue {
         labelAlign="left"
       >
         <a-form-model-item
-          label="尺寸"
           scopedSlots={{
             label: () => {
               return (
@@ -63,7 +62,11 @@ export default class InputConfig extends Vue {
         <a-form-model-item label="后缀">
           <a-input vModel={this.componentProperties.suffix} placeholder="请输入" />
         </a-form-model-item>
-        <a-form-model-item label="允许清除内容">
+        <a-form-model-item
+          label="允许清除内容"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
           <a-switch vModel={this.componentProperties.allowClear} />
         </a-form-model-item>
         <a-form-model-item
@@ -91,7 +94,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="改值动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="改值动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   改值动作
                 </a-tooltip>
@@ -111,7 +114,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   获取焦点动作
                 </a-tooltip>
@@ -131,7 +134,7 @@ export default class InputConfig extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若以选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动清除"
+                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
                 >
                   失去焦点动作
                 </a-tooltip>

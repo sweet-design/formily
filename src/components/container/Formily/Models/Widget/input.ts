@@ -247,7 +247,7 @@ const inputModel: InputModel = {
      * @param {number|null} validator[].exclusiveMaximum - 长度/数值小于等于-----即字符的长度或者数值的值要小于等于指定值 @default null
      * @param {number|null} validator[].exclusiveMinimum - 长度/数值大于等于-----即字符的长度或者数值的值要大于等于指定值 @default null
      * @param {boolean} validator[].whitespace - 不允许有空格-----即字符中不允许出现空格 @default false
-     * @default ''
+     * @default undefined
      */
     validator: undefined,
   },
@@ -349,20 +349,6 @@ const inputModel: InputModel = {
      */
     tooltipLangKey: '',
     /**
-     * @name 标签栅格宽度
-     * @description 采用24格栅格系统，与下面组件栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
-     * @type {number|null}
-     * @default null
-     */
-    labelCol: null,
-    /**
-     * @name 组件栅格宽度
-     * @description 采用24格栅格系统，与上面标签栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
-     * @type {number|null}
-     * @default null
-     */
-    wrapperCol: null,
-    /**
      * @name 标签宽度
      * @description 全局设置标签宽度，支持数值加单位 px、%、vh、em或者auto
      * @type {string}
@@ -376,6 +362,20 @@ const inputModel: InputModel = {
      * @default 'auto'
      */
     wrapperWidth: 'auto',
+    /**
+     * @name 标签栅格宽度
+     * @description 采用24格栅格系统，与下面组件栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
+     * @type {number|null}
+     * @default null
+     */
+    labelCol: null,
+    /**
+     * @name 组件栅格宽度
+     * @description 采用24格栅格系统，与上面标签栅格宽度之和不能大于24，且标签宽度和组件宽度只要其中有一个不是auto，则栅格就不起作用
+     * @type {number|null}
+     * @default null
+     */
+    wrapperCol: null,
     /**
      * @name 标签对齐方式
      * @param {('right', 'left')} labelAlign - 允许的对齐方式

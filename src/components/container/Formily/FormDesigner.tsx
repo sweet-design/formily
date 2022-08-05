@@ -33,6 +33,7 @@ export default class FormDesigner extends Vue {
       'rate',
       'cascader',
       'treeSelect',
+      'slider',
     ],
   })
   inputComps!: Array<string>;
@@ -360,7 +361,7 @@ export default class FormDesigner extends Vue {
               this.jsonConfigVisible = false;
             }}
           >
-            <CustomEditor value={this.jsonConfig} height="500" lang="json" readOnly></CustomEditor>
+            <CustomEditor value={this.jsonConfig} height="400" lang="json" readOnly></CustomEditor>
           </a-modal>
         </Layout>
       </div>

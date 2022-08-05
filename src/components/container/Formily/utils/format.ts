@@ -18,10 +18,10 @@ export const getExecStrs = (str: string): string[] => {
 
 /**
  * create hash value
- * @param {number} hashLength - hash langth
+ * @param hashLength - hash langth
  * @returns {string} - hash value
  */
-export const createHash = (hashLength = 24) => {
+export const createHash = (hashLength = 24): string => {
   return Array.from(Array(Number(hashLength) || 24), () =>
     Math.floor(Math.random() * 36).toString(36),
   ).join('');

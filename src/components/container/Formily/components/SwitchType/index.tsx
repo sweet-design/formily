@@ -39,7 +39,7 @@ export default class SwitchType extends Vue {
         <a-row type="flex" v-show={this.value === 'auto'}>
           <a-col span="24">
             <a-button
-              style="width: 100%; float: right;"
+              style="width: 100%; float: right"
               onClick={() => {
                 this.index = 0;
                 this.updateValue(`${this.defaultValue[0].value}${this.defaultValue[0].unit}`);

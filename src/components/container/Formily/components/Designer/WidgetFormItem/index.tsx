@@ -162,7 +162,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
         >
           <a-form-item
             style={{
-              visibility: this.fieldProperties.display === 'visible' ? 'visible' : 'hidden',
+              opacity: this.fieldProperties.display === 'visible' ? '100%' : '0',
             }}
             required={this.fieldProperties.required}
             class={classnames([
@@ -226,13 +226,15 @@ export default class WidgetFormItem extends Mixins(mixin) {
               style={{
                 display: 'flex',
                 justifyContent: this.wrapperAlign,
+                alignItems: 'center',
+                height: '100%',
               }}
             >
               {
                 <this.InputComponent
                   config={this.data}
                   allConfig={this.allConfig}
-                  style={{ width: this.wrapperWidth }}
+                  style={this.wrapperWidth !== '' && { width: this.wrapperWidth }}
                 />
               }
             </div>

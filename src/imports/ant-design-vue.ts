@@ -41,10 +41,10 @@ import {
   Popover,
   Progress,
   Radio,
-  // Rate,
+  Rate,
   Row,
   Select,
-  // Slider,
+  Slider,
   Spin,
   // Statistic,
   // Steps,
@@ -107,10 +107,10 @@ Vue.use(Popconfirm);
 Vue.use(Popover);
 Vue.use(Progress);
 Vue.use(Radio);
-// Vue.use(Rate);
+Vue.use(Rate);
 Vue.use(Row);
 Vue.use(Select);
-// Vue.use(Slider);
+Vue.use(Slider);
 Vue.use(Spin);
 // Vue.use(Statistic);
 // Vue.use(Steps);

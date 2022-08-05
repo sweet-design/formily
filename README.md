@@ -10,6 +10,7 @@ English | [简体中文](./README.zh-CN.md)
 
 - 🎉 **Extensible**, Formily is very extensible, with a full declaration cycle and extensible support at each node
 - 🚆 **Continuously Update**, While satisfying the business, it will continue to iterate on new functions to meet more usage scenarios
+- 🌐 **International**, Supports multiple languages, and supports custom configuration of multiple languages
 
 ## Getting Started
 

@@ -377,6 +377,7 @@ export default class GenerateForm extends Vue {
             dayjs,
             this.models,
             this.value,
+            this.$i18n,
           ),
           trigger: 'change',
         },
@@ -425,8 +426,16 @@ export default class GenerateForm extends Vue {
             ...genList[i].rules.map((item: any) => {
               if (item.pattern) {
                 return { ...item, pattern: eval(item.pattern) };
+              } else if (item.required) {
+                return {
+                  ...item,
+                  message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
+                };
               } else {
-                return { ...item };
+                return {
+                  ...item,
+                  message: `${this.$t(genList[i].name)}${this.$t('component.check.format')}`,
+                };
               }
             }),
             ...this.customValidator(genList[i]),
@@ -436,8 +445,16 @@ export default class GenerateForm extends Vue {
             ...genList[i].rules.map((item: any) => {
               if (item.pattern) {
                 return { ...item, pattern: eval(item.pattern) };
+              } else if (item.required) {
+                return {
+                  ...item,
+                  message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
+                };
               } else {
-                return { ...item };
+                return {
+                  ...item,
+                  message: `${this.$t(genList[i].name)}${this.$t('component.check.format')}`,
+                };
               }
             }),
             ...this.customValidator(genList[i]),

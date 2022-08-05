@@ -119,7 +119,7 @@ export default class WidgetConfig extends Vue {
         required: true,
         message: `${
           this.data.type == 'imgupload' ? this.data.options.alise : this.$t(this.data.name)
-        }不能为空`,
+        } ${this.$t('component.check.null')}`,
         trigger: ['blur', 'change'],
       };
     } else {
@@ -512,6 +512,12 @@ export default class WidgetConfig extends Vue {
                     <a-select-option value="AttQishu">考勤期数</a-select-option>
                     <a-select-option value="HUJI">户籍</a-select-option>
                   </a-select>
+                </div>
+              </a-form-model-item>,
+              <a-divider>查询参数</a-divider>,
+              <a-form-model-item>
+                <div class="feild-item">
+                  <a-input vModel={this.data.options.searchParams} />
                 </div>
               </a-form-model-item>,
               <a-divider>初始搜索</a-divider>,
@@ -1191,6 +1197,7 @@ export default class WidgetConfig extends Vue {
               </a-form-model-item>,
               <a-divider>附件示例</a-divider>,
               <this.plugins.Upload
+                key={this.data.key}
                 accept={this.data.options.accept}
                 showType="1"
                 maxSize={this.data.options.maxSize * 1024 * 1024}

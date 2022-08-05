@@ -13,10 +13,26 @@
         // 在配置层面将默认边距清除
         margin-bottom: 0;
 
+        // 特殊处理
+        .ant-switch {
+          margin: 0;
+        }
+
+        // 特殊处理
+        .ant-rate,
+        .ant-rate-star-first,
+        .ant-rate-star-second {
+          align-items: center;
+          display: flex;
+        }
+
         &.default {
           .ant-form-item-label,
           .ant-form-item-control,
-          .control-text {
+          .control-text,
+          .ant-radio-group,
+          .ant-checkbox-group {
+            height: 32px;
             line-height: 32px;
           }
         }
@@ -24,7 +40,10 @@
         &.large {
           .ant-form-item-label,
           .ant-form-item-control,
-          .control-text {
+          .control-text,
+          .ant-radio-group,
+          .ant-checkbox-group {
+            height: 40px;
             line-height: 40px;
           }
         }
@@ -32,7 +51,10 @@
         &.small {
           .ant-form-item-label,
           .ant-form-item-control,
-          .control-text {
+          .control-text,
+          .ant-radio-group,
+          .ant-checkbox-group {
+            height: 24px;
             line-height: 24px;
           }
         }

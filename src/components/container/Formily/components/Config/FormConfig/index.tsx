@@ -504,14 +504,35 @@ export default class FormConfig extends Vue {
                         <a-input vModel={this.actionForm.name}>
                           <a-tooltip
                             slot="suffix"
-                            title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格和特殊符号"
+                            title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
                             <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
                         </a-input>
                       </a-form-model-item>
                       <a-form-model-item label="响应体">
-                        <div>(data) ={'> {'}</div>
+                        <div>
+                          (data:{' '}
+                          <a-tooltip
+                            scopedSlots={{
+                              title: () => {
+                                return [
+                                  <div>{'type DataInterface = {'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 当前控件值'}</div>,
+                                  <div>&nbsp;&nbsp;{'value: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 表单整体数据对象'}</div>,
+                                  <div>&nbsp;&nbsp;{'model: Object;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 日期插件'}</div>,
+                                  <div>&nbsp;&nbsp;{'dayjs: Dayjs;'}</div>,
+                                  <div>{'}'}</div>,
+                                ];
+                              },
+                            }}
+                          >
+                            <span style="color: rgb(86, 182, 194);">DataInterface</span>
+                          </a-tooltip>
+                          ) ={'> {'}
+                        </div>
                         <CustomEditor
                           height="200"
                           onChange={(value: string) => {
@@ -670,7 +691,7 @@ export default class FormConfig extends Vue {
                         <a-input vModel={this.apiForm.name}>
                           <a-tooltip
                             slot="suffix"
-                            title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格和特殊符号"
+                            title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
                             <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
@@ -806,7 +827,7 @@ export default class FormConfig extends Vue {
                             scopedSlots={{
                               title: () => {
                                 return [
-                                  <div>{'type ConfigModel = {'}</div>,
+                                  <div>{'type ConfigInterface = {'}</div>,
                                   <div>&nbsp;&nbsp;{'// 请求地址'}</div>,
                                   <div>&nbsp;&nbsp;{'url: string;'}</div>,
                                   <div>&nbsp;&nbsp;{'// 请求参数'}</div>,

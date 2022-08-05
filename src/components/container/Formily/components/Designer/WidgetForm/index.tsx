@@ -102,7 +102,12 @@ export default class WidgetForm extends Vue {
           active: this.select && this.select.config?.key === formConfig.key,
         })}
       >
-        {this.data.list.length <= 0 && <a-empty class="empty" />}
+        {this.data.list.length <= 0 && (
+          <a-empty
+            image="https://gw.alipayobjects.com/mdn/miniapp_social/afts/img/A*pevERLJC9v0AAAAAAAAAAABjAQAAAQ/original"
+            class="empty"
+          />
+        )}
         <a-form
           labelAlign={formConfig.labelAlign}
           props={

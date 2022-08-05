@@ -52,4 +52,5 @@ export default {
   'pageDesign.config.form.labelPosition.left': '左对齐',
   'pageDesign.config.form.labelPosition.right': '右对齐',
   'pageDesign.config.widget.title': '字段属性',
+  'pageDesign.check.null': '不能为空',
 };
