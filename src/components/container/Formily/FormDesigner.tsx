@@ -1,5 +1,5 @@
 import { Vue, Component, Prop, Provide } from 'vue-property-decorator';
-import { inputComponents, layoutComponents } from './Models';
+import { inputComponents, layoutComponents, arrayComponents } from './Models';
 import { Layout } from 'ant-design-vue';
 import Draggable from 'vuedraggable';
 import FormConfigModel, { FormModel } from './Models/Form/form';
@@ -8,6 +8,7 @@ import PropertyConfig from './components/Config/PropertyConfig';
 import WidgetForm from './components/Designer/WidgetForm';
 import { createHash, generateComponentList } from './utils/format';
 import CustomEditor from './components/CustomEditor';
+import Generator from './components/Generator';
 import './index.less';
 
 @Component
@@ -46,6 +47,15 @@ export default class FormDesigner extends Vue {
     default: () => ['grid'],
   })
   layoutComps!: Array<string>;
+
+  /**
+   * 自增组件
+   */
+  @Prop({
+    type: Array,
+    default: () => ['arrayTable'],
+  })
+  arrayComps!: Array<string>;
 
   /**
    * 是否显示导入JSON按钮
@@ -88,7 +98,7 @@ export default class FormDesigner extends Vue {
    */
   @Prop({
     type: Boolean,
-    default: true,
+    default: false,
   })
   generateCode!: boolean;
 
@@ -106,7 +116,7 @@ export default class FormDesigner extends Vue {
   };
 
   /**
-   * 注入生成组件树函数
+   * 注入生成组件列表函数
    * @param filterNode 过滤的节点唯一编号
    * @returns 组件目录树结构
    */
@@ -131,7 +141,22 @@ export default class FormDesigner extends Vue {
         };
         if (!filterNode.includes(item.key)) {
           arr.push(temp);
-          this.generateComponentTree(temp.children, item.componentProperties.columns, filterNode);
+          this.generateComponentTree(
+            temp.children,
+            this.extractData(item.componentProperties.columns),
+            filterNode,
+          );
+        }
+      } else if (item.fieldProperties.type === 'arrayTable') {
+        const temp = {
+          value: item.key,
+          key: item.key,
+          title: item.fieldProperties.title,
+          children: [],
+        };
+        if (!filterNode.includes(item.key)) {
+          arr.push(temp);
+          this.generateComponentTree(temp.children, item.componentProperties.list, filterNode);
         }
       } else {
         if (!filterNode.includes(item.key)) {
@@ -146,6 +171,17 @@ export default class FormDesigner extends Vue {
     });
   }
 
+  /**
+   * 提取grid布局下的字段数据
+   * @param data grid 布局下的 columns的数据
+   */
+  private extractData(data: any[]) {
+    const arr: any[] = [];
+    data.forEach(item => item.list.forEach((sub: any) => arr.push(sub)));
+
+    return arr;
+  }
+
   // 根据输入组件类别过滤后的输入组件配置
   private inputComponents = inputComponents.filter(item => {
     return this.inputComps.indexOf(item.fieldProperties.type) != -1;
@@ -156,19 +192,33 @@ export default class FormDesigner extends Vue {
     return this.layoutComps.indexOf(item.fieldProperties.type) != -1;
   });
 
+  // 根据布局组件类别过滤后的布局组件配置
+  private arrayComponents = arrayComponents.filter(item => {
+    return this.arrayComps.indexOf(item.fieldProperties.type) != -1;
+  });
+
   // 表单组件所有配置数据
   private widgetData = {
     list: [],
-    config: { ...FormConfigModel, key: createHash(12) },
+    config: { ...FormConfigModel },
+    key: createHash(12),
   };
 
   // 当前选中的组件
   private widgetDataSelect: any = null;
 
-  // 是否显示json配置预览弹出框
-  private jsonConfigVisible = false;
-  // json配置数据
-  private jsonConfig = '';
+  // 是否显示配置预览弹出框
+  private configPreviewModalVisible = false;
+  // 配置预览数据
+  private configPreviewData = '';
+
+  // 是否显示预览弹框
+  private previewVisible = false;
+
+  // 是否显示导入配置弹框
+  private importModalVisible = false;
+  // 需要导入的配置数据
+  private importData = '';
 
   /**
    * 拖拽开始的事件
@@ -249,6 +299,32 @@ export default class FormDesigner extends Vue {
                   })}
                 </Draggable>,
               ]}
+              {this.layoutComps.length > 0 && [
+                <a-divider>自增组件</a-divider>,
+                <Draggable
+                  tag="ul"
+                  list={this.arrayComponents}
+                  group={{ name: 'people', pull: 'clone', put: false }}
+                  sort={false}
+                  ghostClass="ghost"
+                  onEnd={this.handleMoveEnd}
+                  onStart={this.handleMoveStart}
+                  move={(e: any) => {
+                    const container = e.relatedContext.component;
+                    return container.$attrs.acceptCompType.includes('array');
+                  }}
+                >
+                  {this.arrayComponents.map((item, index) => {
+                    return (
+                      <li class="component-template" key={index}>
+                        <a-button type="dashed" style="width: 100%;">
+                          {item.fieldProperties.title}
+                        </a-button>
+                      </li>
+                    );
+                  })}
+                </Draggable>,
+              ]}
             </div>
           </Layout.Sider>
 
@@ -256,39 +332,69 @@ export default class FormDesigner extends Vue {
           <Layout class="form-designer-wrapper-center">
             {/* 中间顶部工具栏 */}
             <Layout.Header class="header-toolbar">
-              {this.upload && (
-                <a-button type="primary" icon="import">
-                  导入JSON
-                </a-button>
-              )}
-              {this.clearable && (
-                <a-button type="primary" icon="delete" style="margin-left: 8px;">
-                  清空
-                </a-button>
-              )}
-              {this.preview && (
-                <a-button type="primary" icon="eye" style="margin-left: 8px;">
-                  预览
-                </a-button>
-              )}
-              {this.generateJson && (
-                <a-button
-                  type="primary"
-                  icon="download"
-                  style="margin-left: 8px;"
-                  onClick={() => {
-                    this.jsonConfig = JSON.stringify(this.widgetData, null, 2);
-                    this.jsonConfigVisible = true;
-                  }}
-                >
-                  生成JSON
-                </a-button>
-              )}
-              {this.generateCode && (
-                <a-button type="primary" icon="codepen" style="margin-left: 8px;">
-                  生成代码
-                </a-button>
-              )}
+              <a-space>
+                {this.upload && (
+                  <a-button
+                    type="primary"
+                    icon="import"
+                    onClick={() => {
+                      this.importModalVisible = true;
+                    }}
+                  >
+                    导入配置
+                  </a-button>
+                )}
+                {this.clearable && (
+                  <a-button
+                    type="primary"
+                    icon="delete"
+                    onClick={() => {
+                      this.$confirm({
+                        content: '确定清空所有配置吗？',
+                        onOk: () => {
+                          this.widgetData = {
+                            list: [],
+                            config: { ...FormConfigModel },
+                            key: createHash(12),
+                          };
+
+                          this.widgetDataSelect = null;
+                        },
+                      });
+                    }}
+                  >
+                    清空
+                  </a-button>
+                )}
+                {this.preview && (
+                  <a-button
+                    type="primary"
+                    icon="eye"
+                    onClick={() => {
+                      this.previewVisible = true;
+                    }}
+                  >
+                    预览
+                  </a-button>
+                )}
+                {this.generateJson && (
+                  <a-button
+                    type="primary"
+                    icon="download"
+                    onClick={() => {
+                      this.configPreviewData = JSON.stringify(this.widgetData, null, 2);
+                      this.configPreviewModalVisible = true;
+                    }}
+                  >
+                    生成配置
+                  </a-button>
+                )}
+                {this.generateCode && (
+                  <a-button type="primary" icon="codepen">
+                    生成代码
+                  </a-button>
+                )}
+              </a-space>
             </Layout.Header>
             {/* 中间配置内容 */}
             <Layout.Content class="content-config">
@@ -350,18 +456,83 @@ export default class FormDesigner extends Vue {
             </a-tabs>
           </Layout.Sider>
 
+          {/* 配置数据预览弹出框 */}
           <a-modal
-            vModel={this.jsonConfigVisible}
-            title="JSON配置数据"
+            vModel={this.configPreviewModalVisible}
+            title="配置数据"
             centered
             keyboard={false}
             maskClosable={false}
             width={800}
             onOk={() => {
-              this.jsonConfigVisible = false;
+              this.configPreviewModalVisible = false;
             }}
           >
-            <CustomEditor value={this.jsonConfig} height="400" lang="json" readOnly></CustomEditor>
+            <CustomEditor
+              value={this.configPreviewData}
+              height="400"
+              lang="json"
+              readOnly
+            ></CustomEditor>
+          </a-modal>
+
+          {/* 导入配置弹出框 */}
+          <a-modal
+            vModel={this.importModalVisible}
+            title="导入配置"
+            centered
+            destroyOnClose
+            keyboard={false}
+            maskClosable={false}
+            width={800}
+            onOk={() => {
+              try {
+                this.widgetData = JSON.parse(this.importData);
+
+                // 如果存在配置，默认将第一个置为选中
+                if (this.widgetData.list.length > 0) {
+                  this.updateWidgetDataSelect(this.widgetData.list[0]);
+                }
+              } catch (e) {
+                this.$message.error((e as any).message);
+              }
+
+              // 导入完成后清空数据
+              this.importData = '';
+              this.importModalVisible = false;
+            }}
+          >
+            <a-alert
+              message="直接书写JSON，或直接复制生成的JSON进行覆盖"
+              type="info"
+              show-icon
+              style="margin-bottom: 10px;"
+            />
+
+            <CustomEditor
+              value={this.importData}
+              height="400"
+              lang="json"
+              onChange={(value: string) => {
+                this.importData = value;
+              }}
+            ></CustomEditor>
+          </a-modal>
+
+          {/* 组件预览弹出框 */}
+          <a-modal
+            vModel={this.previewVisible}
+            title="组件预览"
+            centered
+            destroyOnClose
+            keyboard={false}
+            maskClosable={false}
+            width={1000}
+            onOk={() => {
+              this.previewVisible = false;
+            }}
+          >
+            <Generator config={this.widgetData} />
           </a-modal>
         </Layout>
       </div>
