@@ -1,0 +1,31 @@
+.formily-create-form-item {
+  .hide-label {
+    .ant-form-item-label {
+      display: none;
+    }
+  }
+
+  // 特殊处理lable标签无法输入空格来进行间距设置
+  &__space {
+    &::after {
+      content: ' ';
+      margin: 0 8px 0 2px;
+    }
+  }
+
+  .asterisk {
+    .ant-form-item-label {
+      & > label {
+        &::before {
+          color: #f5222d;
+          content: '*';
+          display: inline-block;
+          font-family: SimSun, sans-serif;
+          font-size: 14px;
+          line-height: 1;
+          margin-right: 4px;
+        }
+      }
+    }
+  }
+}

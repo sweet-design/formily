@@ -1,0 +1,13 @@
+.formily-array-table {
+  // 特殊处理lable标签无法输入空格来进行间距设置
+  &__space {
+    &::after {
+      content: ' ';
+      margin: 0 8px 0 2px;
+    }
+  }
+
+  &-container {
+    overflow: auto;
+  }
+}

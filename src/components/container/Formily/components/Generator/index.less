@@ -1,0 +1,10 @@
+.formily-generator {
+  position: relative;
+
+  // 统一处理冒号不显示时的占位
+  .ant-form-item-no-colon {
+    &::after {
+      content: none !important;
+    }
+  }
+}
