@@ -23,7 +23,7 @@ export default class Radio extends Vue {
   select!: any;
 
   // customStyle 转换的列表数据
-  private classList: string[] = [];
+  private classList: string[] = getExecStrs(this.data.config.customStyle);
 
   // 监听表单自定义样式的变化，进而给当前组件选择自定义classname
   @Watch('data.config.customStyle')
@@ -68,7 +68,7 @@ export default class Radio extends Vue {
             style="width: 100%"
             placeholder="请输入"
             vModel={this.decoratorProperties.labelCol}
-            min={1}
+            min={0}
             max={24}
           />
         </a-form-model-item>
@@ -90,7 +90,7 @@ export default class Radio extends Vue {
             style="width: 100%"
             placeholder="请输入"
             vModel={this.decoratorProperties.wrapperCol}
-            min={1}
+            min={0}
             max={24}
           />
         </a-form-model-item>
@@ -156,6 +156,21 @@ export default class Radio extends Vue {
           wrapperCol={{ span: 9, offset: 1 }}
         >
           <a-switch vModel={this.decoratorProperties.colon} />
+        </a-form-model-item>
+        <a-form-model-item
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip placement="left" title="是否有星号：如果启用必填，此设置无效">
+                  是否有星号
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-switch vModel={this.decoratorProperties.asterisk} />
         </a-form-model-item>
         <a-form-model-item
           scopedSlots={{
