@@ -63,7 +63,7 @@ export default class Number extends Vue {
             <a-select-option value="small">小</a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="小数点">
+        <a-form-model-item label="小数点符号">
           <a-input vModel={this.componentProperties.decimalSeparator} placeholder="请输入" />
         </a-form-model-item>
         <a-form-model-item
@@ -97,7 +97,17 @@ export default class Number extends Vue {
             placeholder="请输入"
           />
         </a-form-model-item>
-        <a-form-model-item label="步长">
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip placement="left" title="步长：如果为空，默认为 1">
+                  步长
+                </a-tooltip>
+              );
+            },
+          }}
+        >
           <a-input-number
             style="width: 100%"
             vModel={this.componentProperties.step}
@@ -207,6 +217,46 @@ export default class Number extends Vue {
           }}
         >
           <a-select vModel={this.componentProperties.onChange} placeholder="请选择" allowClear>
+            {this.data.config.actions.map((item: any) => {
+              return <a-select-option value={item.key}>{item.name}</a-select-option>;
+            })}
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
+                >
+                  获取焦点动作
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.onFocus} placeholder="请选择" allowClear>
+            {this.data.config.actions.map((item: any) => {
+              return <a-select-option value={item.key}>{item.name}</a-select-option>;
+            })}
+          </a-select>
+        </a-form-model-item>
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
+                >
+                  失去焦点动作
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.onBlur} placeholder="请选择" allowClear>
             {this.data.config.actions.map((item: any) => {
               return <a-select-option value={item.key}>{item.name}</a-select-option>;
             })}

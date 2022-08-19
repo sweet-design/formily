@@ -3,7 +3,7 @@ import SwitchType from '../../../../SwitchType';
 import { getExecStrs } from '../../../../../utils/format';
 
 @Component
-export default class Cascader extends Vue {
+export default class ArrayTable extends Vue {
   /**
    * 所有配置数据
    */
