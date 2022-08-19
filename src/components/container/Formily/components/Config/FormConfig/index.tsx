@@ -3,6 +3,8 @@ import { FormModel } from '../../../Models/Form/form';
 import SwitchType from '../../SwitchType';
 import CustomEditor from '../../CustomEditor';
 import { getExecStrs, createHash } from '../../../utils/format';
+import { loadCssCode } from '../../../utils';
+import { singleApiGenerator } from '../../../utils/apiGenerator';
 import './index.less';
 
 @Component
@@ -38,27 +40,6 @@ export default class FormConfig extends Vue {
   private cssId = ''; // css 编号
 
   /**
-   * 动态插入cssstyle
-   * @param code css code
-   */
-  private loadCssCode(code: string, id: string) {
-    const style: any = document.createElement('style');
-    style.type = 'text/css';
-    style.rel = 'stylesheet';
-    style.id = id;
-    this.cssId = id;
-    try {
-      // for Chrome Firefox Opera Safari
-      style.appendChild(document.createTextNode(code));
-    } catch (ex) {
-      // for IE
-      style.styleSheet.cssText = code;
-    }
-    const head = document.getElementsByTagName('head')[0];
-    head.appendChild(style);
-  }
-
-  /**
    * 生成action 模型数据
    */
   private generatorActionModel(name?: string, body?: string) {
@@ -78,6 +59,8 @@ export default class FormConfig extends Vue {
     auto?: boolean,
     headers?: Array<any>,
     params?: Array<any>,
+    bodyType?: string,
+    body?: Array<any>,
     requestInterceptor?: string,
     responseInterceptor?: string,
     error?: string,
@@ -90,6 +73,8 @@ export default class FormConfig extends Vue {
       auto: auto ?? false,
       headers: headers ?? [],
       params: params ?? [],
+      bodyType: bodyType ?? 'json',
+      body: body ?? [],
       requestInterceptor: requestInterceptor ?? '',
       responseInterceptor: responseInterceptor ?? '',
       error: error ?? '',
@@ -350,7 +335,10 @@ export default class FormConfig extends Vue {
             if (this.cssDefaultValue.trim() !== '' && config.customStyle !== this.cssDefaultValue) {
               const styleDom = document.getElementById(`${this.cssId}`);
               if (styleDom) styleDom.remove();
-              this.loadCssCode(this.cssDefaultValue, createHash(12));
+
+              const key = createHash(12);
+              loadCssCode(this.cssDefaultValue, key);
+              this.cssId = key;
             }
             // 扫描css代码中的classname
             config.customStyle = this.cssDefaultValue;
@@ -395,7 +383,7 @@ export default class FormConfig extends Vue {
         >
           <div style="min-height: 500px">
             <a-alert
-              message="每个动作即为一个函数，且函数体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
+              message="每个动作即为一个函数，且响应体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
               type="info"
               show-icon
               style="margin-bottom: 10px;"
@@ -440,7 +428,7 @@ export default class FormConfig extends Vue {
                             this.actionForm = this.actions[index];
                           }}
                         >
-                          <span>{item.name}</span>
+                          <span class="form-model-config-left-item-text">{item.name}</span>
                           <div class="form-model-config-left-item-opt">
                             <a-space>
                               <a-tooltip
@@ -506,7 +494,7 @@ export default class FormConfig extends Vue {
                             slot="suffix"
                             title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
-                            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
+                            <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
                         </a-input>
                       </a-form-model-item>
@@ -573,7 +561,7 @@ export default class FormConfig extends Vue {
         >
           <div style="min-height: 500px">
             <a-alert
-              message="每个动作即为一个函数，且函数体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
+              message="每个API接口即为一个函数，且响应体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
               type="info"
               show-icon
               style="margin-bottom: 10px;"
@@ -594,10 +582,23 @@ export default class FormConfig extends Vue {
                   type="danger"
                   disabled={this.apis.length === 0}
                   onClick={() => {
-                    this.apis.splice(0);
+                    this.$confirm({
+                      content: '确定清空所有API吗？',
+                      onOk: () => {
+                        this.apis.splice(0);
+                      },
+                    });
                   }}
                 >
                   清空API
+                </a-button>
+                <a-button
+                  onClick={async () => {
+                    const res = await singleApiGenerator(this.apis[this.selectedApis]);
+                    console.log('测试返回结果', res);
+                  }}
+                >
+                  接口测试
                 </a-button>
               </a-space>
             </div>
@@ -618,7 +619,7 @@ export default class FormConfig extends Vue {
                             this.apiForm = this.apis[index];
                           }}
                         >
-                          <span>{item.name}</span>
+                          <span class="form-model-config-left-item-text">{item.name}</span>
                           <div class="form-model-config-left-item-opt">
                             <a-space>
                               <a-tooltip
@@ -632,6 +633,8 @@ export default class FormConfig extends Vue {
                                       item.auto,
                                       JSON.parse(JSON.stringify(item.headers)),
                                       JSON.parse(JSON.stringify(item.params)),
+                                      item.bodyType,
+                                      JSON.parse(JSON.stringify(item.body)),
                                       item.requestInterceptor,
                                       item.responseInterceptor,
                                       item.error,
@@ -693,7 +696,7 @@ export default class FormConfig extends Vue {
                             slot="suffix"
                             title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
-                            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
+                            <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
                         </a-input>
                       </a-form-model-item>
@@ -741,7 +744,7 @@ export default class FormConfig extends Vue {
                                 自动
                                 <a-tooltip title="是否在表单初始化时，发送请求">
                                   <a-icon
-                                    type="info-circle"
+                                    type="question-circle-o"
                                     style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
                                   />
                                 </a-tooltip>
@@ -820,18 +823,94 @@ export default class FormConfig extends Vue {
                           }}
                         ></a-button>
                       </a-form-model-item>
-                      <a-form-model-item label="请求拦截器">
+                      <a-form-model-item label="请求体类型">
+                        <a-radio-group vModel={this.apiForm.bodyType} button-style="solid">
+                          <a-radio-button value="json">json</a-radio-button>
+                          <a-radio-button value="form">form</a-radio-button>
+                        </a-radio-group>
+                      </a-form-model-item>
+                      <a-form-model-item
+                        scopedSlots={{
+                          label: () => {
+                            return (
+                              <span>
+                                请求体
+                                <a-tooltip title="value值支持JSON对象">
+                                  <a-icon
+                                    type="question-circle-o"
+                                    style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
+                                  />
+                                </a-tooltip>
+                              </span>
+                            );
+                          },
+                        }}
+                      >
+                        {this.apiForm.body.map((item: any, index: number) => {
+                          return (
+                            <a-row type="flex" gutter={10}>
+                              <a-col span={6}>
+                                <a-textarea placeholder="key" autoSize vModel={item.key} />
+                              </a-col>
+                              <a-col span={16}>
+                                <a-textarea placeholder="value" autoSize vModel={item.value} />
+                              </a-col>
+                              <a-col span={2}>
+                                <a-button
+                                  type="danger"
+                                  icon="delete"
+                                  onClick={() => {
+                                    this.apiForm.body.splice(index, 1);
+                                  }}
+                                />
+                              </a-col>
+                            </a-row>
+                          );
+                        })}
+                        <a-button
+                          type="dashed"
+                          block
+                          icon="plus"
+                          onClick={() => {
+                            this.apiForm.body.push({
+                              key: '',
+                              value: '',
+                            });
+                          }}
+                        ></a-button>
+                      </a-form-model-item>
+                      <a-form-model-item
+                        scopedSlots={{
+                          label: () => {
+                            return (
+                              <span>
+                                请求拦截器
+                                <a-tooltip title="必须返回配置信息">
+                                  <a-icon
+                                    type="question-circle-o"
+                                    style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
+                                  />
+                                </a-tooltip>
+                              </span>
+                            );
+                          },
+                        }}
+                      >
                         <div>
                           (config:{' '}
                           <a-tooltip
                             scopedSlots={{
                               title: () => {
                                 return [
-                                  <div>{'type ConfigInterface = {'}</div>,
+                                  <div>{'type RequestConfigInterface = {'}</div>,
                                   <div>&nbsp;&nbsp;{'// 请求地址'}</div>,
                                   <div>&nbsp;&nbsp;{'url: string;'}</div>,
                                   <div>&nbsp;&nbsp;{'// 请求参数'}</div>,
-                                  <div>&nbsp;&nbsp;{'  data: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'params: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 请求体'}</div>,
+                                  <div>&nbsp;&nbsp;{'data: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 请求头'}</div>,
+                                  <div>&nbsp;&nbsp;{'headers: any;'}</div>,
                                   <div>&nbsp;&nbsp;{'// 请求方法'}</div>,
                                   <div>&nbsp;&nbsp;{'method: string;'}</div>,
                                   <div>{'}'}</div>,
@@ -839,9 +918,10 @@ export default class FormConfig extends Vue {
                               },
                             }}
                           >
-                            <span style="color: rgb(86, 182, 194);">ConfigInterface</span>
+                            <span style="color: rgb(86, 182, 194);">RequestConfigInterface</span>
                           </a-tooltip>
-                          , args) ={'> {'}
+                          ): <span style="color: rgb(86, 182, 194);">RequestConfigInterface</span> =
+                          {'> {'}
                         </div>
                         <CustomEditor
                           height="200"
@@ -853,8 +933,51 @@ export default class FormConfig extends Vue {
                         ></CustomEditor>
                         <div>{'}'}</div>
                       </a-form-model-item>
-                      <a-form-model-item label="请求响应器">
-                        <div>(config, args) ={'> {'}</div>
+                      <a-form-model-item
+                        scopedSlots={{
+                          label: () => {
+                            return (
+                              <span>
+                                响应拦截器
+                                <a-tooltip title="必须返回响应信息">
+                                  <a-icon
+                                    type="question-circle-o"
+                                    style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
+                                  />
+                                </a-tooltip>
+                              </span>
+                            );
+                          },
+                        }}
+                      >
+                        <div>
+                          (response:{' '}
+                          <a-tooltip
+                            scopedSlots={{
+                              title: () => {
+                                return [
+                                  <div>{'type ResponseInterface = {'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 业务响应数据'}</div>,
+                                  <div>&nbsp;&nbsp;{'data: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 状态码'}</div>,
+                                  <div>&nbsp;&nbsp;{'status: number;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 状态文本信息'}</div>,
+                                  <div>&nbsp;&nbsp;{'statusText: string;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 响应头信息'}</div>,
+                                  <div>&nbsp;&nbsp;{'headers: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 请求配置信息'}</div>,
+                                  <div>&nbsp;&nbsp;{'config: RequestConfigInterface;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 请求实例对象'}</div>,
+                                  <div>&nbsp;&nbsp;{'request: any;'}</div>,
+                                  <div>{'}'}</div>,
+                                ];
+                              },
+                            }}
+                          >
+                            <span style="color: rgb(86, 182, 194);">ResponseInterface</span>
+                          </a-tooltip>
+                          ): <span style="color: rgb(86, 182, 194);">any</span> ={'> {'}
+                        </div>
                         <CustomEditor
                           height="200"
                           value={this.apiForm.responseInterceptor}
@@ -866,7 +989,27 @@ export default class FormConfig extends Vue {
                         <div>{'}'}</div>
                       </a-form-model-item>
                       <a-form-model-item label="错误处理">
-                        <div>(error) ={'> {'}</div>
+                        {/* <div>(error) ={'> {'}</div> */}
+                        <div>
+                          (error:{' '}
+                          <a-tooltip
+                            scopedSlots={{
+                              title: () => {
+                                return [
+                                  <div>{'type ErrorInterface = {'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 响应实例对象'}</div>,
+                                  <div>&nbsp;&nbsp;{'response?: any;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 请求实例对象'}</div>,
+                                  <div>&nbsp;&nbsp;{'request?: any;'}</div>,
+                                  <div>{'}'}</div>,
+                                ];
+                              },
+                            }}
+                          >
+                            <span style="color: rgb(86, 182, 194);">ErrorInterface</span>
+                          </a-tooltip>
+                          ) ={'> {'}
+                        </div>
                         <CustomEditor
                           height="200"
                           onChange={(value: string) => {
@@ -907,7 +1050,7 @@ export default class FormConfig extends Vue {
         >
           <div style="min-height: 500px">
             <a-alert
-              message="每个动作即为一个函数，且函数体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
+              message="每个生命周期即为一个函数，且响应体中只能书写原生JavaScript代码，如果为空，将不执行，反之亦然"
               type="info"
               show-icon
               style="margin-bottom: 10px;"
@@ -928,7 +1071,7 @@ export default class FormConfig extends Vue {
                             this.lifecyclesForm = this.lifecycles[index];
                           }}
                         >
-                          <span>{item.name}</span>
+                          <span class="form-model-config-left-item-text">{item.name}</span>
                         </div>
                       );
                     })}
@@ -944,12 +1087,31 @@ export default class FormConfig extends Vue {
                       <a-form-model-item label="名称" prop="name">
                         <a-input vModel={this.lifecyclesForm.name} disabled>
                           <a-tooltip slot="suffix" title="生命周期函数为内置函数，不可修改函数名">
-                            <a-icon type="info-circle" style="color: rgba(0,0,0,.45)" />
+                            <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
                         </a-input>
                       </a-form-model-item>
                       <a-form-model-item label="响应体">
-                        <div>(data) ={'> {'}</div>
+                        <div>
+                          (data:{' '}
+                          <a-tooltip
+                            scopedSlots={{
+                              title: () => {
+                                return [
+                                  <div>{'type DataInterface = {'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 表单整体数据对象'}</div>,
+                                  <div>&nbsp;&nbsp;{'model: Object;'}</div>,
+                                  <div>&nbsp;&nbsp;{'// 日期插件'}</div>,
+                                  <div>&nbsp;&nbsp;{'dayjs: Dayjs;'}</div>,
+                                  <div>{'}'}</div>,
+                                ];
+                              },
+                            }}
+                          >
+                            <span style="color: rgb(86, 182, 194);">DataInterface</span>
+                          </a-tooltip>
+                          ) ={'> {'}
+                        </div>
                         <CustomEditor
                           height="200"
                           onChange={(value: string) => {
