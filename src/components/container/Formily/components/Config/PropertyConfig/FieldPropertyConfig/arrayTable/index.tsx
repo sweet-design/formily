@@ -4,11 +4,10 @@ import { createHash } from '../../../../../utils/format';
 import CustomEditor from '../../../../CustomEditor';
 import { ValidatorInterface } from '../../../../../Models/Widget/input';
 import ControlCenter from '../../../../ControlCenter';
-import DataGenerator from '../../../../DataGenerator';
 import DataTypeSwitch from '../../../../DataTypeSwitch';
 
 @Component
-export default class Cascader extends Vue {
+export default class ArrayTable extends Vue {
   /**
    * 所有配置数据
    */
@@ -58,9 +57,6 @@ export default class Cascader extends Vue {
   // 是否显示受控中心弹窗
   private controlVisible = false;
 
-  // 是否显示静态数据生成器
-  private dataGeneratorVisible = false;
-
   // 校验规则折叠箭头角度
   private rotate = 0;
 
@@ -73,17 +69,8 @@ export default class Cascader extends Vue {
   // 是否显示高级校验配置抽屉
   private drawerVisible = false;
 
-  // 是否显示数据源参数配置气泡框
-  private dataSourceArgVisible = false;
-
-  // api接口中心数据
-  get apis() {
-    return this.data.config.apis;
-  }
-
   $refs!: {
     expression: CustomEditor;
-    dataSourceArgs: CustomEditor;
   };
 
   render() {
@@ -128,7 +115,7 @@ export default class Cascader extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip placement="left" title="展示状态：半隐藏只会隐藏UI，全隐藏会删除数据">
+                  <a-tooltip placement="left" title="半隐藏只会隐藏UI，全隐藏会删除数据">
                     展示状态
                   </a-tooltip>
                 );
@@ -155,7 +142,7 @@ export default class Cascader extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title='格式化函数：阅读模式下数据格式化函数，格式: (value) => { return "string"}'
+                    title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'
                   >
                     格式化函数
                   </a-tooltip>
@@ -197,10 +184,7 @@ export default class Cascader extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip
-                    placement="left"
-                    title="默认值：指控件初始值，数据类型为 string[] | number[]，在配置层表达式提供json字符串来表示，在应用层会将json字符串转换成实际数据类型"
-                  >
+                  <a-tooltip title="默认值：数据类型为对象数组，在配置层为json字符串，在应用层会将此转换成对象">
                     默认值
                   </a-tooltip>
                 );
@@ -230,129 +214,6 @@ export default class Cascader extends Vue {
           <a-form-model-item label="必填消息国际化标识">
             <a-input vModel={this.fieldProperties.requiredMessageLangKey} placeholder="请输入" />
           </a-form-model-item>
-
-          <a-form-model-item label="选项来源">
-            <a-select vModel={this.fieldProperties.dataSource}>
-              <a-select-option value="staticData">静态数据</a-select-option>
-              <a-select-option value="dynamicData">动态数据</a-select-option>
-            </a-select>
-          </a-form-model-item>
-
-          {this.fieldProperties.dataSource === 'dynamicData' && [
-            <a-form-model-item
-              scopedSlots={{
-                label: () => {
-                  return (
-                    <a-tooltip
-                      placement="left"
-                      title="动态数据来源：数据源即为API中心接口数据，JS变量为在调用生成器时所传递的本地js变量数据，js函数为在调用生成器时所传递的本地js函数供生成器调用"
-                    >
-                      动态数据来源
-                    </a-tooltip>
-                  );
-                },
-              }}
-            >
-              <a-select vModel={this.fieldProperties.dynamicDataSource}>
-                <a-select-option value="api">数据源</a-select-option>
-                <a-select-option value="var">JS变量</a-select-option>
-                <a-select-option value="function">JS函数</a-select-option>
-              </a-select>
-            </a-form-model-item>,
-            this.fieldProperties.dynamicDataSource === 'api' && (
-              <a-form-model-item
-                scopedSlots={{
-                  label: () => {
-                    return (
-                      <a-tooltip
-                        placement="left"
-                        title="数据源选项：来源于表单配置中的API接口中心的数据"
-                      >
-                        数据源选项
-                      </a-tooltip>
-                    );
-                  },
-                }}
-              >
-                <a-select
-                  vModel={this.fieldProperties.apiParams.key}
-                  placeholder="请选择"
-                  allowClear
-                >
-                  {this.apis.map((item: any) => {
-                    return <a-select-option value={item.key}>{item.name}</a-select-option>;
-                  })}
-                </a-select>
-              </a-form-model-item>
-            ),
-            this.fieldProperties.dynamicDataSource === 'api' && (
-              <a-form-model-item
-                scopedSlots={{
-                  label: () => {
-                    return (
-                      <a-tooltip placement="left" title="数据源参数：数据源所需参数信息">
-                        数据源参数
-                      </a-tooltip>
-                    );
-                  },
-                }}
-              >
-                <a-popover
-                  trigger="click"
-                  placement="bottomRight"
-                  arrow-point-at-center
-                  visible={this.dataSourceArgVisible}
-                  onVisibleChange={(visible: boolean) => {
-                    this.dataSourceArgVisible = visible;
-                    if (!visible) {
-                      this.fieldProperties.apiParams.args = this.$refs.dataSourceArgs.getValue();
-                    }
-                  }}
-                  scopedSlots={{
-                    content: () => {
-                      return (
-                        <div style="width: 300px">
-                          <CustomEditor
-                            height="200"
-                            theme="chrome"
-                            ref="dataSourceArgs"
-                            value={this.fieldProperties.apiParams.args}
-                            lang="javascript"
-                          ></CustomEditor>
-                        </div>
-                      );
-                    },
-                  }}
-                >
-                  <a-button block>参数设置</a-button>
-                </a-popover>
-              </a-form-model-item>
-            ),
-            this.fieldProperties.dynamicDataSource === 'var' && (
-              <a-form-model-item label="JS变量名">
-                <a-input vModel={this.fieldProperties.jsVar} placeholder="请输入" />
-              </a-form-model-item>
-            ),
-            this.fieldProperties.dynamicDataSource === 'function' && (
-              <a-form-model-item label="JS函数名">
-                <a-input vModel={this.fieldProperties.functionName} placeholder="请输入" />
-              </a-form-model-item>
-            ),
-          ]}
-
-          {this.fieldProperties.dataSource === 'staticData' && (
-            <a-form-model-item label="静态数据">
-              <a-button
-                block
-                onClick={() => {
-                  this.dataGeneratorVisible = true;
-                }}
-              >
-                配置可选项
-              </a-button>
-            </a-form-model-item>
-          )}
-
           <a-form-model-item label="受控中心">
             <a-button
               block
@@ -558,20 +419,6 @@ export default class Cascader extends Vue {
           />
         )}
 
-        {/* 静态数据配置 */}
-        {this.dataGeneratorVisible && (
-          <DataGenerator
-            data={this.fieldProperties.staticDatas}
-            onConfirm={(data: any) => {
-              this.fieldProperties.staticDatas = data;
-              this.dataGeneratorVisible = false;
-            }}
-            onCancel={() => {
-              this.dataGeneratorVisible = false;
-            }}
-          />
-        )}
-
         {/* 高级校验规则抽屉 */}
         <a-drawer
           placement="right"
@@ -641,7 +488,7 @@ export default class Cascader extends Vue {
                         return (
                           <a-tooltip
                             placement="left"
-                            title='自定义校验器：格式: function (value){ return "Error Message"}'
+                            title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'
                           >
                             自定义校验器
                           </a-tooltip>
@@ -680,7 +527,7 @@ export default class Cascader extends Vue {
                         return (
                           <a-tooltip
                             placement="left"
-                            title="错误消息：错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则"
+                            title="错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则"
                           >
                             错误消息
                           </a-tooltip>
