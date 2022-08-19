@@ -63,9 +63,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
    * @param value 当前所要删除的栅格组件的配置数据
    */
   @Emit('remove')
-  private componentRemoveHandle(value: any, parentContainer: any) {
-    return this.list;
-  }
+  private componentRemoveHandle(list: any[], value: any, parentContainer: any) {}
 
   /**
    * 复制组件
@@ -89,7 +87,22 @@ export default class WidgetFormItem extends Mixins(mixin) {
 
   // 动态导入输入组件
   private InputComponent: any = () =>
-    import(`../InputComponents/${this.data.fieldProperties.type}`);
+    import(`../${this.componentCate}/${this.data.fieldProperties.type}`);
+
+  // 缓存组件类别，动态加载指定类别下的组件
+  get componentCate() {
+    switch (this.data.fieldProperties.cate) {
+      case 'array':
+        return 'ArrayComponents';
+      case 'input':
+        return 'InputComponents';
+      case 'layout':
+        return 'LayoutComponents';
+    }
+  }
+
+  // 自动高度的组件类型，如果匹配到，高度默认auto
+  private autoHeightComponent = ['arrayTable', 'textarea'];
 
   // 缓存容器属性
   get decoratorProperties() {
@@ -137,17 +150,6 @@ export default class WidgetFormItem extends Mixins(mixin) {
     return '';
   }
 
-  // 计算组件对齐方式
-  get wrapperAlign() {
-    if (this.decoratorProperties.wrapperAlign) {
-      return this.decoratorProperties.wrapperAlign === 'left' ? 'flex-start' : 'flex-end';
-    }
-
-    if (this.formConfig.wrapperAlign) {
-      return this.formConfig.wrapperAlign === 'left' ? 'flex-start' : 'flex-end';
-    }
-  }
-
   render() {
     return (
       <div class="widget-form-item">
@@ -168,6 +170,11 @@ export default class WidgetFormItem extends Mixins(mixin) {
             class={classnames([
               ...this.decoratorProperties.customClass,
               this.componentProperties.size ?? this.formConfig.size,
+              this.fieldProperties.type &&
+                this.autoHeightComponent.includes(this.fieldProperties.type) &&
+                'component-height-auto',
+              this.decoratorProperties.hideLabel && 'hide-label',
+              !this.fieldProperties.required && this.decoratorProperties.asterisk && 'asterisk',
             ])}
             props={
               this.formConfig.layout === 'horizontal'
@@ -196,6 +203,10 @@ export default class WidgetFormItem extends Mixins(mixin) {
                       width: this.labelWidth,
                       maxWidth: this.labelWidth,
                     }}
+                    class={classnames({
+                      'widget-form-item__item__space':
+                        !this.decoratorProperties.colon && !this.decoratorProperties.hideLabel,
+                    })}
                   >
                     {this.getLangResult(
                       this.fieldProperties.titleLangKey,
@@ -224,10 +235,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
           >
             <div
               style={{
-                display: 'flex',
-                justifyContent: this.wrapperAlign,
-                alignItems: 'center',
-                height: '100%',
+                textAlign: this.decoratorProperties.wrapperAlign ?? this.formConfig.wrapperAlign,
               }}
             >
               {
@@ -235,6 +243,13 @@ export default class WidgetFormItem extends Mixins(mixin) {
                   config={this.data}
                   allConfig={this.allConfig}
                   style={this.wrapperWidth !== '' && { width: this.wrapperWidth }}
+                  select={this.select}
+                  onSelect={(data: any) => {
+                    this.componentSelectChangeHandle(data);
+                  }}
+                  onRemove={(list: any[], data: any, parentContainer: any) => {
+                    this.componentRemoveHandle(list, data, parentContainer);
+                  }}
                 />
               }
             </div>
@@ -248,7 +263,7 @@ export default class WidgetFormItem extends Mixins(mixin) {
                 type="delete"
                 onClick={(e: Event) => {
                   e.stopPropagation();
-                  this.componentRemoveHandle(this.data, this.parentContainer);
+                  this.componentRemoveHandle(this.list, this.data, this.parentContainer);
                 }}
               />
             </a-tooltip>

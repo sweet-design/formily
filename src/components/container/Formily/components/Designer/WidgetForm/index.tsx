@@ -99,7 +99,7 @@ export default class WidgetForm extends Vue {
     return (
       <div
         class={classnames('widget-form-wrapper', 'custom-horizontal-wrapper', {
-          active: this.select && this.select.config?.key === formConfig.key,
+          active: this.select && this.select.key === this.data.key,
         })}
       >
         {this.data.list.length <= 0 && (
@@ -128,7 +128,7 @@ export default class WidgetForm extends Vue {
             ghostClass="ghost"
             animation={200}
             handle=".drag-widget"
-            acceptCompType={['layout', 'input']}
+            acceptCompType={['layout', 'input', 'array']}
             onEnd={this.handleMoveEnd}
             onAdd={this.handleWidgetAdd}
             move={(e: any) => {

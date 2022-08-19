@@ -1,9 +1,10 @@
 import { Component, Prop, Mixins } from 'vue-property-decorator';
 import { executeStr } from '../../../../utils/format';
+import { isNull, isUndefined } from 'lodash';
 import mixin from '@/components/container/Formily/utils/mixin';
 
 @Component
-export default class Input extends Mixins(mixin) {
+export default class Number extends Mixins(mixin) {
   /**
    * 单个字段配置数据
    */
@@ -26,7 +27,7 @@ export default class Input extends Mixins(mixin) {
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
 
-    if (fieldProperties.defaultValue.trim() === '') {
+    if (isNull(fieldProperties.defaultValue) || isUndefined(fieldProperties.defaultValue)) {
       return 'N/A';
     }
 
@@ -47,16 +48,49 @@ export default class Input extends Mixins(mixin) {
     const componentProperties = this.config.componentProperties;
     const formConfig = this.allConfig.config;
 
-    return fieldProperties.pattern === 'readPretty' ? (
-      <div class="control-text">{this.transValue}</div>
-    ) : (
-      <a-input
-        readOnly
+    if (fieldProperties.pattern === 'readPretty') {
+      return <div class="control-text">{this.transValue}</div>;
+    }
+
+    let formatter = null;
+    try {
+      if (componentProperties.formatter?.trim() !== '') {
+        formatter = Function('"use strict";return (' + componentProperties.formatter + ')')();
+      }
+    } catch (e) {
+      this.$message.error((e as any).message);
+    }
+
+    let parser = null;
+    try {
+      if (componentProperties.parser?.trim() !== '') {
+        parser = Function('"use strict";return (' + componentProperties.parser + ')')();
+      }
+    } catch (e) {
+      this.$message.error((e as any).message);
+    }
+
+    const obj: any = {};
+
+    if (componentProperties.precision) {
+      obj.precision = componentProperties.precision;
+    }
+
+    return (
+      <a-input-number
+        style="width: 100%"
         value={fieldProperties.defaultValue}
         placeholder={this.getLangResult(
           componentProperties.placeholderLangKey,
           componentProperties.placeholder,
         )}
+        decimalSeparator={componentProperties.decimalSeparator}
+        props={obj}
+        max={componentProperties.max ?? Infinity}
+        min={componentProperties.min ?? -Infinity}
+        step={componentProperties.step ?? 1}
+        formatter={formatter}
+        parser={parser}
         size={componentProperties.size ?? formConfig.size}
         disabled={fieldProperties.pattern === 'disabled'}
       />

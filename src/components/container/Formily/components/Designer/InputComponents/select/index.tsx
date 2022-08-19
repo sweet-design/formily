@@ -1,7 +1,7 @@
 import { Component, Prop, Mixins } from 'vue-property-decorator';
 import { executeStr } from '../../../../utils/format';
 import mixin from '@/components/container/Formily/utils/mixin';
-import { isNull, isString, isArray, isUndefined } from 'lodash';
+import { isNull, isString, isArray, isUndefined, isNumber } from 'lodash';
 
 @Component
 export default class Select extends Mixins(mixin) {
@@ -95,12 +95,27 @@ export default class Select extends Mixins(mixin) {
 
     // 此处在生成器中不可存在，这里只是作为展示
     const defaultValue = fieldProperties.defaultValue.value;
-    const previewValue =
-      componentProperties.mode === 'multiple' ? JSON.parse(defaultValue) : defaultValue;
+    let previewValue = null;
+    try {
+      if (isString(defaultValue) && defaultValue.trim() !== '') {
+        previewValue =
+          componentProperties.mode === 'multiple' ? JSON.parse(defaultValue) : defaultValue;
+      }
 
-    return fieldProperties.pattern === 'readPretty' ? (
-      <div class="control-text">{this.transValue}</div>
-    ) : (
+      if (isNull(defaultValue) || isNumber(defaultValue)) {
+        previewValue = defaultValue;
+      }
+    } catch (e) {
+      this.$message.error('多选模式下，默认值转换错误，请配置默认值为JSON字符串类型');
+
+      previewValue = [];
+    }
+
+    if (fieldProperties.pattern === 'readPretty') {
+      return <div class="control-text">{this.transValue}</div>;
+    }
+
+    return (
       <a-select
         readOnly
         mode={componentProperties.mode}
