@@ -410,7 +410,7 @@ export default class Radio extends Vue {
                                   type="up"
                                   onClick={() => {
                                     const temp = this.fieldProperties.validator;
-                                    if (temp.length === 1) return;
+                                    if (temp.length === 1 || index === 0) return;
 
                                     temp.splice(
                                       index - 1,
@@ -462,7 +462,7 @@ export default class Radio extends Vue {
                   this.fieldProperties.validator.push({
                     key: createHash(12),
                     strategy: 'self',
-                    triggerType: 'onInput',
+                    triggerType: 'change',
                     driveList: [],
                     rangeRuleList: [
                       {
@@ -492,6 +492,14 @@ export default class Radio extends Vue {
               </a-button>
             </div>
           )}
+          {!Array.isArray(this.fieldProperties.validator) && [
+            <a-form-model-item label="类型错误消息">
+              <a-input vModel={this.fieldProperties.typeErrorMessage} placeholder="请输入" />
+            </a-form-model-item>,
+            <a-form-model-item label="类型错误消息国际化标识">
+              <a-input vModel={this.fieldProperties.typeErrorMessageLangKey} placeholder="请输入" />
+            </a-form-model-item>,
+          ]}
         </a-form-model>
 
         {/* 受控中心配置 */}
@@ -560,9 +568,8 @@ export default class Radio extends Vue {
               >
                 <a-form-model-item label="触发类型">
                   <a-select vModel={this.currentCheckRule.triggerType} placeholder="请选择">
-                    <a-select-option value="onInput">输入时</a-select-option>
-                    <a-select-option value="onFocus">聚焦时</a-select-option>
-                    <a-select-option value="onBlur">失焦时</a-select-option>
+                    <a-select-option value="change">改变时</a-select-option>
+                    <a-select-option value="blur">失焦时</a-select-option>
                   </a-select>
                 </a-form-model-item>
                 <a-form-model-item label="校验策略">
@@ -591,7 +598,7 @@ export default class Radio extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title='格式: function (value){ return "Error Message"}'>
+                          <a-tooltip title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'>
                             自定义校验器
                           </a-tooltip>
                         );

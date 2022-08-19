@@ -76,6 +76,9 @@ export default class Select extends Vue {
   // 是否显示数据源参数配置气泡框
   private dataSourceArgVisible = false;
 
+  // 是否显示数据源回调配置气泡框
+  private dataSourceCallbackVisible = false;
+
   // api接口中心数据
   get apis() {
     return this.data.config.apis;
@@ -84,6 +87,7 @@ export default class Select extends Vue {
   $refs!: {
     expression: CustomEditor;
     dataSourceArgs: CustomEditor;
+    dataSourceCallback: CustomEditor;
   };
 
   render() {
@@ -204,7 +208,7 @@ export default class Select extends Vue {
             <DataTypeSwitch
               dataType={this.fieldProperties.defaultValue.dataType}
               values={this.fieldProperties.defaultValue.value}
-              types={['text', 'expression']}
+              types={['text', 'expression', 'number']}
               on={{
                 ['update:dataType']: (newType: string) => {
                   this.fieldProperties.defaultValue.dataType = newType;
@@ -255,7 +259,12 @@ export default class Select extends Vue {
                 scopedSlots={{
                   label: () => {
                     return (
-                      <a-tooltip title="来源于表单配置中的API接口中心的数据">数据源选项</a-tooltip>
+                      <a-tooltip
+                        placement="left"
+                        title="数据源选项：来源于表单配置中的API接口中心的数据"
+                      >
+                        数据源选项
+                      </a-tooltip>
                     );
                   },
                 }}
@@ -275,7 +284,14 @@ export default class Select extends Vue {
               <a-form-model-item
                 scopedSlots={{
                   label: () => {
-                    return <a-tooltip title="数据源所需参数信息">数据源参数</a-tooltip>;
+                    return (
+                      <a-tooltip
+                        placement="left"
+                        title="数据源参数：数据源所需参数信息，格式：() => Object"
+                      >
+                        数据源参数
+                      </a-tooltip>
+                    );
                   },
                 }}
               >
@@ -307,6 +323,52 @@ export default class Select extends Vue {
                   }}
                 >
                   <a-button block>参数设置</a-button>
+                </a-popover>
+              </a-form-model-item>
+            ),
+            this.fieldProperties.dynamicDataSource === 'api' && (
+              <a-form-model-item
+                scopedSlots={{
+                  label: () => {
+                    return (
+                      <a-tooltip
+                        placement="left"
+                        title="数据源回调函数：在返回业务数据后的回调处理，此回调返回的数据将作为此控件最终数据源，参数res为api返回的业务数据，格式：(res) => Object"
+                      >
+                        数据源回调函数
+                      </a-tooltip>
+                    );
+                  },
+                }}
+              >
+                <a-popover
+                  trigger="click"
+                  placement="bottomRight"
+                  arrow-point-at-center
+                  visible={this.dataSourceCallbackVisible}
+                  onVisibleChange={(visible: boolean) => {
+                    this.dataSourceCallbackVisible = visible;
+                    if (!visible) {
+                      this.fieldProperties.apiParams.callback = this.$refs.dataSourceCallback.getValue();
+                    }
+                  }}
+                  scopedSlots={{
+                    content: () => {
+                      return (
+                        <div style="width: 300px">
+                          <CustomEditor
+                            height="200"
+                            theme="chrome"
+                            ref="dataSourceCallback"
+                            value={this.fieldProperties.apiParams.callback}
+                            lang="javascript"
+                          ></CustomEditor>
+                        </div>
+                      );
+                    },
+                  }}
+                >
+                  <a-button block>回调设置</a-button>
                 </a-popover>
               </a-form-model-item>
             ),
@@ -433,7 +495,7 @@ export default class Select extends Vue {
                                   type="up"
                                   onClick={() => {
                                     const temp = this.fieldProperties.validator;
-                                    if (temp.length === 1) return;
+                                    if (temp.length === 1 || index === 0) return;
 
                                     temp.splice(
                                       index - 1,
@@ -485,7 +547,7 @@ export default class Select extends Vue {
                   this.fieldProperties.validator.push({
                     key: createHash(12),
                     strategy: 'self',
-                    triggerType: 'onInput',
+                    triggerType: 'change',
                     driveList: [],
                     rangeRuleList: [
                       {
@@ -515,6 +577,14 @@ export default class Select extends Vue {
               </a-button>
             </div>
           )}
+          {!Array.isArray(this.fieldProperties.validator) && [
+            <a-form-model-item label="类型错误消息">
+              <a-input vModel={this.fieldProperties.typeErrorMessage} placeholder="请输入" />
+            </a-form-model-item>,
+            <a-form-model-item label="类型错误消息国际化标识">
+              <a-input vModel={this.fieldProperties.typeErrorMessageLangKey} placeholder="请输入" />
+            </a-form-model-item>,
+          ]}
         </a-form-model>
 
         {/* 受控中心配置 */}
@@ -583,9 +653,8 @@ export default class Select extends Vue {
               >
                 <a-form-model-item label="触发类型">
                   <a-select vModel={this.currentCheckRule.triggerType} placeholder="请选择">
-                    <a-select-option value="onInput">输入时</a-select-option>
-                    <a-select-option value="onFocus">聚焦时</a-select-option>
-                    <a-select-option value="onBlur">失焦时</a-select-option>
+                    <a-select-option value="change">改变时</a-select-option>
+                    <a-select-option value="blur">失焦时</a-select-option>
                   </a-select>
                 </a-form-model-item>
                 <a-form-model-item label="校验策略">
@@ -614,7 +683,7 @@ export default class Select extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title='格式: function (value){ return "Error Message"}'>
+                          <a-tooltip title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'>
                             自定义校验器
                           </a-tooltip>
                         );
