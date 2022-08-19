@@ -22,6 +22,8 @@ export type FormModel = {
     auto: boolean;
     headers: { [key: string]: any };
     params: { [key: string]: any };
+    bodyType: string;
+    body: { [key: string]: any };
     requestInterceptor: string;
     responseInterceptor: string;
     error: string;
@@ -153,6 +155,8 @@ const formModel: FormModel = {
    * @param {boolean} apis[].auto - 是否初始化时发送请求
    * @param {object} apis[].headers - 请求头信息
    * @param {object} apis[].params - 请求参数
+   * @param {object} apis[].bodyType - 请求体类型
+   * @param {object} apis[].body - 请求体
    * @param {string} apis[].requestInterceptor - 请求拦截器
    * @param {string} apis[].responseInterceptor - 响应拦截器
    * @param {string} apis[].error - 请求错误处理
@@ -167,6 +171,12 @@ const formModel: FormModel = {
    * @param {string} lifecycles[].body - 周期函数体内容，可修改
    */
   lifecycles: [
+    {
+      key: 'created',
+      // 表单创建后执行
+      name: 'created',
+      body: '',
+    },
     {
       key: 'mounted',
       // 表单挂载后执行

@@ -38,13 +38,15 @@ export const generateComponentList = (data: any, filterNode: string[]) => {
   data.list.forEach((item: any) => {
     if (item.fieldProperties.type === 'grid') {
       item.componentProperties.columns.forEach((element: any) => {
-        if (!filterNode.includes(element.key)) {
-          arr.push({
-            value: element.key,
-            key: element.key,
-            title: element.fieldProperties.title,
-          });
-        }
+        element.list.forEach((sub: any) => {
+          if (!filterNode.includes(sub.key)) {
+            arr.push({
+              value: sub.key,
+              key: sub.key,
+              title: sub.fieldProperties.title,
+            });
+          }
+        });
       });
     } else {
       if (!filterNode.includes(item.key)) {

@@ -15,6 +15,7 @@ import timePicker from './Widget/timePicker';
 import timeRangePicker from './Widget/timeRangePicker';
 import treeSelect from './Widget/treeSelect';
 import grid from './Layout/grid';
+import arrayTable from './Array/arrayTable';
 
 // 导出输入组件
 export const inputComponents = [
@@ -35,6 +36,9 @@ export const inputComponents = [
   treeSelect,
   slider,
 ];
+
+// 导出自增组件
+export const arrayComponents = [arrayTable];
 
 // 导出布局组件
 export const layoutComponents = [grid];

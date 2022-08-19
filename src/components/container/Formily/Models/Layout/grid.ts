@@ -1,5 +1,6 @@
 export type GridModel = {
   fieldProperties: {
+    cate: string;
     type: string;
     name: string;
     title: string;
@@ -35,6 +36,13 @@ const gridModel: GridModel = {
    * 字段属性
    */
   fieldProperties: {
+    /**
+     * @name 控件类别
+     * @description 控件的类别
+     * @type {string}
+     * @default 'layout'
+     */
+    cate: 'layout',
     /**
      * @name 控件类型
      * @description 控件的类型

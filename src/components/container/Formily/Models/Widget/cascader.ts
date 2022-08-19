@@ -1,5 +1,6 @@
 export type CascaderModel = {
   fieldProperties: {
+    cate: string;
     type: string;
     name: string;
     title: string;
@@ -42,6 +43,8 @@ export type CascaderModel = {
       };
     };
     validator: undefined | string | ValidatorInterface[];
+    typeErrorMessage: string;
+    typeErrorMessageLangKey: string;
   };
   componentProperties: {
     allowClear: boolean;
@@ -67,6 +70,7 @@ export type CascaderModel = {
     wrapperAlign: string | undefined;
     hideLabel: boolean;
     colon: boolean;
+    asterisk: boolean;
     labelCol: number | null;
     wrapperCol: number | null;
     customClass: string[];
@@ -103,6 +107,13 @@ const CascaderModel: CascaderModel = {
    * 字段属性
    */
   fieldProperties: {
+    /**
+     * @name 控件类别
+     * @description 控件的类别
+     * @type {string}
+     * @default 'input'
+     */
+    cate: 'input',
     /**
      * @name 控件类型
      * @description 控件的类型
@@ -293,7 +304,7 @@ const CascaderModel: CascaderModel = {
      * @type {('undefined', 'string' | Array.<Object>)} - 支持字符串或者对象数组类型，如果为字符串时，只能选择内置的数据格式校验(适合简单场景)，对象数组会相对复杂且包含了内置的数据格式校验(适合复杂场景)
      * @param {Object[]} validator - 自定义校验规则
      * @param {('self', 'drive', 'range')} validator[].strategy - 校验策略-----分别为自身校验--驱动校验--范围校验 @default 'self'
-     * @param {('onInput', 'onFocus', 'onBlur')} validator[].triggerType - 触发类型-----分别为输入时--聚焦时--失焦时 @default 'onInput'
+     * @param {('change', 'blur')} validator[].triggerType - 触发类型-----分别为改变时--失焦时 @default 'change'
      *
      * @description 以下配置适合用于 validator[].strategy == 'drive'的情况
      * @param {Array.<string>} validator[].driveList - 驱动校验字段-----驱动校验的字段列表，值为所对应的字段标识 @default []
@@ -322,6 +333,20 @@ const CascaderModel: CascaderModel = {
      * @default undefined
      */
     validator: undefined,
+    /**
+     * @name 类型错误消息
+     * @description 类型错误消息
+     * @type {string}
+     * @default ''
+     */
+    typeErrorMessage: '',
+    /**
+     * @name 类型错误消息国际化标识
+     * @description 指多语言对应的key，不限制标识格式
+     * @type {string}
+     * @default ''
+     */
+    typeErrorMessageLangKey: '',
   },
   /**
    * 组件属性
@@ -491,6 +516,12 @@ const CascaderModel: CascaderModel = {
      * @default true
      */
     colon: true,
+    /**
+     * @name 是否有星号
+     * @type {boolean}
+     * @default true
+     */
+    asterisk: false,
     /**
      * @name 自定义类名
      * @description 此className来自自定义style中的类名或者自己自定义
