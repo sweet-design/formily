@@ -2,7 +2,7 @@ import { Vue, Component, Prop, Provide } from 'vue-property-decorator';
 import { inputComponents, layoutComponents, arrayComponents } from './Models';
 import { Layout } from 'ant-design-vue';
 import Draggable from 'vuedraggable';
-import FormConfigModel, { FormModel } from './Models/Form/form';
+import FormConfigModel from './Models/Form/form';
 import FormConfig from './components/Config/FormConfig';
 import PropertyConfig from './components/Config/PropertyConfig';
 import WidgetForm from './components/Designer/WidgetForm';

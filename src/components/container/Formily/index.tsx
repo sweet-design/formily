@@ -1,7 +1,9 @@
 import FormDesigner from './FormDesigner';
+import FormGenerator from './components/Generator';
 
-export { FormDesigner };
+export { FormDesigner, FormGenerator };
 
 export default {
   FormDesigner,
+  FormGenerator,
 };
