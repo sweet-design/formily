@@ -1,4 +1,4 @@
-import { Vue, Component, Prop } from 'vue-property-decorator';
+import { Vue, Component, Prop, Watch, Emit } from 'vue-property-decorator';
 import dayjs from 'dayjs';
 import classnames from 'classnames';
 import { loadCssCode } from '../../../utils';
@@ -18,6 +18,15 @@ export default class CreateForm extends Vue {
   })
   config!: any;
 
+  /**
+   * 表单初始化绑定数据
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  value!: Record<string, any>;
+
   // 缓存表单配置数据
   get formConfig() {
     return this.config.config;
@@ -34,6 +43,19 @@ export default class CreateForm extends Vue {
 
     return {};
   }
+
+  @Watch('value', { deep: true })
+  private handleValue(newVal: any, oldValue: any) {
+    console.log('新值', newVal);
+    this.handleValueChange(newVal);
+  }
+
+  /**
+   * 模型改变回调
+   * @param value 回调数据
+   */
+  @Emit('change')
+  private handleValueChange(value: Record<string, any>) {}
 
   // 动作响应中心生成数据
   private actions = actionGenerator(this.formConfig.actions);
@@ -81,16 +103,13 @@ export default class CreateForm extends Vue {
     return require(`../${prefix}/${type}`).default;
   }
 
-  // 表单数据模型
-  private models = {};
-
   render() {
     const formConfig = this.formConfig;
 
     return (
       <div class="formily-create-form">
         <a-form-model
-          props={{ model: this.models }}
+          props={{ model: this.value }}
           labelCol={this.formLayout.labelCol}
           wrapperCol={this.formLayout.wrapperCol}
           labelAlign={formConfig.labelAlign}
@@ -108,8 +127,8 @@ export default class CreateForm extends Vue {
                   apis={this.apis}
                   actions={this.actions}
                   form={this.$refs[this.config.key]}
-                  models={this.models}
-                  directModels={this.models}
+                  models={this.value}
+                  directModels={this.value}
                   key={item.key}
                 />
               );
@@ -123,8 +142,8 @@ export default class CreateForm extends Vue {
               );
               return (
                 <LayoutComponent
-                  models={this.models}
-                  directModels={this.models}
+                  models={this.value}
+                  directModels={this.value}
                   form={this.$refs[this.config.key]}
                   actions={this.actions}
                   config={this.config}
@@ -142,8 +161,8 @@ export default class CreateForm extends Vue {
               );
               return (
                 <ArrayComponent
-                  models={this.models}
-                  directModels={this.models}
+                  models={this.value}
+                  directModels={this.value}
                   form={this.$refs[this.config.key]}
                   actions={this.actions}
                   config={this.config}
@@ -160,7 +179,7 @@ export default class CreateForm extends Vue {
               html-type="submit"
               onClick={(e: any) => {
                 e.preventDefault();
-                console.log('最终数据', this.models);
+                console.log('最终数据', this.value);
 
                 (this.$refs[this.config.key] as any).validate((valid: any, data: any) => {
                   if (valid) {

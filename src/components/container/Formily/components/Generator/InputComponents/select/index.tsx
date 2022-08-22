@@ -100,11 +100,11 @@ export default class Select extends Mixins(mixin) {
     const fieldProperties = this.currentConfig.fieldProperties;
 
     if (fieldProperties.dataSource === 'dynamicData') {
-      const dynamicdata: any = await dynamicDataGenerator(this.currentConfig, this.apis);
+      const dynamicData: any = await dynamicDataGenerator(this.currentConfig, this.apis);
 
       const replaceField = this.currentConfig.componentProperties.replaceField; // 替换字段
 
-      fieldProperties.dynamicDatas = dynamicdata.map((item: any) => {
+      fieldProperties.dynamicDatas = dynamicData.map((item: any) => {
         return {
           label: this.getLangResult(item[replaceField.lang], item[replaceField.label]),
           value: item[replaceField.value],

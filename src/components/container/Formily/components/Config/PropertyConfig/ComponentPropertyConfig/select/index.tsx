@@ -105,7 +105,7 @@ export default class Select extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 string 变为 { value: string, label: ReactNode } 的格式"
+                  title="是否把每个选项的 label 包装到 value 中，会把 Select 的 value 类型从 string 变为 { key: string, label: vNodes } 的格式"
                 >
                   标签值
                 </a-tooltip>

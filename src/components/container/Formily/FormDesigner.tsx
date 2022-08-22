@@ -243,6 +243,8 @@ export default class FormDesigner extends Vue {
     this.widgetDataSelect = value;
   }
 
+  private models: any = {};
+
   render() {
     return (
       <div class="form-designer">
@@ -532,7 +534,13 @@ export default class FormDesigner extends Vue {
               this.previewVisible = false;
             }}
           >
-            <Generator config={this.widgetData} />
+            <Generator
+              config={this.widgetData}
+              vModel={this.models}
+              onChange={(data: any) => {
+                console.log('数据', data);
+              }}
+            />
           </a-modal>
         </Layout>
       </div>

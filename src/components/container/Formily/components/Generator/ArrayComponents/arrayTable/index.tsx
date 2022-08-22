@@ -167,38 +167,45 @@ export default class ArrayTable extends Mixins(mixin) {
           scopedSlots={{
             label: () => {
               return this.decoratorProperties.hideLabel ? null : (
-                <span
-                  style={{
-                    display: 'inline-block',
-                    width: this.labelWidth,
-                    maxWidth: this.labelWidth,
-                  }}
-                  class={classnames({
-                    'formily-array-table__space':
-                      !this.decoratorProperties.colon && !this.decoratorProperties.hideLabel,
-                  })}
-                >
-                  {this.getLangResult(
+                <a-tooltip
+                  title={this.getLangResult(
                     this.fieldProperties.titleLangKey,
                     this.fieldProperties.title,
                   )}
-                  {this.getLangResult(
-                    this.decoratorProperties.tooltipLangKey,
-                    this.decoratorProperties.tooltip,
-                  ) !== '' && (
-                    <a-tooltip
-                      title={this.getLangResult(
-                        this.decoratorProperties.tooltipLangKey,
-                        this.decoratorProperties.tooltip,
-                      )}
-                    >
-                      <a-icon
-                        type="info-circle"
-                        style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
-                      />
-                    </a-tooltip>
-                  )}
-                </span>
+                >
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: this.labelWidth,
+                      maxWidth: this.labelWidth,
+                    }}
+                    class={classnames({
+                      'formily-array-table__space':
+                        !this.decoratorProperties.colon && !this.decoratorProperties.hideLabel,
+                    })}
+                  >
+                    {this.getLangResult(
+                      this.fieldProperties.titleLangKey,
+                      this.fieldProperties.title,
+                    )}
+                    {this.getLangResult(
+                      this.decoratorProperties.tooltipLangKey,
+                      this.decoratorProperties.tooltip,
+                    ) !== '' && (
+                      <a-tooltip
+                        title={this.getLangResult(
+                          this.decoratorProperties.tooltipLangKey,
+                          this.decoratorProperties.tooltip,
+                        )}
+                      >
+                        <a-icon
+                          type="info-circle"
+                          style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
+                        />
+                      </a-tooltip>
+                    )}
+                  </span>
+                </a-tooltip>
               );
             },
           }}
