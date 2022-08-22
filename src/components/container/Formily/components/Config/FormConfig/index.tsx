@@ -492,6 +492,7 @@ export default class FormConfig extends Vue {
                         <a-input vModel={this.actionForm.name}>
                           <a-tooltip
                             slot="suffix"
+                            placement="left"
                             title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
                             <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
@@ -694,6 +695,7 @@ export default class FormConfig extends Vue {
                         <a-input vModel={this.apiForm.name}>
                           <a-tooltip
                             slot="suffix"
+                            placement="left"
                             title="默认会生成hash值，此名称不作为函数调用方法名，支持中文，若以英文尽量以小驼峰命名，切记不要使用空格或特殊字符"
                           >
                             <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
@@ -1086,7 +1088,11 @@ export default class FormConfig extends Vue {
                     >
                       <a-form-model-item label="名称" prop="name">
                         <a-input vModel={this.lifecyclesForm.name} disabled>
-                          <a-tooltip slot="suffix" title="生命周期函数为内置函数，不可修改函数名">
+                          <a-tooltip
+                            placement="left"
+                            slot="suffix"
+                            title="生命周期函数为内置函数，不可修改函数名"
+                          >
                             <a-icon type="question-circle-o" style="color: rgba(0,0,0,.45)" />
                           </a-tooltip>
                         </a-input>

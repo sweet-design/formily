@@ -184,7 +184,10 @@ export default class ArrayTable extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip title="默认值：数据类型为对象数组，在配置层为json字符串，在应用层会将此转换成对象">
+                  <a-tooltip
+                    placement="left"
+                    title="默认值：数据类型为对象数组，在配置层为json字符串，在应用层会将此转换成对象"
+                  >
                     默认值
                   </a-tooltip>
                 );

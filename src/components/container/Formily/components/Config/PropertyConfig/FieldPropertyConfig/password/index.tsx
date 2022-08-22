@@ -139,7 +139,10 @@ export default class Password extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'>
+                  <a-tooltip
+                    placement="left"
+                    title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'
+                  >
                     格式化函数
                   </a-tooltip>
                 );
@@ -460,7 +463,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'>
+                          <a-tooltip
+                            placement="left"
+                            title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'
+                          >
                             自定义校验器
                           </a-tooltip>
                         );
@@ -496,7 +502,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则">
+                          <a-tooltip
+                            placement="left"
+                            title="错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则"
+                          >
                             错误消息
                           </a-tooltip>
                         );
@@ -526,7 +535,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度限制】：字符的长度或者数值要等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度限制】：字符的长度或者数值要等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度限制
                           </a-tooltip>
                         );
@@ -539,7 +551,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值小于】：字符的长度或者数值要小于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值小于】：字符的长度或者数值要小于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值小于
                           </a-tooltip>
                         );
@@ -552,7 +567,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值大于】：字符的长度或者数值要大于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值大于】：字符的长度或者数值要大于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值大于
                           </a-tooltip>
                         );
@@ -565,7 +583,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值小于等于】：字符的长度或者数值要小于等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值小于等于】：字符的长度或者数值要小于等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值小于等于
                           </a-tooltip>
                         );
@@ -581,7 +602,10 @@ export default class Password extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值大于等于】：字符的长度或者数值要大于等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值大于等于】：字符的长度或者数值要大于等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值大于等于
                           </a-tooltip>
                         );

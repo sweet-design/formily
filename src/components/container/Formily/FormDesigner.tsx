@@ -113,11 +113,27 @@ export default class FormDesigner extends Vue {
 
   @Watch('config')
   private handleValueChange(newVal: any) {
-    this.widgetData = JSON.parse(JSON.stringify(newVal, null, 2));
+    if (newVal && Object.keys(newVal).length > 0) {
+      this.updateConifg(newVal);
+    }
   }
 
   created() {
-    this.widgetData = JSON.parse(JSON.stringify(this.config, null, 2));
+    if (this.config && Object.keys(this.config).length > 0) {
+      this.updateConifg(this.config);
+    }
+  }
+
+  /**
+   * 更新配置信息并默认选中第一个
+   * @param data 全量配置数据
+   */
+  private updateConifg(data: Record<string, any>) {
+    this.widgetData = JSON.parse(JSON.stringify(data, null, 2));
+
+    if (this.widgetData.list.length > 0) {
+      this.updateWidgetDataSelect(this.widgetData.list[0]);
+    }
   }
 
   /**
@@ -517,7 +533,7 @@ export default class FormDesigner extends Vue {
               try {
                 this.widgetData = JSON.parse(this.importData);
 
-                // 如果存在配置，默认将第一个置为选中
+                // 如果存在至少一个配置，默认将第一个置为选中
                 if (this.widgetData.list.length > 0) {
                   this.updateWidgetDataSelect(this.widgetData.list[0]);
                 }

@@ -51,7 +51,10 @@ export default class Radio extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="自定义字段名：数据映射，此处的字段映射跟数据源数据结构有关，请注意设置">
+                <a-tooltip
+                  placement="left"
+                  title="自定义字段名：数据映射，此处的字段映射跟数据源数据结构有关，请注意设置"
+                >
                   自定义字段名
                 </a-tooltip>
               );

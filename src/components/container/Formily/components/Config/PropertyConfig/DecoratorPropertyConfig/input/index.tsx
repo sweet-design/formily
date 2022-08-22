@@ -173,21 +173,6 @@ export default class Input extends Vue {
           <a-switch vModel={this.decoratorProperties.asterisk} />
         </a-form-model-item>
         <a-form-model-item
-          labelCol={{ span: 14 }}
-          wrapperCol={{ span: 9, offset: 1 }}
-          scopedSlots={{
-            label: () => {
-              return (
-                <a-tooltip placement="left" title="是否有星号：如果启用必填，此设置无效">
-                  是否有星号
-                </a-tooltip>
-              );
-            },
-          }}
-        >
-          <a-switch vModel={this.decoratorProperties.asterisk} />
-        </a-form-model-item>
-        <a-form-model-item
           scopedSlots={{
             label: () => {
               return (

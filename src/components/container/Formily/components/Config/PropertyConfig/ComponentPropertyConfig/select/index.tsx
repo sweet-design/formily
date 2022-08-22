@@ -136,7 +136,10 @@ export default class Select extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="是否根据输入项进行筛选。当其为一个函数时，会接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false">
+                <a-tooltip
+                  placement="left"
+                  title="是否根据输入项进行筛选。当其为一个函数时，会接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false"
+                >
                   选项筛选器
                 </a-tooltip>
               );
@@ -161,7 +164,11 @@ export default class Select extends Vue {
         <a-form-model-item
           scopedSlots={{
             label: () => {
-              return <a-tooltip title="弹框滚动高度，单位 px">弹框滚动高度</a-tooltip>;
+              return (
+                <a-tooltip placement="left" title="弹框滚动高度，单位 px">
+                  弹框滚动高度
+                </a-tooltip>
+              );
             },
           }}
         >
@@ -204,7 +211,10 @@ export default class Select extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="自定义字段名：此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，当数据源为静态数据时，子级值需置为children">
+                <a-tooltip
+                  placement="left"
+                  title="自定义字段名：此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，当数据源为静态数据时，子级值需置为children"
+                >
                   自定义字段名
                 </a-tooltip>
               );

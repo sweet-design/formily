@@ -118,7 +118,10 @@ export default class Number extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="指定输入框展示值的格式，格式: (value: number | string) => string">
+                <a-tooltip
+                  placement="left"
+                  title="指定输入框展示值的格式，格式: (value: number | string) => string"
+                >
                   格式转换器
                 </a-tooltip>
               );
@@ -159,7 +162,10 @@ export default class Number extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip title="指定从 格式转换器 里转换回数字的方式，和 格式转换器 搭配使用,(string) => number">
+                <a-tooltip
+                  placement="left"
+                  title="指定从 格式转换器 里转换回数字的方式，和 格式转换器 搭配使用,(string) => number"
+                >
                   格式解析器
                 </a-tooltip>
               );

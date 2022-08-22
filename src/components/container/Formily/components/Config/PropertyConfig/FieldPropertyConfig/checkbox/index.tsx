@@ -153,7 +153,10 @@ export default class Checkbox extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'>
+                  <a-tooltip
+                    placement="left"
+                    title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'
+                  >
                     格式化函数
                   </a-tooltip>
                 );
@@ -194,7 +197,10 @@ export default class Checkbox extends Vue {
             scopedSlots={{
               label: () => {
                 return (
-                  <a-tooltip title='数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，在配置组件的时候，一律以字符串显示，在生成器层面按照实际类型来展示，所以，如果默认值配置成["aaa", "bbb"]时，会直接显示配置的值，这不是错误'>
+                  <a-tooltip
+                    placement="left"
+                    title='数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，在配置组件的时候，一律以字符串显示，在生成器层面按照实际类型来展示，所以，如果默认值配置成["aaa", "bbb"]时，会直接显示配置的值，这不是错误'
+                  >
                     默认值
                   </a-tooltip>
                 );
@@ -237,7 +243,10 @@ export default class Checkbox extends Vue {
               scopedSlots={{
                 label: () => {
                   return (
-                    <a-tooltip title="数据源即为API中心接口数据，JS变量为在调用生成器时所传递的本地js变量数据，js函数为在调用生成器时所传递的本地js函数供生成器调用">
+                    <a-tooltip
+                      placement="left"
+                      title="数据源即为API中心接口数据，JS变量为在调用生成器时所传递的本地js变量数据，js函数为在调用生成器时所传递的本地js函数供生成器调用"
+                    >
                       动态数据来源
                     </a-tooltip>
                   );
@@ -255,7 +264,9 @@ export default class Checkbox extends Vue {
                 scopedSlots={{
                   label: () => {
                     return (
-                      <a-tooltip title="来源于表单配置中的API接口中心的数据">数据源选项</a-tooltip>
+                      <a-tooltip placement="left" title="来源于表单配置中的API接口中心的数据">
+                        数据源选项
+                      </a-tooltip>
                     );
                   },
                 }}
@@ -275,7 +286,11 @@ export default class Checkbox extends Vue {
               <a-form-model-item
                 scopedSlots={{
                   label: () => {
-                    return <a-tooltip title="数据源所需参数信息">数据源参数</a-tooltip>;
+                    return (
+                      <a-tooltip placement="left" title="数据源所需参数信息">
+                        数据源参数
+                      </a-tooltip>
+                    );
                   },
                 }}
               >
@@ -621,7 +636,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'>
+                          <a-tooltip
+                            placement="left"
+                            title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'
+                          >
                             自定义校验器
                           </a-tooltip>
                         );
@@ -657,7 +675,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则">
+                          <a-tooltip
+                            placement="left"
+                            title="错误消息只对当前规则集的一个内置规则生效，如果需要对不同内置规则定制错误消息，请拆分成多条规则"
+                          >
                             错误消息
                           </a-tooltip>
                         );
@@ -687,7 +708,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度限制】：字符的长度或者数值要等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度限制】：字符的长度或者数值要等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度限制
                           </a-tooltip>
                         );
@@ -700,7 +724,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值小于】：字符的长度或者数值要小于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值小于】：字符的长度或者数值要小于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值小于
                           </a-tooltip>
                         );
@@ -713,7 +740,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值大于】：字符的长度或者数值要大于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值大于】：字符的长度或者数值要大于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值大于
                           </a-tooltip>
                         );
@@ -726,7 +756,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值小于等于】：字符的长度或者数值要小于等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值小于等于】：字符的长度或者数值要小于等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值小于等于
                           </a-tooltip>
                         );
@@ -742,7 +775,10 @@ export default class Checkbox extends Vue {
                     scopedSlots={{
                       label: () => {
                         return (
-                          <a-tooltip title="【长度/数值大于等于】：字符的长度或者数值要大于等于此值，如果不想校验此规则，可删除其值">
+                          <a-tooltip
+                            placement="left"
+                            title="【长度/数值大于等于】：字符的长度或者数值要大于等于此值，如果不想校验此规则，可删除其值"
+                          >
                             长度/数值大于等于
                           </a-tooltip>
                         );
