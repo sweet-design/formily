@@ -33,6 +33,15 @@ export default class Recognizer extends Mixins(mixin) {
   actions!: any;
 
   /**
+   * api接口数据
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  apis!: any;
+
+  /**
    * 表单实例对象
    */
   @Prop({
@@ -174,6 +183,7 @@ export default class Recognizer extends Mixins(mixin) {
                   : this.directModels[this.currentConfig.fieldProperties.name][index]
               }
               actions={this.actions}
+              apis={this.apis}
               config={this.config}
               currentConfig={item}
               key={item.key}

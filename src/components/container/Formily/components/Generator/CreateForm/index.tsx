@@ -148,6 +148,7 @@ export default class CreateForm extends Vue {
                   actions={this.actions}
                   config={this.config}
                   currentConfig={item}
+                  apis={this.apis}
                   key={item.key}
                 />
               );
@@ -167,6 +168,7 @@ export default class CreateForm extends Vue {
                   actions={this.actions}
                   config={this.config}
                   currentConfig={item}
+                  apis={this.apis}
                   key={item.key}
                 />
               );

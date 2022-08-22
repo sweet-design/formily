@@ -1,4 +1,4 @@
-import { Vue, Component, Prop, Provide } from 'vue-property-decorator';
+import { Vue, Component, Prop, Provide, Model, Watch } from 'vue-property-decorator';
 import { inputComponents, layoutComponents, arrayComponents } from './Models';
 import { Layout } from 'ant-design-vue';
 import Draggable from 'vuedraggable';
@@ -103,6 +103,24 @@ export default class FormDesigner extends Vue {
   generateCode!: boolean;
 
   /**
+   * 默认配置数据
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  config!: Record<string, any>;
+
+  @Watch('config')
+  private handleValueChange(newVal: any) {
+    this.widgetData = JSON.parse(JSON.stringify(newVal, null, 2));
+  }
+
+  created() {
+    this.widgetData = JSON.parse(JSON.stringify(this.config, null, 2));
+  }
+
+  /**
    * 注入生成组件树函数
    * @param filterNode 过滤的节点唯一编号
    * @returns 组件目录树结构
@@ -124,6 +142,14 @@ export default class FormDesigner extends Vue {
   generateList = (filterNode: string[] = []) => {
     return generateComponentList(this.widgetData, filterNode);
   };
+
+  /**
+   * 获取表单配置信息
+   * @returns 表单配置数据
+   */
+  getConfigData() {
+    return this.widgetData;
+  }
 
   /**
    * 生成组件树

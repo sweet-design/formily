@@ -31,6 +31,15 @@ export default class Grid extends Vue {
   actions!: any;
 
   /**
+   * api接口数据
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  apis!: any;
+
+  /**
    * 表单数据对象
    */
   @Prop({
@@ -85,6 +94,7 @@ export default class Grid extends Vue {
                       config={this.config}
                       models={this.models}
                       form={this.form}
+                      apis={this.apis}
                       currentConfig={item}
                       directModels={this.directModels}
                       key={item.key}

@@ -36,6 +36,15 @@ export default class ArrayTable extends Mixins(mixin) {
   actions!: any;
 
   /**
+   * api接口数据
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  apis!: any;
+
+  /**
    * 表单实例对象
    */
   @Prop({
@@ -225,6 +234,7 @@ export default class ArrayTable extends Mixins(mixin) {
               actions={this.actions}
               style={this.wrapperWidth !== '' && { width: this.wrapperWidth }}
               models={this.models}
+              apis={this.apis}
               form={this.form}
               directModels={this.models}
               formItemInstance={this.$refs[this.currentConfig.key]}
