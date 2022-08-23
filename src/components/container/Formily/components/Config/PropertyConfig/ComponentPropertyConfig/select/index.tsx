@@ -34,11 +34,24 @@ export default class Select extends Vue {
         wrapper-col={{ span: 14, offset: 1 }}
         labelAlign="left"
       >
-        <a-form-model-item label="模式">
-          <a-radio-group vModel={this.componentProperties.mode} button-style="solid">
-            <a-radio-button value="default">单选</a-radio-button>
-            <a-radio-button value="multiple">多选</a-radio-button>
-          </a-radio-group>
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="模式：如需默认值，在单选时，请选择文本或者数值进行设置，在多选时，请选择表达式进行设置"
+                >
+                  模式
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.mode}>
+            <a-select-option value="default">单选</a-select-option>
+            <a-select-option value="multiple">多选</a-select-option>
+          </a-select>
         </a-form-model-item>
 
         <a-form-model-item

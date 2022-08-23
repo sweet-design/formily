@@ -17,7 +17,7 @@ export type TreeSelectModel = {
     dataSource: string;
     dynamicDataSource: string;
     staticDatas: Array<{ [key: string]: any }>;
-    apiParams: { key: string | undefined; args: string };
+    apiParams: { key: string | undefined; args: string; callback: string };
     jsVar: string;
     functionName: string;
     dynamicDatas: any[];
@@ -75,6 +75,8 @@ export type TreeSelectModel = {
     searchPlaceholder: string;
     searchPlaceholderLangKey: string;
     onChange: string | undefined;
+    onFocus: string | undefined;
+    onBlur: string | undefined;
   };
   decoratorProperties: {
     tooltip: string;
@@ -236,6 +238,7 @@ const TreeSelectModel: TreeSelectModel = {
     apiParams: {
       key: undefined,
       args: '',
+      callback: '(res) => {\n  return res.data;\n}',
     },
     /**
      * @name JS变量名
@@ -527,6 +530,20 @@ const TreeSelectModel: TreeSelectModel = {
      * @default undefined
      */
     onChange: undefined,
+    /**
+     * @name 获取焦点动作
+     * @description 输入框获取焦点时的回调函数，函数来自formModel中的actions
+     * @type {string|undefined}
+     * @default undefined
+     */
+    onFocus: undefined,
+    /**
+     * @name 失去焦点动作
+     * @description 输入框失去焦点时的回调函数，函数来自formModel中的actions
+     * @type {string|undefined}
+     * @default undefined
+     */
+    onBlur: undefined,
   },
   /**
    * 容器属性

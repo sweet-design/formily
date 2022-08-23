@@ -300,9 +300,6 @@ export default class TreeSelect extends Mixins(mixin) {
           componentProperties.searchPlaceholderLangKey,
           componentProperties.searchPlaceholder,
         )}
-        onChange={(value: string | string[], label: string[], extra: Record<string, any>) => {
-          console.log('数据值', value, label);
-        }}
       />
     );
   }

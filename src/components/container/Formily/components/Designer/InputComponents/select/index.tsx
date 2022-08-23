@@ -2,6 +2,7 @@ import { Component, Prop, Mixins } from 'vue-property-decorator';
 import { executeStr } from '../../../../utils/format';
 import mixin from '@/components/container/Formily/utils/mixin';
 import { isNull, isString, isArray, isUndefined, isNumber } from 'lodash';
+import defaultValueGenerator from '../../../../utils/defaultValueGenerator';
 
 @Component
 export default class Select extends Mixins(mixin) {
@@ -81,11 +82,31 @@ export default class Select extends Mixins(mixin) {
 
     return staticDatas.map((item: any) => {
       return {
-        ...item,
         label: this.getLangResult(item[replaceField.lang], item[replaceField.label]),
         value: item[replaceField.value],
       };
     });
+  }
+
+  get previewValue() {
+    const fieldProperties = this.config.fieldProperties;
+    const componentProperties = this.config.componentProperties;
+
+    const defaultValue = fieldProperties.defaultValue.value;
+
+    try {
+      if (componentProperties.mode === 'multiple' || componentProperties.labelInValue) {
+        return JSON.parse(defaultValue);
+      } else {
+        return defaultValue;
+      }
+    } catch (e) {
+      this.$message.error(
+        '组件属性为多选模或者标签值，默认值转换错误，请配置默认值为表达式且值的类型为JSON字符串类型',
+      );
+
+      return undefined;
+    }
   }
 
   render() {
@@ -93,33 +114,15 @@ export default class Select extends Mixins(mixin) {
     const componentProperties = this.config.componentProperties;
     const formConfig = this.allConfig.config;
 
-    // 此处在生成器中不可存在，这里只是作为展示
-    const defaultValue = fieldProperties.defaultValue.value;
-    let previewValue = null;
-    try {
-      if (isString(defaultValue) && defaultValue.trim() !== '') {
-        previewValue =
-          componentProperties.mode === 'multiple' ? JSON.parse(defaultValue) : defaultValue;
-      }
-
-      if (isNull(defaultValue) || isNumber(defaultValue)) {
-        previewValue = defaultValue;
-      }
-    } catch (e) {
-      this.$message.error('多选模式下，默认值转换错误，请配置默认值为JSON字符串类型');
-
-      previewValue = [];
-    }
-
     if (fieldProperties.pattern === 'readPretty') {
       return <div class="control-text">{this.transValue}</div>;
     }
 
     return (
       <a-select
-        readOnly
+        labelInValue={componentProperties.labelInValue}
         mode={componentProperties.mode}
-        value={previewValue || undefined}
+        value={this.previewValue}
         showSearch={componentProperties.showSearch}
         optionFilterProp="children"
         filterOption={componentProperties.filterOption.value}

@@ -574,13 +574,14 @@ export default class FormDesigner extends Vue {
             width={1000}
             onOk={() => {
               this.previewVisible = false;
+              this.models = {};
             }}
           >
             <Generator
               config={this.widgetData}
               vModel={this.models}
               onChange={(data: any) => {
-                console.log('数据', data);
+                console.log('响应数据', data);
               }}
             />
           </a-modal>

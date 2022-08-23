@@ -46,7 +46,6 @@ export default class CreateForm extends Vue {
 
   @Watch('value', { deep: true })
   private handleValue(newVal: any, oldValue: any) {
-    console.log('新值', newVal);
     this.handleValueChange(newVal);
   }
 
@@ -174,28 +173,6 @@ export default class CreateForm extends Vue {
               );
             }
           })}
-
-          <a-form-model-item>
-            <a-button
-              type="primary"
-              html-type="submit"
-              onClick={(e: any) => {
-                e.preventDefault();
-                console.log('最终数据', this.value);
-
-                (this.$refs[this.config.key] as any).validate((valid: any, data: any) => {
-                  if (valid) {
-                    console.log('验证通过', data);
-                  } else {
-                    console.log('验证错误字段', data);
-                    return false;
-                  }
-                });
-              }}
-            >
-              Submit
-            </a-button>
-          </a-form-model-item>
         </a-form-model>
       </div>
     );

@@ -86,9 +86,6 @@ export default class Slider extends Mixins(mixin) {
         max={componentProperties.max}
         min={componentProperties.min}
         step={componentProperties.step || null}
-        onChange={(value: any) => {
-          console.log('数据', value);
-        }}
       />
     );
   }

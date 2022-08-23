@@ -77,6 +77,9 @@ export default class Select extends Mixins(mixin) {
   })
   directModels!: any;
 
+  // 动态数据
+  private dynamicDatas = [];
+
   // 根据替换字段需要转换的数据
   get shadowData() {
     if (this.currentConfig.fieldProperties.dataSource === 'staticData') {
@@ -92,7 +95,7 @@ export default class Select extends Mixins(mixin) {
       });
     } else {
       // 直接返回动态数据载体中的数据
-      return this.currentConfig.fieldProperties.dynamicDatas;
+      return this.dynamicDatas;
     }
   }
 
@@ -104,7 +107,7 @@ export default class Select extends Mixins(mixin) {
 
       const replaceField = this.currentConfig.componentProperties.replaceField; // 替换字段
 
-      fieldProperties.dynamicDatas = dynamicData.map((item: any) => {
+      this.dynamicDatas = dynamicData.map((item: any) => {
         return {
           label: this.getLangResult(item[replaceField.lang], item[replaceField.label]),
           value: item[replaceField.value],
@@ -137,11 +140,7 @@ export default class Select extends Mixins(mixin) {
         size={componentProperties.size ?? formConfig.size}
         allowClear={componentProperties.allowClear}
         disabled={fieldProperties.pattern === 'disabled'}
-        options={
-          fieldProperties.dataSource === 'staticData'
-            ? this.shadowData
-            : fieldProperties.dynamicDatas
-        }
+        options={fieldProperties.dataSource === 'staticData' ? this.shadowData : this.dynamicDatas}
         labelInValue={componentProperties.labelInValue}
         onChange={() => {
           this.formItemInstance.onFieldChange();

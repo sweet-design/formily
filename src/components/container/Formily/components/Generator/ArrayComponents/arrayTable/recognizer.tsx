@@ -216,7 +216,7 @@ export default class Recognizer extends Mixins(mixin) {
             scroll={{ x: this.scrollWidth }}
           ></a-table>
         </div>
-        <div style="margin-top: 10px;">
+        {/* <div style="margin-top: 10px;">
           <a-button
             type="dashed"
             icon="plus"
@@ -234,7 +234,7 @@ export default class Recognizer extends Mixins(mixin) {
           >
             添加
           </a-button>
-        </div>
+        </div> */}
       </div>
     );
   }

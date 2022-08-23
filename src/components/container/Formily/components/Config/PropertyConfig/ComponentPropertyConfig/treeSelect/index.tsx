@@ -386,6 +386,48 @@ export default class TreeSelect extends Vue {
             })}
           </a-select>
         </a-form-model-item>
+
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="获取焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
+                >
+                  获取焦点动作
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.onFocus} placeholder="请选择" allowClear>
+            {this.data.config.actions.map((item: any) => {
+              return <a-select-option value={item.key}>{item.name}</a-select-option>;
+            })}
+          </a-select>
+        </a-form-model-item>
+
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="失去焦点动作：值变化后所执行的动作，选择的数据来自表单配置中的动作响应中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
+                >
+                  失去焦点动作
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.onBlur} placeholder="请选择" allowClear>
+            {this.data.config.actions.map((item: any) => {
+              return <a-select-option value={item.key}>{item.name}</a-select-option>;
+            })}
+          </a-select>
+        </a-form-model-item>
       </a-form-model>
     );
   }

@@ -219,11 +219,11 @@ export default class ArrayTable extends Mixins(mixin) {
           </div>
         )}
 
-        <div style="margin-top: 10px;">
+        {/* <div style="margin-top: 10px;">
           <a-button type="dashed" icon="plus" block>
             添加
           </a-button>
-        </div>
+        </div> */}
 
         <div class="array-table-wrapper__opt">
           <a-space>

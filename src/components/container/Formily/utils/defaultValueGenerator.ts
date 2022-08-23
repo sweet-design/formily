@@ -55,6 +55,8 @@ export default (config: Record<string, any>) => {
       return input(config);
     case 'select':
       return select(config);
+    case 'treeSelect':
+      return select(config);
     default:
       return '';
   }

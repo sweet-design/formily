@@ -203,7 +203,7 @@ export default class Select extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title='数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，在配置组件的时候，一律以字符串显示，在生成器层面按照实际类型来展示，所以，如果默认值配置成["aaa", "bbb"]时，会直接显示配置的值，这不是错误'
+                    title="默认值：数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，如果组件属性开启标签值，此时默认值类型将变成 {key : string | number } | { key: string | number }[]，【在单选情况下，请将默认值选中表达式进行配置，多选情况下，可选择文本和数值进行配置】"
                   >
                     默认值
                   </a-tooltip>

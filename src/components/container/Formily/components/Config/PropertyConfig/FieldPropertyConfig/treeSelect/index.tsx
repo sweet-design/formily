@@ -76,6 +76,9 @@ export default class TreeSelect extends Vue {
   // 是否显示数据源参数配置气泡框
   private dataSourceArgVisible = false;
 
+  // 是否显示数据源回调配置气泡框
+  private dataSourceCallbackVisible = false;
+
   // api接口中心数据
   get apis() {
     return this.data.config.apis;
@@ -84,6 +87,7 @@ export default class TreeSelect extends Vue {
   $refs!: {
     expression: CustomEditor;
     dataSourceArgs: CustomEditor;
+    dataSourceCallback: CustomEditor;
   };
 
   render() {
@@ -290,7 +294,10 @@ export default class TreeSelect extends Vue {
                 scopedSlots={{
                   label: () => {
                     return (
-                      <a-tooltip placement="left" title="数据源参数：数据源所需参数信息">
+                      <a-tooltip
+                        placement="left"
+                        title="数据源参数：数据源所需参数信息，格式：() => Object"
+                      >
                         数据源参数
                       </a-tooltip>
                     );
@@ -325,6 +332,52 @@ export default class TreeSelect extends Vue {
                   }}
                 >
                   <a-button block>参数设置</a-button>
+                </a-popover>
+              </a-form-model-item>
+            ),
+            this.fieldProperties.dynamicDataSource === 'api' && (
+              <a-form-model-item
+                scopedSlots={{
+                  label: () => {
+                    return (
+                      <a-tooltip
+                        placement="left"
+                        title="数据源回调函数：在返回业务数据后的回调处理，此回调返回的数据将作为此控件最终数据源，参数res为api返回的业务数据，格式：(res) => Object"
+                      >
+                        数据源回调函数
+                      </a-tooltip>
+                    );
+                  },
+                }}
+              >
+                <a-popover
+                  trigger="click"
+                  placement="bottomRight"
+                  arrow-point-at-center
+                  visible={this.dataSourceCallbackVisible}
+                  onVisibleChange={(visible: boolean) => {
+                    this.dataSourceCallbackVisible = visible;
+                    if (!visible) {
+                      this.fieldProperties.apiParams.callback = this.$refs.dataSourceCallback.getValue();
+                    }
+                  }}
+                  scopedSlots={{
+                    content: () => {
+                      return (
+                        <div style="width: 300px">
+                          <CustomEditor
+                            height="200"
+                            theme="chrome"
+                            ref="dataSourceCallback"
+                            value={this.fieldProperties.apiParams.callback}
+                            lang="javascript"
+                          ></CustomEditor>
+                        </div>
+                      );
+                    },
+                  }}
+                >
+                  <a-button block>回调设置</a-button>
                 </a-popover>
               </a-form-model-item>
             ),
