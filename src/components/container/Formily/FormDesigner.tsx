@@ -124,6 +124,10 @@ export default class FormDesigner extends Vue {
     }
   }
 
+  $refs!: {
+    generator: any;
+  };
+
   /**
    * 更新配置信息并默认选中第一个
    * @param data 全量配置数据
@@ -572,14 +576,60 @@ export default class FormDesigner extends Vue {
             keyboard={false}
             maskClosable={false}
             width={1000}
-            onOk={() => {
-              this.previewVisible = false;
+            onCancel={() => {
               this.models = {};
+            }}
+            scopedSlots={{
+              footer: () => {
+                return [
+                  <a-button
+                    onClick={() => {
+                      this.previewVisible = false;
+                      this.models = {};
+                    }}
+                  >
+                    取消
+                  </a-button>,
+                  <a-button
+                    type="primary"
+                    onClick={() => {
+                      this.previewVisible = false;
+                      this.models = {};
+                    }}
+                  >
+                    确认
+                  </a-button>,
+                  <a-button
+                    type="primary"
+                    onClick={() => {
+                      this.$refs.generator
+                        .getData()
+                        .then((data: any) => {
+                          console.log('当前数据', data);
+                        })
+                        .catch((error: any) => {
+                          console.log('错误信息', error);
+                        });
+                    }}
+                  >
+                    获取数据
+                  </a-button>,
+                  <a-button
+                    type="primary"
+                    onClick={() => {
+                      this.$refs.generator.reset();
+                    }}
+                  >
+                    重置
+                  </a-button>,
+                ];
+              },
             }}
           >
             <Generator
               config={this.widgetData}
               vModel={this.models}
+              ref="generator"
               onChange={(data: any) => {
                 console.log('响应数据', data);
               }}

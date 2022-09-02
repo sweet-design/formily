@@ -197,45 +197,45 @@ export default class WidgetFormItem extends Mixins(mixin) {
             scopedSlots={{
               label: () => {
                 return this.decoratorProperties.hideLabel ? null : (
-                  <a-tooltip
-                    title={this.getLangResult(
-                      this.fieldProperties.titleLangKey,
-                      this.fieldProperties.title,
-                    )}
+                  <span
+                    style={{
+                      display: 'inline-block',
+                      width: this.labelWidth,
+                      maxWidth: this.labelWidth,
+                    }}
+                    class={classnames({
+                      'widget-form-item__item__space':
+                        !this.decoratorProperties.colon && !this.decoratorProperties.hideLabel,
+                    })}
                   >
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        width: this.labelWidth,
-                        maxWidth: this.labelWidth,
-                      }}
-                      class={classnames({
-                        'widget-form-item__item__space':
-                          !this.decoratorProperties.colon && !this.decoratorProperties.hideLabel,
-                      })}
+                    <a-tooltip
+                      title={this.getLangResult(
+                        this.fieldProperties.titleLangKey,
+                        this.fieldProperties.title,
+                      )}
                     >
                       {this.getLangResult(
                         this.fieldProperties.titleLangKey,
                         this.fieldProperties.title,
                       )}
-                      {this.getLangResult(
-                        this.decoratorProperties.tooltipLangKey,
-                        this.decoratorProperties.tooltip,
-                      ) !== '' && (
-                        <a-tooltip
-                          title={this.getLangResult(
-                            this.decoratorProperties.tooltipLangKey,
-                            this.decoratorProperties.tooltip,
-                          )}
-                        >
-                          <a-icon
-                            type="info-circle"
-                            style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
-                          />
-                        </a-tooltip>
-                      )}
-                    </span>
-                  </a-tooltip>
+                    </a-tooltip>
+                    {this.getLangResult(
+                      this.decoratorProperties.tooltipLangKey,
+                      this.decoratorProperties.tooltip,
+                    ) !== '' && (
+                      <a-tooltip
+                        title={this.getLangResult(
+                          this.decoratorProperties.tooltipLangKey,
+                          this.decoratorProperties.tooltip,
+                        )}
+                      >
+                        <a-icon
+                          type="info-circle"
+                          style="color: rgba(0,0,0,.45); position: relative; top: 1px; margin-left: 4px"
+                        />
+                      </a-tooltip>
+                    )}
+                  </span>
                 );
               },
             }}

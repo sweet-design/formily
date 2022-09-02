@@ -57,6 +57,8 @@ export type SelectModel = {
     defaultOpen: boolean;
     showArrow: boolean;
     showSearch: boolean;
+    optionFilterProp: string;
+    optionLabelProp: string;
     filterOption: { value: string | boolean; dataType: string };
     listHeight: number;
     maxTagCount: number | null;
@@ -64,10 +66,11 @@ export type SelectModel = {
     maxTagTextLength: number | null;
     notFoundContent: string;
     notFoundContentLangKey: string;
-    replaceField: { label: string; value: string; lang: string };
+    replaceField: { label: string; value: string; children: string; lang: string };
     size: string | undefined;
     placeholder: string;
     placeholderLangKey: string;
+    remoteSearch: { key: string | undefined; args: string; callback: string };
     onChange: string | undefined;
     onFocus: string | undefined;
     onBlur: string | undefined;
@@ -435,6 +438,20 @@ const SelectModel: SelectModel = {
      */
     showSearch: false,
     /**
+     * @name 选项过滤属性
+     * @description 搜索时针对指定属性进行搜索
+     * @type {string}
+     * @default 'value'
+     */
+    optionFilterProp: 'value',
+    /**
+     * @name 回填属性
+     * @description 选中回填到文本框中的属性
+     * @type {string}
+     * @default 'children'
+     */
+    optionLabelProp: 'children',
+    /**
      * @name 选项筛选器
      * @description 是否根据输入项进行筛选。当其为一个函数时，会接收 inputValue option 两个参数，当 option 符合筛选条件时，应返回 true，反之则返回 false
      * @type {object}
@@ -487,13 +504,14 @@ const SelectModel: SelectModel = {
     notFoundContentLangKey: '',
     /**
      * @name 自定义字段名
-     * @description 此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，当数据源为静态数据时，子级值需置为children
+     * @description 此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，此处会将数据源在内部进行转换，当数据源为静态数据时，子级值需置为children
      * @type {object}
-     * @default {label:'label',value:'value',lang:'lang'}
+     * @default {label:'label',value:'value',children:'children',lang:'lang'}
      */
     replaceField: {
       label: 'label',
       value: 'value',
+      children: 'children',
       lang: 'lang',
     },
     /**
@@ -515,6 +533,17 @@ const SelectModel: SelectModel = {
      * @default ''
      */
     placeholderLangKey: '',
+    /**
+     * @name 远端搜索回调
+     * @description 搜索框变化时的回调，一般用在远端搜索场景，值为API接口中心的选项唯一键
+     * @type {object}
+     * @default {key:undefined,args:'',callback:''}
+     */
+    remoteSearch: {
+      key: undefined,
+      args: '',
+      callback: '(res) => {\n  return res.data;\n}',
+    },
     /**
      * @name 改值动作
      * @description 输入框内容变化时的回调函数，函数来自formModel中的actions

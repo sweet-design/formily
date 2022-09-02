@@ -5,8 +5,17 @@ import dayjs from 'dayjs';
  * 校验生成工具
  * @params config 单个字段配置全量数据
  * @params getLangResult 多语言获取函数
+ * @params models 全局model对象
+ * @params directModels 当前字段直属上级对象
+ * @params path 当前字段路径
  */
-export default (config: any, getLangResult: Function) => {
+export default (
+  config: any,
+  getLangResult: Function,
+  models: Record<string, any>,
+  directModels: Record<string, any>,
+  path: string,
+) => {
   const arr = [];
 
   if (config.fieldProperties.required) {
@@ -40,6 +49,9 @@ export default (config: any, getLangResult: Function) => {
               validator: Function('"use strict";return (' + item.validator.trim() + ')')()(
                 dayjs,
                 getLangResult,
+                models,
+                directModels,
+                path,
               ),
               trigger: item.triggerType,
             });

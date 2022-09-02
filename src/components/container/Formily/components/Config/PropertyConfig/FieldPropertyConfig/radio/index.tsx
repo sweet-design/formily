@@ -612,7 +612,7 @@ export default class Radio extends Vue {
                         return (
                           <a-tooltip
                             placement="left"
-                            title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'
+                            title='自定义校验器：格式: (dayjs, getLangResult, models, directModels, path) => { return (rule, value, callback) => { callback("错误消息") } }'
                           >
                             自定义校验器
                           </a-tooltip>

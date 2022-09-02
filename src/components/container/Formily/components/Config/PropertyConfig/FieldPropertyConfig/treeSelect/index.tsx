@@ -159,7 +159,7 @@ export default class TreeSelect extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title='格式化函数：阅读模式下数据格式化函数，格式: (value) => { return "string"}'
+                    title="格式化函数：阅读模式下数据格式化函数，格式: (data: {value: string | number; label: string} | {value: string | number; label: string}[]) => string"
                   >
                     格式化函数
                   </a-tooltip>
@@ -203,7 +203,7 @@ export default class TreeSelect extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title="默认值：指控件初始值，数据类型为 string | string[]，在配置层表达式提供json字符串来表示，在应用层会将json字符串转换成实际数据类型"
+                    title="默认值：数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，如果组件属性开启标签值，此时默认值类型将变成 {value : string | number } | { value: string | number }[]，【在多选或者标签值或者复选情况下，请将默认值选中表达式进行配置，单选情况下，可选择文本和数值进行配置】"
                   >
                     默认值
                   </a-tooltip>
@@ -214,7 +214,7 @@ export default class TreeSelect extends Vue {
             <DataTypeSwitch
               dataType={this.fieldProperties.defaultValue.dataType}
               values={this.fieldProperties.defaultValue.value}
-              types={['text', 'expression']}
+              types={['text', 'expression', 'number']}
               on={{
                 ['update:dataType']: (newType: string) => {
                   this.fieldProperties.defaultValue.dataType = newType;

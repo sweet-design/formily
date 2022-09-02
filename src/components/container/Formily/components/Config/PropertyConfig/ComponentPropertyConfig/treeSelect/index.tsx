@@ -1,5 +1,6 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import DataTypeSwitch from '../../../../DataTypeSwitch';
+import { isUndefined } from 'lodash';
 
 @Component
 export default class TreeSelect extends Vue {
@@ -21,9 +22,36 @@ export default class TreeSelect extends Vue {
   })
   select!: any;
 
+  // 临时存储替换字段值
+  private replaceField = {
+    title: '',
+    value: '',
+    children: '',
+    lang: '',
+  };
+
   // 缓存组件属性配置
   get componentProperties() {
     return this.select.componentProperties;
+  }
+
+  @Watch('select', { deep: true })
+  private selectChangeHanlde() {
+    this.upgradeConfig();
+  }
+
+  created() {
+    this.upgradeConfig();
+  }
+
+  /**
+   * 组件配置升级策略
+   * -----此处会按照版本发布来进行升级----
+   */
+  private upgradeConfig() {
+    if (isUndefined(this.componentProperties.multiple)) {
+      this.$set(this.select.componentProperties, 'multiple', false);
+    }
   }
 
   render() {
@@ -50,7 +78,7 @@ export default class TreeSelect extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="标签值：是否把每个选项的 label 包装到 value 中，会把 value 类型从 string 变为 {value: string, label: VNode } 的格式，如果在多选且完全受控情况下，将强制为开启状态，但不会自动变成开启状态，而是此属性在应用层内置为开启"
+                  title="标签值：是否把每个选项的 label 包装到 value 中，会把 value 类型从 string 变为 {value: string | number, label: VNode } 的格式，如果在复选且完全受控情况下，将强制为开启状态，但不会自动变成开启状态，而是此属性在应用层内置为开启"
                 >
                   标签值
                 </a-tooltip>
@@ -78,6 +106,14 @@ export default class TreeSelect extends Vue {
           }}
         >
           <a-switch vModel={this.componentProperties.showSearch} />
+        </a-form-model-item>
+
+        <a-form-model-item
+          label="开启多选"
+          labelCol={{ span: 14 }}
+          wrapperCol={{ span: 9, offset: 1 }}
+        >
+          <a-switch vModel={this.componentProperties.multiple} />
         </a-form-model-item>
 
         <a-form-model-item
@@ -112,7 +148,7 @@ export default class TreeSelect extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="完全受控：多选状态下节点选择完全受控（父子节点选中状态不再关联），会使得 标签值(labelInValue) 强制为 开启状态，单选状态下无效"
+                  title="完全受控：复选状态下节点选择完全受控（父子节点选中状态不再关联），会使得 标签值(labelInValue) 强制为 开启状态，非复选状态下无效"
                 >
                   完全受控
                 </a-tooltip>
@@ -127,7 +163,10 @@ export default class TreeSelect extends Vue {
           scopedSlots={{
             label: () => {
               return (
-                <a-tooltip placement="left" title="复选回显策略：开启复选时，定义回显到控件的策略">
+                <a-tooltip
+                  placement="left"
+                  title="复选回显策略：开启复选时，定义回显到控件的策略，如果组件完全受控，将不起作用"
+                >
                   复选回显策略
                 </a-tooltip>
               );
@@ -170,7 +209,20 @@ export default class TreeSelect extends Vue {
           />
         </a-form-model-item>
 
-        <a-form-model-item label="节点过滤属性">
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="节点过滤属性：输入项过滤对应的 treeNode 属性，默认值为value，如果想使用标签，可设置title/label，如果为label，替换字段中的标签值必须为label，否则请使用title"
+                >
+                  节点过滤属性
+                </a-tooltip>
+              );
+            },
+          }}
+        >
           <a-input vModel={this.componentProperties.treeNodeFilterProp} placeholder="请输入" />
         </a-form-model-item>
 
@@ -180,7 +232,7 @@ export default class TreeSelect extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="标签显示名称：此处的值一般为label或者title，注意：此处的值不是替换字段中的键名也不是数据源中的显示值（如：数据源中的name）的键名，如果不理解此解释，填写title就行"
+                  title="标签显示名称：默认值为title，此处的值一般为label或者title，注意：此处的值不是替换字段中的键名也不是数据源中的显示值（如：数据源中的name）的键名，如果不理解此解释，填写title就行"
                 >
                   标签显示名称
                 </a-tooltip>
@@ -197,7 +249,7 @@ export default class TreeSelect extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="节点过滤器：是否根据输入项进行筛选，默认用 节点过滤属性 的值作为要筛选的 TreeNode 的属性值，若为表达式，格式为：(inputValue: string, treeNode: TreeNode) => boolean"
+                  title="节点过滤器：是否根据输入项进行筛选，默认用 节点过滤属性 的值作为要筛选的 TreeNode 的属性值，若为表达式，格式为：(inputValue: string, treeNode: TreeNode) => boolean，如果为否，搜索文本为任何数据，都将全部展开节点，搜索将无效"
                 >
                   节点过滤器
                 </a-tooltip>
@@ -278,7 +330,7 @@ export default class TreeSelect extends Vue {
               return (
                 <a-tooltip
                   placement="left"
-                  title="自定义字段名：此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式"
+                  title="自定义字段名：此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式，请注意字段名必须与数据源对应上，否者会报错，当数据源为静态数据时，子级值需置为children"
                 >
                   自定义字段名
                 </a-tooltip>
@@ -290,6 +342,18 @@ export default class TreeSelect extends Vue {
             trigger="click"
             placement="bottomRight"
             arrow-point-at-center
+            onVisibleChange={(visible: boolean) => {
+              if (visible) {
+                this.replaceField = JSON.parse(
+                  JSON.stringify(this.componentProperties.replaceField),
+                );
+              } else {
+                this.componentProperties.replaceField = {
+                  ...this.componentProperties.replaceField,
+                  ...this.replaceField,
+                };
+              }
+            }}
             scopedSlots={{
               content: () => {
                 return (
@@ -297,25 +361,25 @@ export default class TreeSelect extends Vue {
                     <a-input
                       addon-before="标签值"
                       placeholder="请输入"
-                      vModel={this.componentProperties.replaceField.title}
+                      vModel={this.replaceField.title}
                     />
                     <a-input
                       addon-before="数据值"
                       placeholder="请输入"
                       style="margin-top: 10px"
-                      vModel={this.componentProperties.replaceField.value}
+                      vModel={this.replaceField.value}
                     />
                     <a-input
                       addon-before="子级值"
                       placeholder="请输入"
                       style="margin-top: 10px"
-                      vModel={this.componentProperties.replaceField.children}
+                      vModel={this.replaceField.children}
                     />
                     <a-input
                       addon-before="语言值"
                       placeholder="请输入"
                       style="margin-top: 10px"
-                      vModel={this.componentProperties.replaceField.lang}
+                      vModel={this.replaceField.lang}
                     />
                   </div>
                 );
@@ -355,11 +419,35 @@ export default class TreeSelect extends Vue {
           <a-input vModel={this.componentProperties.placeholderLangKey} placeholder="请输入" />
         </a-form-model-item>
 
-        <a-form-model-item label="搜索占位提示">
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip placement="left" title="搜索占位提示：此占位符仅在单选模式下生效">
+                  搜索占位提示
+                </a-tooltip>
+              );
+            },
+          }}
+        >
           <a-input vModel={this.componentProperties.searchPlaceholder} placeholder="请输入" />
         </a-form-model-item>
 
-        <a-form-model-item label="搜索占位提示国际化标识">
+        <a-form-model-item
+          label="搜索占位提示国际化标识"
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="搜索占位提示国际化标识：此占位符仅在单选模式下生效"
+                >
+                  搜索占位提示国际化标识
+                </a-tooltip>
+              );
+            },
+          }}
+        >
           <a-input
             vModel={this.componentProperties.searchPlaceholderLangKey}
             placeholder="请输入"

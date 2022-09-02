@@ -1,8 +1,7 @@
-import { Component, Prop, Mixins } from 'vue-property-decorator';
-import { executeStr, createHash } from '../../../../utils/format';
+import { Component, Prop, Mixins, Watch } from 'vue-property-decorator';
+import { executeStr, isJSON } from '../../../../utils/format';
 import mixin from '@/components/container/Formily/utils/mixin';
-import { isNull, isString, isArray, isUndefined } from 'lodash';
-import options from '../../../../utils/chinaDivision';
+import { isNull, isString, isArray, isUndefined, isObject } from 'lodash';
 
 @Component
 export default class TreeSelect extends Mixins(mixin) {
@@ -24,93 +23,94 @@ export default class TreeSelect extends Mixins(mixin) {
   })
   allConfig!: any;
 
+  // 动态数据
+  private dynamicDatas = [];
+
   // 阅读模式下数据转换显示，每种控件在阅读模式下在转换成显示值时所需要的函数是不同的
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
+    const newValue = this.dataFactory();
+
+    if (!newValue) {
+      return 'N/A';
+    }
 
     if (fieldProperties.valueFormatter.trim() !== '') {
       try {
-        const newValue = this.dataFactory();
         return executeStr(fieldProperties.valueFormatter, newValue);
       } catch (e) {
-        this.$message.error((e as any).message);
+        this.$message.error('格式化函数处理错误');
         return 'N/A';
       }
     }
 
-    return this.dataFactory();
+    if (isArray(newValue)) {
+      return newValue.map((item: any) => item.label).join(',') || 'N/A';
+    }
+
+    return newValue.label || 'N/A';
   }
 
   /**
    * 数据工厂
    * @returns {string} 当前选中值的lable
    */
-  private dataFactory(): string {
+  private dataFactory(): any {
     const defaultValue = this.config.fieldProperties.defaultValue.value;
 
-    if (
-      (isString(defaultValue) && defaultValue.trim() === '') ||
-      isNull(defaultValue) ||
-      (isArray(defaultValue) && defaultValue.length === 0) ||
-      isUndefined(defaultValue) ||
-      this.config.fieldProperties.dataSource === 'dynamicData'
-    ) {
-      return 'N/A';
-    }
+    if (isNull(defaultValue) || (isString(defaultValue) && defaultValue.trim() === '')) return null;
 
     const componentProperties = this.config.componentProperties;
 
-    // 选中值的标签值列表
-    let temps = null;
+    // 如果是复选或者多选模式
+    if (componentProperties.treeCheckable || componentProperties.multiple) {
+      if (!isJSON(defaultValue)) return null;
 
-    // 如果是多选模式
-    if (componentProperties.treeCheckable) {
+      const temp = JSON.parse(defaultValue);
+
+      if (!isArray(temp) || (isArray(temp) && temp.length === 0)) return null;
+
       // 完全受控或者标签值
       if (componentProperties.treeCheckStrictly || componentProperties.labelInValue) {
-        try {
-          temps = JSON.parse(defaultValue);
-        } catch (e) {
-          this.$message.error((e as any).message);
-          return 'N/A';
-        }
+        return this.loopData(
+          temp.map((item: any) => {
+            return item.value || null;
+          }),
+          true,
+        );
       } else {
-        // 需要递归去找数据
-        try {
-          const transData = JSON.parse(defaultValue);
-          temps = this.loopData(transData, true);
-        } catch (e) {
-          this.$message.error((e as any).message);
-          return 'N/A';
-        }
+        return this.loopData(temp, true);
       }
     } else {
-      temps = this.loopData(defaultValue, false);
-    }
+      if (componentProperties.labelInValue) {
+        if (!isJSON(defaultValue) || isUndefined(defaultValue.value)) return null;
 
-    return temps.map((item: any) => item.label).join(',');
+        return this.loopData(defaultValue.value, false);
+      } else {
+        return this.loopData(defaultValue, false);
+      }
+    }
   }
 
   /**
-   * 在全量数据源下，根据选中节点的标识列表查找明细数据
+   * 在全量数据源下，根据选中节点的标识或者标识列表查找明细数据
    * @param selected 已选中的值
-   * @param multi 是否为多选
+   * @param multiple 是否为多选
    * @returns 选中项的 labelInValue 值
    */
   private loopData(
     selected: string | string[],
-    multi: boolean,
+    multiple: boolean,
   ): Array<{ label: string; value: string }> {
     const replaceField = this.config.componentProperties.replaceField;
     const title = replaceField.title;
     const value = replaceField.value;
     const children = replaceField.children;
 
-    const temp = selected;
-
     const container: any = [];
     const recursion = (data: any[]) => {
       data.forEach((item: any) => {
-        if (multi ? temp.includes(item[value]) : temp === item[value]) {
+        if (multiple ? selected.includes(item[value]) : selected === item[value]) {
           container.push({ label: item[title], value: item[value] });
         } else {
           if (item[children] && item[children].length > 0) {
@@ -122,7 +122,7 @@ export default class TreeSelect extends Mixins(mixin) {
 
     recursion(this.shadowData);
 
-    return container;
+    return multiple ? container : container[0];
   }
 
   /**
@@ -130,80 +130,192 @@ export default class TreeSelect extends Mixins(mixin) {
    * 此处只处理静态数据，暂不支持动态数据
    */
   get shadowData() {
-    const staticDatas = this.config.fieldProperties.staticDatas; // 静态数据
-    const replaceField = this.config.componentProperties.replaceField; // 替换字段
+    if (this.config.fieldProperties.dataSource === 'staticData') {
+      const staticDatas = this.config.fieldProperties.staticDatas; // 静态数据
+      const replaceField = this.config.componentProperties.replaceField; // 替换字段
 
-    const trans = (data: any) => {
-      return data.map((item: any) => {
-        return {
-          [replaceField.title]: this.getLangResult(
-            item[replaceField.lang],
-            item[replaceField.title],
-          ),
-          [replaceField.value]: item[replaceField.value],
-          [replaceField.children]:
-            (item.children && item.children.length > 0 && trans(item.children)) || [],
-        };
-      });
-    };
+      const componentProperties = this.config.componentProperties; // 组件属性
 
-    return trans(staticDatas);
+      if (componentProperties.treeDataSimpleMode.dataType === 'boolean') {
+        if (componentProperties.treeDataSimpleMode.value) {
+          // 启用了简单格式的treeData，此处就是为了转换多语言
+          return staticDatas.map((item: any) => {
+            return {
+              ...item,
+              [replaceField.title]: this.getLangResult(
+                item[replaceField.lang],
+                item[replaceField.title],
+              ),
+            };
+          });
+        } else {
+          // 不启用简单格式的treeData
+          const trans = (data: any) => {
+            return data.map((item: any) => {
+              return {
+                [replaceField.title]: this.getLangResult(
+                  item[replaceField.lang],
+                  item[replaceField.title],
+                ),
+                [replaceField.value]: item[replaceField.value],
+                [replaceField.children]:
+                  (item.children && item.children.length > 0 && trans(item.children)) || [],
+              };
+            });
+          };
+
+          return trans(staticDatas);
+        }
+      } else {
+        if (componentProperties.treeDataSimpleMode.value.trim() !== '') {
+          // 启用了简单格式的treeData，此处就是为了转换多语言
+          return staticDatas.map((item: any) => {
+            return {
+              ...item,
+              [replaceField.title]: this.getLangResult(
+                item[replaceField.lang],
+                item[replaceField.title],
+              ),
+            };
+          });
+        }
+
+        return staticDatas;
+      }
+    } else {
+      return this.dynamicDatas;
+    }
   }
 
-  private datas = [
-    {
-      label: '上海市',
-      value: '0-0',
-      children: [
-        {
-          value: '0-0-1',
-          label: '浦东新区',
-        },
-        {
-          label: '闵行区',
-          value: '0-0-2',
-          children: [
-            {
-              label: '浦江镇',
-              value: '0-0-2-1',
-              children: [
-                {
-                  label: '东风村',
-                  value: '0-0-2-1-1',
-                },
-              ],
-            },
-            {
-              label: '黄糖镇',
-              value: '0-0-2-2',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      label: '节点二',
-      value: '0-1',
-    },
-  ];
+  // 预览值
+  private previewValue: any = null;
 
-  private dataList = [
-    {
-      id: '0-0',
-      label: '上海市',
-      pId: '0',
-    },
-    {
-      id: '0-0-1',
-      label: '浦东新区',
-      pId: '0-0',
-    },
-    {
-      label: '节点二',
-      id: '0-1',
-      pId: '0',
-    },
-  ];
+  // 监听默认值变动
+  @Watch('config.fieldProperties.defaultValue', { deep: true })
+  private defaultValueChangeHandle() {
+    this.updatePreviewValue();
+  }
+
+  // 监听组件开启多选状态的变动
+  @Watch('config.componentProperties.multiple')
+  private multipleChangeHandle(newValue: boolean) {
+    if (!this.config.componentProperties.treeCheckable) {
+      this.updatePreviewValue();
+    }
+  }
+
+  // 监听组件开启复选状态的变动
+  @Watch('config.componentProperties.treeCheckable')
+  private treeCheckableChangeHandle(newValue: boolean) {
+    this.updatePreviewValue();
+  }
+
+  // 监听是否为标签值的变动
+  @Watch('config.componentProperties.labelInValue')
+  private labelInValueChangeHandle(newValue: boolean) {
+    const componentProperties = this.config.componentProperties;
+    if (!(componentProperties.treeCheckable && componentProperties.treeCheckStrictly)) {
+      this.updatePreviewValue();
+    }
+  }
+
+  // 监听是否完全受控状态的变动
+  @Watch('config.componentProperties.treeCheckStrictly')
+  private treeCheckStrictlyChangeHandle(newValue: boolean) {
+    const componentProperties = this.config.componentProperties;
+    if (componentProperties.treeCheckable) {
+      this.updatePreviewValue();
+    }
+  }
+
+  created() {
+    this.updatePreviewValue();
+  }
+
+  // 更新预览值
+  private updatePreviewValue() {
+    const defaultValue = this.config.fieldProperties.defaultValue;
+    const componentProperties = this.config.componentProperties;
+
+    if (
+      isNull(defaultValue.value) ||
+      (isString(defaultValue.value) && defaultValue.value.trim() === '')
+    ) {
+      this.previewValue = null;
+      return;
+    }
+
+    if (componentProperties.treeCheckable || componentProperties.multiple) {
+      if (defaultValue.dataType !== 'expression') {
+        this.$message.error('请将默认值类型设置为表达式，再进行配置json格式数据', 5);
+        this.previewValue = null;
+        return;
+      }
+
+      if (!isJSON(defaultValue.value)) {
+        this.$message.error('请设置正确的数据格式', 5);
+        this.previewValue = null;
+        return;
+      }
+
+      const temp = JSON.parse(defaultValue.value);
+
+      if (!isArray(temp)) {
+        this.$message.error('请设置正确的数据格式', 5);
+        this.previewValue = null;
+        return;
+      }
+
+      if (componentProperties.labelInValue || componentProperties.treeCheckStrictly) {
+        // 对象数组
+        for (let i = 0; i < temp.length; i++) {
+          if (!isObject(temp[i])) {
+            this.$message.error('请设置正确的数据格式', 5);
+            this.previewValue = null;
+            return;
+          }
+        }
+      } else {
+        // 字符串数组
+        for (let i = 0; i < temp.length; i++) {
+          if (isObject(temp[i])) {
+            this.$message.error('请设置正确的数据格式', 5);
+            this.previewValue = null;
+            return;
+          }
+        }
+      }
+
+      this.previewValue = temp;
+    } else {
+      if (componentProperties.labelInValue) {
+        if (defaultValue.dataType !== 'expression') {
+          this.$message.error('请将默认值类型设置为表达式，再进行配置json格式数据', 5);
+          this.previewValue = null;
+          return;
+        }
+
+        if (!isJSON(defaultValue.value)) {
+          this.$message.error('请设置正确的数据格式', 5);
+          this.previewValue = null;
+          return;
+        }
+
+        const temp = JSON.parse(defaultValue.value);
+
+        if (!temp.value || isObject(temp.value)) {
+          this.$message.error('请设置正确的数据格式', 5);
+          this.previewValue = null;
+          return;
+        }
+
+        this.previewValue = temp;
+        return;
+      }
+
+      this.previewValue = defaultValue.value;
+    }
+  }
 
   render() {
     const fieldProperties = this.config.fieldProperties;
@@ -212,23 +324,6 @@ export default class TreeSelect extends Mixins(mixin) {
 
     if (fieldProperties.pattern === 'readPretty') {
       return <div class="control-text">{this.transValue}</div>;
-    }
-
-    // 此处在生成器中不可存在，这里只是作为展示
-    let previewValue = null;
-    try {
-      if (
-        fieldProperties.defaultValue.dataType === 'text' &&
-        fieldProperties.defaultValue.value.trim() !== ''
-      ) {
-        previewValue = fieldProperties.defaultValue.value;
-      } else {
-        if (fieldProperties.defaultValue.value.trim() !== '') {
-          previewValue = JSON.parse(fieldProperties.defaultValue.value);
-        }
-      }
-    } catch (e) {
-      this.$message.error((e as any).message);
     }
 
     // 转换树过滤条件
@@ -273,23 +368,24 @@ export default class TreeSelect extends Mixins(mixin) {
 
     return (
       <a-tree-select
-        treeData={fieldProperties.dataSource === 'staticData' ? this.shadowData : []}
-        value={previewValue}
+        treeData={this.shadowData}
+        value={this.previewValue || undefined}
         allowClear={componentProperties.allowClear}
         labelInValue={componentProperties.labelInValue}
         showSearch={componentProperties.showSearch}
+        multiple={componentProperties.multiple}
         treeCheckable={componentProperties.treeCheckable}
         treeDefaultExpandAll={componentProperties.treeDefaultExpandAll}
         dropdownMatchSelectWidth={componentProperties.dropdownMatchSelectWidth}
+        treeCheckStrictly={componentProperties.treeCheckStrictly}
         showCheckedStrategy={componentProperties.showCheckedStrategy}
         treeDefaultExpandedKeys={treeDefaultExpandedKeys}
         treeNodeFilterProp={componentProperties.treeNodeFilterProp}
         treeNodeLabelProp={componentProperties.treeNodeLabelProp}
-        maxTagCount={componentProperties.maxTagCount}
         filterTreeNode={filterTreeNode}
         treeDataSimpleMode={treeDataSimpleMode}
-        treeCheckStrictly={componentProperties.treeCheckStrictly}
         dropdownStyle={{ maxHeight: `${componentProperties.listHeight}px` }}
+        maxTagCount={componentProperties.maxTagCount || undefined}
         replaceFields={componentProperties.replaceField}
         size={componentProperties.size ?? formConfig.size}
         placeholder={this.getLangResult(

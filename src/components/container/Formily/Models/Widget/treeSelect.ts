@@ -50,6 +50,7 @@ export type TreeSelectModel = {
     allowClear: boolean;
     labelInValue: boolean;
     showSearch: boolean;
+    multiple: boolean;
     treeCheckable: boolean;
     treeDefaultExpandAll: boolean;
     dropdownMatchSelectWidth: boolean;
@@ -391,6 +392,13 @@ const TreeSelectModel: TreeSelectModel = {
      */
     showSearch: false,
     /**
+     * @name 开启多选
+     * @description 当开启复选时，此自动开启
+     * @type {boolean}
+     * @default false
+     */
+    multiple: false,
+    /**
      * @name 开启复选
      * @description 开启后，将出现checkbox选择，自动变成多选模式
      * @type {boolean}
@@ -441,7 +449,7 @@ const TreeSelectModel: TreeSelectModel = {
     treeNodeFilterProp: 'value',
     /**
      * @name 标签显示名称
-     * @description 标签中显示的值所对应的key
+     * @description 标签中显示的值所对应的key，组件使用的是treeData进行数据渲染，非TreeNode手动构造
      * @type {string}
      * @default 'title'
      */
@@ -484,7 +492,7 @@ const TreeSelectModel: TreeSelectModel = {
      * @name 自定义字段名
      * @description 此处为数据格式映射，为了统一各个UI库之间的数据格式以及支撑后端数据源格式
      * @type {object}
-     * @default {label:'label',value:'value',children:'children',lang:'lang'}
+     * @default {title:'label',value:'value',children:'children',lang:'lang'}
      */
     replaceField: {
       title: 'label',

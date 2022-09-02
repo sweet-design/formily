@@ -69,5 +69,27 @@ export const generateComponentList = (data: any, filterNode: string[]) => {
  * @returns {boolean} - return state
  */
 export const executeStr = (obj: string, ...agrs: any[]): boolean => {
-  return Function('"use strict";return (' + obj + ')')()(agrs);
+  return Function('"use strict";return (' + obj + ')')()(...agrs);
+};
+
+/**
+ * 判断是否是json字符串
+ * @param str 字符串
+ * @returns {boolean} 是否为json字符串
+ */
+export const isJSON = (str: string): boolean => {
+  if (typeof str == 'string') {
+    try {
+      const obj = JSON.parse(str);
+      if (typeof obj == 'object' && obj) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      return false;
+    }
+  }
+
+  return false;
 };

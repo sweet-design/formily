@@ -99,7 +99,7 @@ export default class Recognizer extends Mixins(mixin) {
 
   mounted() {
     this.$nextTick(() => {
-      const domNode: any = document.querySelector(`#${this.currentConfig.key}`);
+      const domNode: any = document.querySelector(`#s${this.currentConfig.key}`);
       this.scrollWidth = domNode?.getBoundingClientRect().width;
     });
   }
@@ -200,7 +200,7 @@ export default class Recognizer extends Mixins(mixin) {
   render() {
     return (
       <div>
-        <div class="formily-array-table-container" id={this.currentConfig.key}>
+        <div class="formily-array-table-container" id={'s' + this.currentConfig.key}>
           <a-table
             columns={this.columns}
             rowKey={(record: any, index: number) => {
@@ -216,7 +216,7 @@ export default class Recognizer extends Mixins(mixin) {
             scroll={{ x: this.scrollWidth }}
           ></a-table>
         </div>
-        {/* <div style="margin-top: 10px;">
+        <div style="margin-top: 10px;">
           <a-button
             type="dashed"
             icon="plus"
@@ -234,7 +234,7 @@ export default class Recognizer extends Mixins(mixin) {
           >
             添加
           </a-button>
-        </div> */}
+        </div>
       </div>
     );
   }

@@ -12,21 +12,21 @@ const select = (config: Record<string, any>) => {
         return value;
       }
 
-      return undefined;
+      return;
     }
     case 'expression': {
       if (value.trim() !== '') {
         return JSON.parse(value);
       }
 
-      return undefined;
+      return;
     }
     case 'number': {
       if (value) {
         return value;
       }
 
-      return undefined;
+      return;
     }
   }
 };

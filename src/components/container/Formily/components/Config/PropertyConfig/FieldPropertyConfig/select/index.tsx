@@ -159,7 +159,7 @@ export default class Select extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title='阅读模式下数据格式化函数，格式: (value) => { return "string"}'
+                    title="格式化函数：阅读模式下数据格式化函数，格式: (data: {value: string | number; label: string} | {value: string | number; label: string}[]) => string"
                   >
                     格式化函数
                   </a-tooltip>
@@ -203,7 +203,7 @@ export default class Select extends Vue {
                 return (
                   <a-tooltip
                     placement="left"
-                    title="默认值：数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，如果组件属性开启标签值，此时默认值类型将变成 {key : string | number } | { key: string | number }[]，【在单选情况下，请将默认值选中表达式进行配置，多选情况下，可选择文本和数值进行配置】"
+                    title="默认值：数据类型支持 string | string[] | number | number[]，其中表达式是为 string[] | number[] 而生，如果组件属性开启标签值，此时默认值类型将变成 {key : string | number } | { key: string | number }[]，【在多选或者标签值情况下，请将默认值选中表达式进行配置，单选情况下，可选择文本和数值进行配置】"
                   >
                     默认值
                   </a-tooltip>
@@ -694,7 +694,7 @@ export default class Select extends Vue {
                         return (
                           <a-tooltip
                             placement="left"
-                            title='自定义校验器：格式: (dayjs, getLangResult) => { return (rule, value, callback) => { callback("错误消息") } }'
+                            title='自定义校验器：格式: (dayjs, getLangResult, models, directModels, path) => { return (rule, value, callback) => { callback("错误消息") } }'
                           >
                             自定义校验器
                           </a-tooltip>

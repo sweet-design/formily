@@ -219,7 +219,13 @@ export default class ArrayTable extends Mixins(mixin) {
             },
           }}
           prop={`${this.path}${this.currentConfig.fieldProperties.name}`}
-          rules={rulesGenerator(this.currentConfig, this.getLangResult)}
+          rules={rulesGenerator(
+            this.currentConfig,
+            this.getLangResult,
+            this.models,
+            this.models,
+            this.path,
+          )}
           ref={this.currentConfig.key}
           autoLink={false}
         >
@@ -235,6 +241,7 @@ export default class ArrayTable extends Mixins(mixin) {
               style={this.wrapperWidth !== '' && { width: this.wrapperWidth }}
               models={this.models}
               apis={this.apis}
+              path={this.path}
               form={this.form}
               directModels={this.models}
               formItemInstance={this.$refs[this.currentConfig.key]}
