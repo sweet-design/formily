@@ -1,7 +1,7 @@
 import { Component, Prop, Mixins } from 'vue-property-decorator';
 import mixin from '@/components/container/Formily/utils/mixin';
 import defaultValueGenerator from '../../../../utils/defaultValueGenerator';
-import dynamicDataGenerator from '../../../../utils/dynamicDataGenerator';
+import dynamicDataGenerator, { fetchData } from '../../../../utils/dynamicDataGenerator';
 import { isNull, isArray, isUndefined, isObject } from 'lodash';
 import { executeStr } from '../../../../utils/format';
 
@@ -243,6 +243,18 @@ export default class TreeSelect extends Mixins(mixin) {
     }
   }
 
+  // 懒加载函数
+  private loadData(treeNode: any) {
+    return new Promise((resolve: any) => {
+      fetchData(this.currentConfig.componentProperties.lazyLoad, this.apis, treeNode.dataRef).then(
+        data => {
+          this.dynamicDatas = this.dynamicDatas.concat(data);
+          resolve();
+        },
+      );
+    });
+  }
+
   render() {
     const fieldProperties = this.currentConfig.fieldProperties;
     const componentProperties = this.currentConfig.componentProperties;
@@ -296,6 +308,11 @@ export default class TreeSelect extends Mixins(mixin) {
       <a-tree-select
         treeData={this.shadowData}
         vModel={this.directModels[fieldProperties.name]}
+        loadData={
+          componentProperties.lazyLoad?.key &&
+          fieldProperties.dataSource === 'dynamicData' &&
+          this.loadData
+        }
         allowClear={componentProperties.allowClear}
         labelInValue={componentProperties.labelInValue}
         showSearch={componentProperties.showSearch}

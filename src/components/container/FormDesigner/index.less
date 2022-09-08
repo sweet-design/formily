@@ -2,72 +2,72 @@
 @import '@/assets/less/mixins/scrollbar';
 
 .component-form-designer {
-	position: relative;
+  position: relative;
 
-	.form-designer-wrapper {
-		height: 100vh;
+  .form-designer-wrapper {
+    height: 100vh;
 
-		&-sider {
-			.scrollbarLight();
+    &-sider {
+      .scrollbarLight();
 
-			&.left {
-				box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
-			}
+      &.left {
+        box-shadow: 2px 0 8px 0 rgba(29, 35, 41, 0.05);
+      }
 
-			&.right {
-				box-shadow: -1px 0 8px 0 rgba(29, 35, 41, 0.05);
+      &.right {
+        box-shadow: -1px 0 8px 0 rgba(29, 35, 41, 0.05);
 
-				.ant-tabs-content {
-					height: calc(100% - 44px);
-				}
-			}
-		}
+        .ant-tabs-content {
+          height: calc(100% - 44px);
+        }
+      }
+    }
 
-		&-center {
-			.header-tools {
-				background-color: #f0f2f5;
-				padding: 0 20px;
+    &-center {
+      .header-tools {
+        background-color: #f0f2f5;
+        padding: 0 20px;
 
-				.ant-btn {
-					margin-right: 8px;
-				}
-			}
+        .ant-btn {
+          margin-right: 8px;
+        }
+      }
 
-			&-content {
-				padding: 0 20px 20px;
+      &-content {
+        padding: 0 20px 20px;
 
-				.scrollbarLight();
+        .scrollbarLight();
 
-				&-container {
-					background-color: #ffffff;
-					height: 100%;
-					overflow: auto;
-					position: relative;
-				}
-			}
-		}
+        &-container {
+          background-color: #ffffff;
+          height: 100%;
+          overflow: auto;
+          position: relative;
+        }
+      }
+    }
 
-		.components-list {
-			height: 100%;
-			overflow: auto;
-			padding: 0 10px 10px;
+    .components-list {
+      height: 100%;
+      overflow: auto;
+      padding: 0 10px 10px;
 
-			ul {
-				margin: 0;
-				overflow: hidden;
-				padding: 0;
-				position: relative;
+      ul {
+        margin: 0;
+        overflow: hidden;
+        padding: 0;
+        position: relative;
 
-				.component-template {
-					cursor: move;
-					float: left;
-					line-height: 26px;
-					margin: 0 1% 5px;
-					overflow: hidden;
-					white-space: nowrap;
-					width: 48%;
-				}
-			}
-		}
-	}
+        .component-template {
+          cursor: move;
+          float: left;
+          line-height: 26px;
+          margin: 0 1% 5px;
+          overflow: hidden;
+          white-space: nowrap;
+          width: 48%;
+        }
+      }
+    }
+  }
 }

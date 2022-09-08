@@ -1,565 +1,565 @@
 {
-	"list": [
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "input",
-							"name": "姓名",
-							"icon": "icon-input",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"width": "100%",
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": "",
-								"required": false,
-								"dataType": "string",
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"pattern": "",
-								"placeholder": "请输入",
-								"disabled": false,
-								"remoteFunc": "func_1619319244646",
-								"onchange": "",
-								"valueFormatter": "(str) => {\n    return str.replace(/aaa/, \"hahaha\");\n}"
-							},
-							"key": 1619319244646,
-							"model": "input",
-							"rules": [
-								{
-									"type": "string",
-									"message": "姓名格式不正确",
-									"trigger": ["blur", "change"]
-								}
-							]
-						}
-					]
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "textarea",
-							"name": "多行文本",
-							"icon": "icon-diy-com-textarea",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"width": "100%",
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": "",
-								"required": false,
-								"disabled": false,
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"pattern": "",
-								"placeholder": "请输入",
-								"remoteFunc": "func_1619319405676",
-								"onchange": "",
-								"valueFormatter": ""
-							},
-							"key": 1619319405676,
-							"model": "textarea",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619319243227"
-			},
-			"key": 1619319243227,
-			"model": "grid_1619319243227",
-			"rules": []
-		},
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "number",
-							"name": "计数器",
-							"icon": "icon-number",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"width": "100%",
-								"isControl": false,
-								"controlCondition": "",
-								"required": false,
-								"defaultValue": 0,
-								"min": 1,
-								"max": 10,
-								"step": 1,
-								"disabled": false,
-								"controlsPosition": "",
-								"advanceRuleType": "",
-								"driveList": [],
-								"rangeRuleObj": {
-									"field": "",
-									"condition": "",
-									"target": 0,
-									"unit": "default",
-									"message": ""
-								},
-								"customRuleFunc": "",
-								"remoteFunc": "func_1619319421962",
-								"precision": 0,
-								"onchange": "",
-								"valueFormatter": ""
-							},
-							"key": 1619319421962,
-							"model": "number",
-							"rules": []
-						}
-					]
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "radio",
-							"name": "单选框组",
-							"icon": "icon-radio-active",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"inline": true,
-								"defaultValue": "Option1",
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"showLabel": true,
-								"options": [
-									{
-										"value": "Option1",
-										"label": "选项1"
-									},
-									{
-										"value": "Option2",
-										"label": "选项2"
-									},
-									{
-										"value": "Option3",
-										"label": "选项3"
-									}
-								],
-								"required": false,
-								"width": "",
-								"remote": false,
-								"remoteOptions": [],
-								"props": {
-									"value": "value",
-									"label": "label"
-								},
-								"remoteFunc": "func_1619319436308",
-								"disabled": false,
-								"onchange": ""
-							},
-							"key": 1619319436308,
-							"model": "radio",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619319418774"
-			},
-			"key": 1619319418774,
-			"model": "grid_1619319418774",
-			"rules": []
-		},
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "checkbox",
-							"name": "多选框组",
-							"icon": "icon-check-box",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"inline": true,
-								"defaultValue": ["Option1"],
-								"showLabel": true,
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"options": [
-									{
-										"value": "Option1",
-										"label": "选项1"
-									},
-									{
-										"value": "Option2",
-										"label": "选项2"
-									},
-									{
-										"value": "Option3",
-										"label": "选项3"
-									}
-								],
-								"required": false,
-								"width": "",
-								"remote": false,
-								"remoteOptions": [],
-								"props": {
-									"value": "value",
-									"label": "label"
-								},
-								"remoteFunc": "func_1619319467543",
-								"disabled": false,
-								"onchange": ""
-							},
-							"key": 1619319467543,
-							"model": "checkbox",
-							"rules": []
-						}
-					]
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "time",
-							"name": "时间",
-							"icon": "icon-time",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": "",
-								"readonly": false,
-								"disabled": false,
-								"clearable": true,
-								"placeholder": "",
-								"startPlaceholder": "",
-								"endPlaceholder": "",
-								"advanceRuleType": "",
-								"driveList": [],
-								"rangeRuleObj": {
-									"field": "",
-									"condition": "",
-									"target": 0,
-									"unit": "default",
-									"message": ""
-								},
-								"customRuleFunc": "",
-								"format": "HH:mm:ss",
-								"required": false,
-								"width": "100%",
-								"remoteFunc": "func_1619319484505",
-								"isRange": false,
-								"hourStep": 1,
-								"minuteStep": 1,
-								"secondStep": 1,
-								"onchange": ""
-							},
-							"key": 1619319484505,
-							"model": "time",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619319463336"
-			},
-			"key": 1619319463336,
-			"model": "grid_1619319463336",
-			"rules": []
-		},
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "date",
-							"name": "日期",
-							"icon": "icon-date",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": "",
-								"readonly": false,
-								"disabled": false,
-								"clearable": true,
-								"placeholder": "",
-								"startPlaceholder": "",
-								"endPlaceholder": "",
-								"type": "date",
-								"advanceRuleType": "",
-								"driveList": [],
-								"rangeRuleObj": {
-									"field": "",
-									"condition": "",
-									"target": 0,
-									"unit": "default",
-									"message": ""
-								},
-								"customRuleFunc": "",
-								"format": "YYYY-MM-DD",
-								"required": false,
-								"width": "100%",
-								"remoteFunc": "func_1619319501860",
-								"hourStep": 1,
-								"minuteStep": 1,
-								"secondStep": 1,
-								"onchange": ""
-							},
-							"key": 1619319501860,
-							"model": "date",
-							"rules": []
-						}
-					]
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "treeSelect",
-							"name": "下拉树",
-							"icon": "icon-select",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": [],
-								"multiple": true,
-								"disabled": false,
-								"clearable": false,
-								"placeholder": "",
-								"required": false,
-								"assistField": "treeSelectText",
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"asyncLoad": false,
-								"width": "100%",
-								"filterable": true,
-								"showCheckedStrategy": "SHOW_PARENT",
-								"remote": true,
-								"remoteOptions": [],
-								"props": {
-									"value": "id",
-									"label": "title",
-									"children": "children"
-								},
-								"remoteFunc": "loadTree",
-								"onchange": ""
-							},
-							"key": 1619319520870,
-							"model": "treeSelect",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619319499034"
-			},
-			"key": 1619319499034,
-			"model": "grid_1619319499034",
-			"rules": []
-		},
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "select",
-							"name": "下拉选择框",
-							"icon": "icon-select",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": [],
-								"multiple": false,
-								"disabled": false,
-								"clearable": false,
-								"placeholder": "",
-								"required": false,
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"showLabel": true,
-								"width": "100%",
-								"options": [
-									{
-										"value": "Option1",
-										"label": "选择1"
-									},
-									{
-										"value": "Option2",
-										"label": "选择2"
-									},
-									{
-										"value": "Option3",
-										"label": "选择3"
-									}
-								],
-								"remote": false,
-								"filterable": true,
-								"remoteOptions": [],
-								"props": {
-									"value": "value",
-									"label": "label"
-								},
-								"remoteFunc": "func_1619319568270",
-								"onchange": ""
-							},
-							"key": 1619319568270,
-							"model": "select",
-							"rules": []
-						}
-					]
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "ddList",
-							"name": "下拉列表",
-							"icon": "icon-select",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": [],
-								"multiple": true,
-								"disabled": false,
-								"clearable": false,
-								"placeholder": "",
-								"required": false,
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"width": "100%",
-								"searchType": "HrEmp",
-								"autoSearch": false,
-								"count": 10,
-								"remoteFunc": "func_1619319650694",
-								"onchange": ""
-							},
-							"key": 1619319650694,
-							"model": "ddList",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619319564306"
-			},
-			"key": 1619319564306,
-			"model": "grid_1619319564306",
-			"rules": []
-		},
-		{
-			"type": "grid",
-			"name": "栅格布局",
-			"icon": "icon-grid-",
-			"columns": [
-				{
-					"span": 12,
-					"list": []
-				},
-				{
-					"span": 12,
-					"list": [
-						{
-							"type": "switch",
-							"name": "开关",
-							"icon": "icon-switch",
-							"options": {
-								"labelControl": false,
-								"labelCol": 6,
-								"isControl": false,
-								"controlCondition": "",
-								"defaultValue": true,
-								"required": false,
-								"advanceRuleType": "",
-								"driveList": [],
-								"customRuleFunc": "",
-								"disabled": false,
-								"remoteFunc": "func_1619320257210",
-								"onchange": ""
-							},
-							"key": 1619320257210,
-							"model": "switch",
-							"rules": []
-						}
-					]
-				}
-			],
-			"options": {
-				"gutter": 0,
-				"justify": "start",
-				"align": "top",
-				"remoteFunc": "func_1619320207830"
-			},
-			"key": 1619320207830,
-			"model": "grid_1619320207830",
-			"rules": []
-		}
-	],
-	"config": {
-		"labelCol": 6,
-		"labelAlign": "right",
-		"size": "default"
-	}
+  "list": [
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "input",
+              "name": "姓名",
+              "icon": "icon-input",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "width": "100%",
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": "",
+                "required": false,
+                "dataType": "string",
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "pattern": "",
+                "placeholder": "请输入",
+                "disabled": false,
+                "remoteFunc": "func_1619319244646",
+                "onchange": "",
+                "valueFormatter": "(str) => {\n    return str.replace(/aaa/, \"hahaha\");\n}"
+              },
+              "key": 1619319244646,
+              "model": "input",
+              "rules": [
+                {
+                  "type": "string",
+                  "message": "姓名格式不正确",
+                  "trigger": ["blur", "change"]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "textarea",
+              "name": "多行文本",
+              "icon": "icon-diy-com-textarea",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "width": "100%",
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": "",
+                "required": false,
+                "disabled": false,
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "pattern": "",
+                "placeholder": "请输入",
+                "remoteFunc": "func_1619319405676",
+                "onchange": "",
+                "valueFormatter": ""
+              },
+              "key": 1619319405676,
+              "model": "textarea",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319243227"
+      },
+      "key": 1619319243227,
+      "model": "grid_1619319243227",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "number",
+              "name": "计数器",
+              "icon": "icon-number",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "width": "100%",
+                "isControl": false,
+                "controlCondition": "",
+                "required": false,
+                "defaultValue": 0,
+                "min": 1,
+                "max": 10,
+                "step": 1,
+                "disabled": false,
+                "controlsPosition": "",
+                "advanceRuleType": "",
+                "driveList": [],
+                "rangeRuleObj": {
+                  "field": "",
+                  "condition": "",
+                  "target": 0,
+                  "unit": "default",
+                  "message": ""
+                },
+                "customRuleFunc": "",
+                "remoteFunc": "func_1619319421962",
+                "precision": 0,
+                "onchange": "",
+                "valueFormatter": ""
+              },
+              "key": 1619319421962,
+              "model": "number",
+              "rules": []
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "radio",
+              "name": "单选框组",
+              "icon": "icon-radio-active",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "inline": true,
+                "defaultValue": "Option1",
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "showLabel": true,
+                "options": [
+                  {
+                    "value": "Option1",
+                    "label": "选项1"
+                  },
+                  {
+                    "value": "Option2",
+                    "label": "选项2"
+                  },
+                  {
+                    "value": "Option3",
+                    "label": "选项3"
+                  }
+                ],
+                "required": false,
+                "width": "",
+                "remote": false,
+                "remoteOptions": [],
+                "props": {
+                  "value": "value",
+                  "label": "label"
+                },
+                "remoteFunc": "func_1619319436308",
+                "disabled": false,
+                "onchange": ""
+              },
+              "key": 1619319436308,
+              "model": "radio",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319418774"
+      },
+      "key": 1619319418774,
+      "model": "grid_1619319418774",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "checkbox",
+              "name": "多选框组",
+              "icon": "icon-check-box",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "inline": true,
+                "defaultValue": ["Option1"],
+                "showLabel": true,
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "options": [
+                  {
+                    "value": "Option1",
+                    "label": "选项1"
+                  },
+                  {
+                    "value": "Option2",
+                    "label": "选项2"
+                  },
+                  {
+                    "value": "Option3",
+                    "label": "选项3"
+                  }
+                ],
+                "required": false,
+                "width": "",
+                "remote": false,
+                "remoteOptions": [],
+                "props": {
+                  "value": "value",
+                  "label": "label"
+                },
+                "remoteFunc": "func_1619319467543",
+                "disabled": false,
+                "onchange": ""
+              },
+              "key": 1619319467543,
+              "model": "checkbox",
+              "rules": []
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "time",
+              "name": "时间",
+              "icon": "icon-time",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": "",
+                "readonly": false,
+                "disabled": false,
+                "clearable": true,
+                "placeholder": "",
+                "startPlaceholder": "",
+                "endPlaceholder": "",
+                "advanceRuleType": "",
+                "driveList": [],
+                "rangeRuleObj": {
+                  "field": "",
+                  "condition": "",
+                  "target": 0,
+                  "unit": "default",
+                  "message": ""
+                },
+                "customRuleFunc": "",
+                "format": "HH:mm:ss",
+                "required": false,
+                "width": "100%",
+                "remoteFunc": "func_1619319484505",
+                "isRange": false,
+                "hourStep": 1,
+                "minuteStep": 1,
+                "secondStep": 1,
+                "onchange": ""
+              },
+              "key": 1619319484505,
+              "model": "time",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319463336"
+      },
+      "key": 1619319463336,
+      "model": "grid_1619319463336",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "date",
+              "name": "日期",
+              "icon": "icon-date",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": "",
+                "readonly": false,
+                "disabled": false,
+                "clearable": true,
+                "placeholder": "",
+                "startPlaceholder": "",
+                "endPlaceholder": "",
+                "type": "date",
+                "advanceRuleType": "",
+                "driveList": [],
+                "rangeRuleObj": {
+                  "field": "",
+                  "condition": "",
+                  "target": 0,
+                  "unit": "default",
+                  "message": ""
+                },
+                "customRuleFunc": "",
+                "format": "YYYY-MM-DD",
+                "required": false,
+                "width": "100%",
+                "remoteFunc": "func_1619319501860",
+                "hourStep": 1,
+                "minuteStep": 1,
+                "secondStep": 1,
+                "onchange": ""
+              },
+              "key": 1619319501860,
+              "model": "date",
+              "rules": []
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "treeSelect",
+              "name": "下拉树",
+              "icon": "icon-select",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": [],
+                "multiple": true,
+                "disabled": false,
+                "clearable": false,
+                "placeholder": "",
+                "required": false,
+                "assistField": "treeSelectText",
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "asyncLoad": false,
+                "width": "100%",
+                "filterable": true,
+                "showCheckedStrategy": "SHOW_PARENT",
+                "remote": true,
+                "remoteOptions": [],
+                "props": {
+                  "value": "id",
+                  "label": "title",
+                  "children": "children"
+                },
+                "remoteFunc": "loadTree",
+                "onchange": ""
+              },
+              "key": 1619319520870,
+              "model": "treeSelect",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319499034"
+      },
+      "key": 1619319499034,
+      "model": "grid_1619319499034",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "select",
+              "name": "下拉选择框",
+              "icon": "icon-select",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": [],
+                "multiple": false,
+                "disabled": false,
+                "clearable": false,
+                "placeholder": "",
+                "required": false,
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "showLabel": true,
+                "width": "100%",
+                "options": [
+                  {
+                    "value": "Option1",
+                    "label": "选择1"
+                  },
+                  {
+                    "value": "Option2",
+                    "label": "选择2"
+                  },
+                  {
+                    "value": "Option3",
+                    "label": "选择3"
+                  }
+                ],
+                "remote": false,
+                "filterable": true,
+                "remoteOptions": [],
+                "props": {
+                  "value": "value",
+                  "label": "label"
+                },
+                "remoteFunc": "func_1619319568270",
+                "onchange": ""
+              },
+              "key": 1619319568270,
+              "model": "select",
+              "rules": []
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "ddList",
+              "name": "下拉列表",
+              "icon": "icon-select",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": [],
+                "multiple": true,
+                "disabled": false,
+                "clearable": false,
+                "placeholder": "",
+                "required": false,
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "width": "100%",
+                "searchType": "HrEmp",
+                "autoSearch": false,
+                "count": 10,
+                "remoteFunc": "func_1619319650694",
+                "onchange": ""
+              },
+              "key": 1619319650694,
+              "model": "ddList",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319564306"
+      },
+      "key": 1619319564306,
+      "model": "grid_1619319564306",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": []
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "switch",
+              "name": "开关",
+              "icon": "icon-switch",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": true,
+                "required": false,
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "disabled": false,
+                "remoteFunc": "func_1619320257210",
+                "onchange": ""
+              },
+              "key": 1619320257210,
+              "model": "switch",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619320207830"
+      },
+      "key": 1619320207830,
+      "model": "grid_1619320207830",
+      "rules": []
+    }
+  ],
+  "config": {
+    "labelCol": 6,
+    "labelAlign": "right",
+    "size": "default"
+  }
 }

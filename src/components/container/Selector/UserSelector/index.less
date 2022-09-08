@@ -2,50 +2,50 @@
 @import '@/assets/less/mixins/scrollbar';
 
 .component-user-selector-wrap {
-	height: 360px;
+  height: 360px;
 
-	.pane-overflow {
-		// .scrollbarLight();
+  .pane-overflow {
+    // .scrollbarLight();
 
-		& > div {
-			height: 322px;
-			overflow: hidden;
-			padding: 10px;
+    & > div {
+      height: 322px;
+      overflow: hidden;
+      padding: 10px;
 
-			.tree-content {
-				height: 270px;
-			}
-		}
+      .tree-content {
+        height: 270px;
+      }
+    }
 
-		.search-result {
-			.search-item {
-				height: 26px;
-				line-height: 26px;
-				margin-top: 5px;
-				padding-left: 5px;
+    .search-result {
+      .search-item {
+        height: 26px;
+        line-height: 26px;
+        margin-top: 5px;
+        padding-left: 5px;
 
-				&:hover {
-					background-color: @primary-1;
-					cursor: pointer;
-				}
+        &:hover {
+          background-color: @primary-1;
+          cursor: pointer;
+        }
 
-				&.active {
-					background-color: @primary-color;
-					color: #ffffff;
-				}
-			}
-		}
-	}
+        &.active {
+          background-color: @primary-color;
+          color: #ffffff;
+        }
+      }
+    }
+  }
 
-	.ant-tabs-tab {
-		padding: 8px;
-	}
+  .ant-tabs-tab {
+    padding: 8px;
+  }
 
-	.ant-transfer-operation {
-		margin: 0 20px;
-	}
+  .ant-transfer-operation {
+    margin: 0 20px;
+  }
 
-	.ant-transfer-list-body {
-		.scrollbarLight();
-	}
+  .ant-transfer-list-body {
+    .scrollbarLight();
+  }
 }

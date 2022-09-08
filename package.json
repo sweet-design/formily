@@ -21,7 +21,8 @@
     "lint": "vue-cli-service lint",
     "view": "npx http-server ./dist -p 9090 -g",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
-    "deploy": "gh-pages -d site"
+    "deploy": "gh-pages -d site",
+    "prettier": "prettier --config .prettierrc --write **/*"
   },
   "dependencies": {
     "ant-design-vue": "1.7.3",

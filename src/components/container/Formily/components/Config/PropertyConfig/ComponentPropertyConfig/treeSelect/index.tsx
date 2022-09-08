@@ -1,6 +1,7 @@
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import DataTypeSwitch from '../../../../DataTypeSwitch';
 import { isUndefined } from 'lodash';
+import CustomEditor from '../../../../CustomEditor';
 
 @Component
 export default class TreeSelect extends Vue {
@@ -30,6 +31,17 @@ export default class TreeSelect extends Vue {
     lang: '',
   };
 
+  // 是否显示懒加载参数配置气泡框
+  private lazyLoadArgVisible = false;
+
+  // 是否显示懒加载回调配置气泡框
+  private lazyLoadCallbackVisible = false;
+
+  $refs!: {
+    lazyLoadArgs: CustomEditor;
+    lazyLoadCallback: CustomEditor;
+  };
+
   // 缓存组件属性配置
   get componentProperties() {
     return this.select.componentProperties;
@@ -51,6 +63,13 @@ export default class TreeSelect extends Vue {
   private upgradeConfig() {
     if (isUndefined(this.componentProperties.multiple)) {
       this.$set(this.select.componentProperties, 'multiple', false);
+    }
+
+    if (isUndefined(this.componentProperties.lazyLoad)) {
+      this.$set(this.select.componentProperties, 'lazyLoad', {
+        args: '',
+        callback: '(res) => {\n  return res.data;\n}',
+      });
     }
   }
 
@@ -300,6 +319,119 @@ export default class TreeSelect extends Vue {
             }}
           />
         </a-form-model-item>
+
+        <a-form-model-item
+          scopedSlots={{
+            label: () => {
+              return (
+                <a-tooltip
+                  placement="left"
+                  title="懒加载回调：展开节点时异步加载函数，注意：此时需要启用简单数据结构，且数据来源为动态数据，选择的数据来自表单配置中的API接口中心数据，如若已选择的数据在动作响应中心被删除，此处不会自动更新选中值，请主动删除"
+                >
+                  懒加载回调
+                </a-tooltip>
+              );
+            },
+          }}
+        >
+          <a-select vModel={this.componentProperties.lazyLoad.key} placeholder="请选择" allowClear>
+            {this.data.config.apis.map((item: any) => {
+              return <a-select-option value={item.key}>{item.name}</a-select-option>;
+            })}
+          </a-select>
+        </a-form-model-item>
+
+        {this.componentProperties.lazyLoad.key && [
+          <a-form-model-item
+            scopedSlots={{
+              label: () => {
+                return (
+                  <a-tooltip
+                    placement="left"
+                    title="懒加载参数：数据源所需参数信息，格式：(value) => Object，其中value为节点数据对象"
+                  >
+                    懒加载回调参数
+                  </a-tooltip>
+                );
+              },
+            }}
+          >
+            <a-popover
+              trigger="click"
+              placement="bottomRight"
+              arrow-point-at-center
+              visible={this.lazyLoadArgVisible}
+              onVisibleChange={(visible: boolean) => {
+                this.lazyLoadArgVisible = visible;
+                if (!visible) {
+                  this.componentProperties.lazyLoad.args = this.$refs.lazyLoadArgs.getValue();
+                }
+              }}
+              scopedSlots={{
+                content: () => {
+                  return (
+                    <div style="width: 300px">
+                      <CustomEditor
+                        height="200"
+                        theme="chrome"
+                        ref="lazyLoadArgs"
+                        value={this.componentProperties.lazyLoad.args}
+                        lang="javascript"
+                      ></CustomEditor>
+                    </div>
+                  );
+                },
+              }}
+            >
+              <a-button block>参数设置</a-button>
+            </a-popover>
+          </a-form-model-item>,
+
+          <a-form-model-item
+            scopedSlots={{
+              label: () => {
+                return (
+                  <a-tooltip
+                    placement="left"
+                    title="懒加载回调函数：在返回业务数据后的回调处理，此回调返回的数据将作为此控件最终数据源，参数res为api返回的业务数据，格式：(res) => Object"
+                  >
+                    懒加载回调函数
+                  </a-tooltip>
+                );
+              },
+            }}
+          >
+            <a-popover
+              trigger="click"
+              placement="bottomRight"
+              arrow-point-at-center
+              visible={this.lazyLoadCallbackVisible}
+              onVisibleChange={(visible: boolean) => {
+                this.lazyLoadCallbackVisible = visible;
+                if (!visible) {
+                  this.componentProperties.lazyLoad.callback = this.$refs.lazyLoadCallback.getValue();
+                }
+              }}
+              scopedSlots={{
+                content: () => {
+                  return (
+                    <div style="width: 300px">
+                      <CustomEditor
+                        height="200"
+                        theme="chrome"
+                        ref="lazyLoadCallback"
+                        value={this.componentProperties.lazyLoad.callback}
+                        lang="javascript"
+                      ></CustomEditor>
+                    </div>
+                  );
+                },
+              }}
+            >
+              <a-button block>回调设置</a-button>
+            </a-popover>
+          </a-form-model-item>,
+        ]}
 
         <a-form-model-item label="弹框滚动高度">
           <a-input-number

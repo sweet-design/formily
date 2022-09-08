@@ -1,183 +1,183 @@
 .framework-header {
-	box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
-	color: rgba(0, 0, 0, 0.85);
-	height: @framework-header-height;
-	line-height: @framework-header-height;
-	padding: 0;
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+  color: rgba(0, 0, 0, 0.85);
+  height: @framework-header-height;
+  line-height: @framework-header-height;
+  padding: 0;
 
-	&.mix-layout {
-		position: fixed;
-		right: 0;
-		width: 100%;
-		z-index: 100;
-	}
+  &.mix-layout {
+    position: fixed;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+  }
 
-	&-layout {
-		align-items: center;
-		display: flex;
-		height: 100%;
-		padding: 0 16px;
-		position: relative;
+  &-layout {
+    align-items: center;
+    display: flex;
+    height: 100%;
+    padding: 0 16px;
+    position: relative;
 
-		// 头部亮色主题
-		&.light {
-			background-color: #ffffff;
+    // 头部亮色主题
+    &.light {
+      background-color: #ffffff;
 
-			.framework-header-layout-left-logo {
-				h1 {
-					color: @primary-color;
-				}
-			}
+      .framework-header-layout-left-logo {
+        h1 {
+          color: @primary-color;
+        }
+      }
 
-			.framework-header-layout-right {
-				.header-btn-action {
-					color: inherit;
+      .framework-header-layout-right {
+        .header-btn-action {
+          color: inherit;
 
-					&:hover {
-						background: rgba(0, 0, 0, 0.025);
-					}
-				}
-			}
+          &:hover {
+            background: rgba(0, 0, 0, 0.025);
+          }
+        }
+      }
 
-			.framework-header-layout-menu {
-				.ant-menu-light {
-					color: inherit;
+      .framework-header-layout-menu {
+        .ant-menu-light {
+          color: inherit;
 
-					.ant-menu-submenu-title {
-						span > i {
-							color: inherit;
-						}
-					}
-				}
-			}
-		}
+          .ant-menu-submenu-title {
+            span > i {
+              color: inherit;
+            }
+          }
+        }
+      }
+    }
 
-		& > * {
-			height: 100%;
-		}
+    & > * {
+      height: 100%;
+    }
 
-		&-left {
-			display: flex;
-			min-width: 192px;
+    &-left {
+      display: flex;
+      min-width: 192px;
 
-			&-logo {
-				height: 100%;
-				min-width: 165px;
-				overflow: hidden;
-				position: relative;
+      &-logo {
+        height: 100%;
+        min-width: 165px;
+        overflow: hidden;
+        position: relative;
 
-				& > a {
-					align-items: center;
-					display: flex;
+        & > a {
+          align-items: center;
+          display: flex;
 
-					img {
-						display: inline-block;
-						height: 32px;
-						vertical-align: middle;
-					}
+          img {
+            display: inline-block;
+            height: 32px;
+            vertical-align: middle;
+          }
 
-					h1 {
-						color: #ffffff;
-						display: inline-block;
-						font-size: 16px;
-						font-weight: 400;
-						margin: 0 0 0 12px;
-					}
-				}
-			}
-		}
+          h1 {
+            color: #ffffff;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: 400;
+            margin: 0 0 0 12px;
+          }
+        }
+      }
+    }
 
-		// 菜单栏在顶部时特殊处理
-		&-menu {
-			flex: 1 1 0%;
-			overflow: hidden;
+    // 菜单栏在顶部时特殊处理
+    &-menu {
+      flex: 1 1 0%;
+      overflow: hidden;
 
-			.ant-menu {
-				background: 0 0;
-				border: none;
-				height: 100%;
+      .ant-menu {
+        background: 0 0;
+        border: none;
+        height: 100%;
 
-				&.ant-menu-dark {
-					line-height: inherit;
+        &.ant-menu-dark {
+          line-height: inherit;
 
-					.ant-menu-submenu {
-						.ant-menu-submenu-title {
-							border-bottom: none;
-						}
-					}
-				}
+          .ant-menu-submenu {
+            .ant-menu-submenu-title {
+              border-bottom: none;
+            }
+          }
+        }
 
-				&.ant-menu-light {
-					.ant-menu-submenu {
-						border-bottom: none;
+        &.ant-menu-light {
+          .ant-menu-submenu {
+            border-bottom: none;
 
-						.ant-menu-submenu-title {
-							border-bottom: solid 2px transparent;
-						}
+            .ant-menu-submenu-title {
+              border-bottom: solid 2px transparent;
+            }
 
-						&:hover,
-						&.ant-menu-submenu-active,
-						&.ant-menu-submenu-open,
-						&.ant-menu-submenu-selected {
-							.ant-menu-submenu-title {
-								border-bottom: solid 2px @primary-color;
-							}
-						}
-					}
-				}
+            &:hover,
+            &.ant-menu-submenu-active,
+            &.ant-menu-submenu-open,
+            &.ant-menu-submenu-selected {
+              .ant-menu-submenu-title {
+                border-bottom: solid 2px @primary-color;
+              }
+            }
+          }
+        }
 
-				.ant-menu-submenu {
-					// 暗色模式下一级菜单的icon全是白色
-					.ant-menu-submenu-title {
-						margin: 0 20px;
-						padding: 0;
+        .ant-menu-submenu {
+          // 暗色模式下一级菜单的icon全是白色
+          .ant-menu-submenu-title {
+            margin: 0 20px;
+            padding: 0;
 
-						span > i {
-							color: #ffffff;
-						}
-					}
-				}
-			}
-		}
+            span > i {
+              color: #ffffff;
+            }
+          }
+        }
+      }
+    }
 
-		// 当前默认采用暗色主题
-		&-right {
-			display: flex;
-			height: @framework-header-height;
-			margin-left: auto;
+    // 当前默认采用暗色主题
+    &-right {
+      display: flex;
+      height: @framework-header-height;
+      margin-left: auto;
 
-			.ant-dropdown {
-				&-menu-item {
-					color: rgba(0, 0, 0, 0.85);
+      .ant-dropdown {
+        &-menu-item {
+          color: rgba(0, 0, 0, 0.85);
 
-					&-selected {
-						color: @primary-color;
-					}
-				}
-			}
+          &-selected {
+            color: @primary-color;
+          }
+        }
+      }
 
-			.header-btn-action {
-				align-items: center;
-				color: hsla(0, 0%, 100%, 0.85);
-				cursor: pointer;
-				display: inline-flex;
-				font-size: 16px;
-				height: 100%;
-				justify-content: center;
-				padding: 0 12px;
-				transition: all 0.3s;
-				vertical-align: middle;
+      .header-btn-action {
+        align-items: center;
+        color: hsla(0, 0%, 100%, 0.85);
+        cursor: pointer;
+        display: inline-flex;
+        font-size: 16px;
+        height: 100%;
+        justify-content: center;
+        padding: 0 12px;
+        transition: all 0.3s;
+        vertical-align: middle;
 
-				&:hover {
-					background: @primary-color;
-				}
-			}
-		}
-	}
+        &:hover {
+          background: @primary-color;
+        }
+      }
+    }
+  }
 }
 
 .header-placeholder {
-	background-color: transparent;
-	height: @framework-header-height;
-	line-height: @framework-header-height;
+  background-color: transparent;
+  height: @framework-header-height;
+  line-height: @framework-header-height;
 }

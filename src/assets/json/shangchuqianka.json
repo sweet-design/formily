@@ -1,352 +1,352 @@
 {
-	"list": [
-		{
-			"type": "radio",
-			"name": "申请模式",
-			"icon": "icon-radio-active",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": false,
-				"controlCondition": "",
-				"inline": true,
-				"defaultValue": "1",
-				"advanceRuleType": "",
-				"driveList": [],
-				"customRuleFunc": "",
-				"showLabel": true,
-				"options": [
-					{
-						"value": "1",
-						"label": "单次发起"
-					},
-					{
-						"value": "0",
-						"label": "规律发起"
-					}
-				],
-				"required": false,
-				"width": "",
-				"remote": false,
-				"remoteOptions": [],
-				"props": {
-					"value": "value",
-					"label": "label"
-				},
-				"remoteFunc": "func_1620874908178",
-				"disabled": false
-			},
-			"key": 1620874908178,
-			"model": "applyMode",
-			"rules": []
-		},
-		{
-			"type": "date",
-			"name": "选择日期",
-			"icon": "icon-date",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": true,
-				"controlCondition": "(obj) => {\n    return obj.applyMode == '1'\n}",
-				"defaultValue": "",
-				"readonly": false,
-				"disabled": false,
-				"clearable": true,
-				"placeholder": "请选择",
-				"startPlaceholder": "",
-				"endPlaceholder": "",
-				"type": "date",
-				"advanceRuleType": "",
-				"driveList": [],
-				"rangeRuleObj": {
-					"field": "",
-					"condition": "",
-					"target": 0,
-					"unit": "default",
-					"message": ""
-				},
-				"customRuleFunc": "",
-				"format": "YYYY-MM-DD",
-				"required": true,
-				"width": "50%",
-				"remoteFunc": "func_1620889060076"
-			},
-			"key": 1620889060076,
-			"model": "date",
-			"rules": [
-				{
-					"required": true,
-					"message": "选择日期不能为空",
-					"trigger": "blur"
-				}
-			]
-		},
-		{
-			"type": "date",
-			"name": "日期范围",
-			"icon": "icon-date",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": true,
-				"controlCondition": "(obj) => {\n    return obj.applyMode == '0'\n}",
-				"defaultValue": [],
-				"readonly": false,
-				"disabled": false,
-				"clearable": true,
-				"placeholder": "",
-				"startPlaceholder": "开始日期",
-				"endPlaceholder": "结束日期",
-				"type": "daterange",
-				"advanceRuleType": "",
-				"driveList": [],
-				"rangeRuleObj": {
-					"field": "",
-					"condition": "",
-					"target": 0,
-					"unit": "default",
-					"message": ""
-				},
-				"customRuleFunc": "",
-				"format": "YYYY-MM-DD",
-				"required": true,
-				"width": "50%",
-				"remoteFunc": "func_1620889501398",
-				"filterable": true
-			},
-			"key": 1620889501398,
-			"model": "dateRange",
-			"rules": [
-				{
-					"required": true,
-					"message": "日期范围不能为空",
-					"trigger": "blur"
-				}
-			]
-		},
-		{
-			"type": "time",
-			"name": "签卡时间",
-			"icon": "icon-time",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": false,
-				"controlCondition": "",
-				"defaultValue": "",
-				"readonly": false,
-				"disabled": false,
-				"clearable": true,
-				"placeholder": "请选择",
-				"startPlaceholder": "",
-				"endPlaceholder": "",
-				"advanceRuleType": "",
-				"driveList": [],
-				"rangeRuleObj": {
-					"field": "",
-					"condition": "",
-					"target": 0,
-					"unit": "default",
-					"message": ""
-				},
-				"customRuleFunc": "",
-				"format": "HH:mm",
-				"required": true,
-				"width": "50%",
-				"remoteFunc": "func_1620889140133"
-			},
-			"key": 1620889140133,
-			"model": "time",
-			"rules": [
-				{
-					"required": true,
-					"message": "签卡时间不能为空",
-					"trigger": "blur"
-				}
-			]
-		},
-		{
-			"type": "select",
-			"name": "考勤方向",
-			"icon": "icon-select",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": false,
-				"controlCondition": "",
-				"defaultValue": "auto",
-				"multiple": false,
-				"disabled": false,
-				"clearable": false,
-				"placeholder": "请选择",
-				"required": false,
-				"advanceRuleType": "",
-				"driveList": [],
-				"customRuleFunc": "",
-				"showLabel": true,
-				"width": "50%",
-				"options": [
-					{
-						"value": "auto",
-						"label": "自动判断"
-					},
-					{
-						"value": "enter",
-						"label": "签到"
-					},
-					{
-						"value": "out",
-						"label": "签退"
-					}
-				],
-				"remote": false,
-				"filterable": false,
-				"remoteOptions": [],
-				"props": {
-					"value": "value",
-					"label": "label"
-				},
-				"remoteFunc": "func_1620889206536"
-			},
-			"key": 1620889206536,
-			"model": "kqDirection",
-			"rules": []
-		},
-		{
-			"type": "select",
-			"name": "签卡地点",
-			"icon": "icon-select",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": false,
-				"controlCondition": "",
-				"defaultValue": "Option1",
-				"multiple": false,
-				"disabled": false,
-				"clearable": false,
-				"placeholder": "请选择",
-				"required": false,
-				"advanceRuleType": "",
-				"driveList": [],
-				"customRuleFunc": "",
-				"showLabel": true,
-				"width": "50%",
-				"options": [
-					{
-						"value": "Option1",
-						"label": "默认考勤打开地点"
-					},
-					{
-						"value": "Option2",
-						"label": "上海总部"
-					},
-					{
-						"value": "Option3",
-						"label": "其他"
-					}
-				],
-				"remote": false,
-				"filterable": false,
-				"remoteOptions": [],
-				"props": {
-					"value": "value",
-					"label": "label"
-				},
-				"remoteFunc": "func_1620889351920"
-			},
-			"key": 1620889351920,
-			"model": "qkAddress",
-			"rules": []
-		},
-		{
-			"type": "select",
-			"name": "原因类型",
-			"icon": "icon-select",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"isControl": false,
-				"controlCondition": "",
-				"defaultValue": "",
-				"multiple": false,
-				"disabled": false,
-				"clearable": false,
-				"placeholder": "",
-				"required": true,
-				"advanceRuleType": "",
-				"driveList": [],
-				"customRuleFunc": "",
-				"showLabel": true,
-				"width": "50%",
-				"options": [
-					{
-						"value": "0",
-						"label": "私人原因"
-					},
-					{
-						"value": "1",
-						"label": "公司原因"
-					},
-					{
-						"value": "2",
-						"label": "其他原因"
-					}
-				],
-				"remote": false,
-				"filterable": false,
-				"remoteOptions": [],
-				"props": {
-					"value": "value",
-					"label": "label"
-				},
-				"remoteFunc": "func_1620875247627"
-			},
-			"key": 1620875247627,
-			"model": "reasonType",
-			"rules": [
-				{
-					"required": true,
-					"message": "原因类型不能为空",
-					"trigger": "blur"
-				}
-			]
-		},
-		{
-			"type": "textarea",
-			"name": "具体原因",
-			"icon": "icon-diy-com-textarea",
-			"options": {
-				"labelControl": false,
-				"labelCol": 6,
-				"width": "50%",
-				"isControl": false,
-				"controlCondition": "",
-				"defaultValue": "",
-				"required": true,
-				"disabled": false,
-				"advanceRuleType": "",
-				"driveList": [],
-				"customRuleFunc": "",
-				"pattern": "",
-				"placeholder": "请输入",
-				"remoteFunc": "func_1620875359138"
-			},
-			"key": 1620875359138,
-			"model": "specificReason",
-			"rules": [
-				{
-					"required": true,
-					"message": "具体原因不能为空",
-					"trigger": "blur"
-				}
-			]
-		}
-	],
-	"config": {
-		"labelCol": 6,
-		"labelAlign": "right",
-		"size": "default"
-	}
+  "list": [
+    {
+      "type": "radio",
+      "name": "申请模式",
+      "icon": "icon-radio-active",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": false,
+        "controlCondition": "",
+        "inline": true,
+        "defaultValue": "1",
+        "advanceRuleType": "",
+        "driveList": [],
+        "customRuleFunc": "",
+        "showLabel": true,
+        "options": [
+          {
+            "value": "1",
+            "label": "单次发起"
+          },
+          {
+            "value": "0",
+            "label": "规律发起"
+          }
+        ],
+        "required": false,
+        "width": "",
+        "remote": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1620874908178",
+        "disabled": false
+      },
+      "key": 1620874908178,
+      "model": "applyMode",
+      "rules": []
+    },
+    {
+      "type": "date",
+      "name": "选择日期",
+      "icon": "icon-date",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": true,
+        "controlCondition": "(obj) => {\n    return obj.applyMode == '1'\n}",
+        "defaultValue": "",
+        "readonly": false,
+        "disabled": false,
+        "clearable": true,
+        "placeholder": "请选择",
+        "startPlaceholder": "",
+        "endPlaceholder": "",
+        "type": "date",
+        "advanceRuleType": "",
+        "driveList": [],
+        "rangeRuleObj": {
+          "field": "",
+          "condition": "",
+          "target": 0,
+          "unit": "default",
+          "message": ""
+        },
+        "customRuleFunc": "",
+        "format": "YYYY-MM-DD",
+        "required": true,
+        "width": "50%",
+        "remoteFunc": "func_1620889060076"
+      },
+      "key": 1620889060076,
+      "model": "date",
+      "rules": [
+        {
+          "required": true,
+          "message": "选择日期不能为空",
+          "trigger": "blur"
+        }
+      ]
+    },
+    {
+      "type": "date",
+      "name": "日期范围",
+      "icon": "icon-date",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": true,
+        "controlCondition": "(obj) => {\n    return obj.applyMode == '0'\n}",
+        "defaultValue": [],
+        "readonly": false,
+        "disabled": false,
+        "clearable": true,
+        "placeholder": "",
+        "startPlaceholder": "开始日期",
+        "endPlaceholder": "结束日期",
+        "type": "daterange",
+        "advanceRuleType": "",
+        "driveList": [],
+        "rangeRuleObj": {
+          "field": "",
+          "condition": "",
+          "target": 0,
+          "unit": "default",
+          "message": ""
+        },
+        "customRuleFunc": "",
+        "format": "YYYY-MM-DD",
+        "required": true,
+        "width": "50%",
+        "remoteFunc": "func_1620889501398",
+        "filterable": true
+      },
+      "key": 1620889501398,
+      "model": "dateRange",
+      "rules": [
+        {
+          "required": true,
+          "message": "日期范围不能为空",
+          "trigger": "blur"
+        }
+      ]
+    },
+    {
+      "type": "time",
+      "name": "签卡时间",
+      "icon": "icon-time",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": false,
+        "controlCondition": "",
+        "defaultValue": "",
+        "readonly": false,
+        "disabled": false,
+        "clearable": true,
+        "placeholder": "请选择",
+        "startPlaceholder": "",
+        "endPlaceholder": "",
+        "advanceRuleType": "",
+        "driveList": [],
+        "rangeRuleObj": {
+          "field": "",
+          "condition": "",
+          "target": 0,
+          "unit": "default",
+          "message": ""
+        },
+        "customRuleFunc": "",
+        "format": "HH:mm",
+        "required": true,
+        "width": "50%",
+        "remoteFunc": "func_1620889140133"
+      },
+      "key": 1620889140133,
+      "model": "time",
+      "rules": [
+        {
+          "required": true,
+          "message": "签卡时间不能为空",
+          "trigger": "blur"
+        }
+      ]
+    },
+    {
+      "type": "select",
+      "name": "考勤方向",
+      "icon": "icon-select",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": false,
+        "controlCondition": "",
+        "defaultValue": "auto",
+        "multiple": false,
+        "disabled": false,
+        "clearable": false,
+        "placeholder": "请选择",
+        "required": false,
+        "advanceRuleType": "",
+        "driveList": [],
+        "customRuleFunc": "",
+        "showLabel": true,
+        "width": "50%",
+        "options": [
+          {
+            "value": "auto",
+            "label": "自动判断"
+          },
+          {
+            "value": "enter",
+            "label": "签到"
+          },
+          {
+            "value": "out",
+            "label": "签退"
+          }
+        ],
+        "remote": false,
+        "filterable": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1620889206536"
+      },
+      "key": 1620889206536,
+      "model": "kqDirection",
+      "rules": []
+    },
+    {
+      "type": "select",
+      "name": "签卡地点",
+      "icon": "icon-select",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": false,
+        "controlCondition": "",
+        "defaultValue": "Option1",
+        "multiple": false,
+        "disabled": false,
+        "clearable": false,
+        "placeholder": "请选择",
+        "required": false,
+        "advanceRuleType": "",
+        "driveList": [],
+        "customRuleFunc": "",
+        "showLabel": true,
+        "width": "50%",
+        "options": [
+          {
+            "value": "Option1",
+            "label": "默认考勤打开地点"
+          },
+          {
+            "value": "Option2",
+            "label": "上海总部"
+          },
+          {
+            "value": "Option3",
+            "label": "其他"
+          }
+        ],
+        "remote": false,
+        "filterable": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1620889351920"
+      },
+      "key": 1620889351920,
+      "model": "qkAddress",
+      "rules": []
+    },
+    {
+      "type": "select",
+      "name": "原因类型",
+      "icon": "icon-select",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "isControl": false,
+        "controlCondition": "",
+        "defaultValue": "",
+        "multiple": false,
+        "disabled": false,
+        "clearable": false,
+        "placeholder": "",
+        "required": true,
+        "advanceRuleType": "",
+        "driveList": [],
+        "customRuleFunc": "",
+        "showLabel": true,
+        "width": "50%",
+        "options": [
+          {
+            "value": "0",
+            "label": "私人原因"
+          },
+          {
+            "value": "1",
+            "label": "公司原因"
+          },
+          {
+            "value": "2",
+            "label": "其他原因"
+          }
+        ],
+        "remote": false,
+        "filterable": false,
+        "remoteOptions": [],
+        "props": {
+          "value": "value",
+          "label": "label"
+        },
+        "remoteFunc": "func_1620875247627"
+      },
+      "key": 1620875247627,
+      "model": "reasonType",
+      "rules": [
+        {
+          "required": true,
+          "message": "原因类型不能为空",
+          "trigger": "blur"
+        }
+      ]
+    },
+    {
+      "type": "textarea",
+      "name": "具体原因",
+      "icon": "icon-diy-com-textarea",
+      "options": {
+        "labelControl": false,
+        "labelCol": 6,
+        "width": "50%",
+        "isControl": false,
+        "controlCondition": "",
+        "defaultValue": "",
+        "required": true,
+        "disabled": false,
+        "advanceRuleType": "",
+        "driveList": [],
+        "customRuleFunc": "",
+        "pattern": "",
+        "placeholder": "请输入",
+        "remoteFunc": "func_1620875359138"
+      },
+      "key": 1620875359138,
+      "model": "specificReason",
+      "rules": [
+        {
+          "required": true,
+          "message": "具体原因不能为空",
+          "trigger": "blur"
+        }
+      ]
+    }
+  ],
+  "config": {
+    "labelCol": 6,
+    "labelAlign": "right",
+    "size": "default"
+  }
 }
