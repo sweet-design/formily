@@ -109,7 +109,7 @@
 
 @media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
   .ant-spin-blur {
-    background: #ffffff;
+    background: #fff;
     opacity: 0.5;
   }
 }

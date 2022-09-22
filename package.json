@@ -22,7 +22,9 @@
     "view": "npx http-server ./dist -p 9090 -g",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "deploy": "gh-pages -d site",
-    "prettier": "prettier --config .prettierrc --write **/*"
+    "prettier-all": "prettier --config .prettierrc --write **/*",
+    "prettier": "prettier --config .prettierrc --write ./{src,public}/**/*.{vue,tsx,jsx,ts,js,less,json,css,html}",
+    "lint:style": "stylelint ./{src,public}/**/*.less --syntax less --fix"
   },
   "dependencies": {
     "ant-design-vue": "1.7.3",
@@ -100,8 +102,8 @@
     "prettier": "^1.19.1",
     "scp2": "^0.5.0",
     "stylelint": "^13.10.0",
+    "stylelint-config-prettier": "^9.0.3",
     "stylelint-config-standard": "^20.0.0",
-    "stylelint-order": "^4.1.0",
     "typescript": "~3.9.3",
     "vue-template-compiler": "^2.6.11",
     "vue-tsx-support": "^3.1.0",
