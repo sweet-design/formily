@@ -1,48 +1,48 @@
 .formily-create-form {
   &.custom-horizontal-wrapper {
-    .ant-form-horizontal {
-      .ant-form-item {
+    .@{ant-prefix}-form-horizontal {
+      .@{ant-prefix}-form-item {
         // 特殊处理
-        .ant-switch {
+        .@{ant-prefix}-switch {
           margin: 0;
         }
 
         // 特殊处理
-        .ant-rate,
-        .ant-rate-star-first,
-        .ant-rate-star-second {
+        .@{ant-prefix}-rate,
+        .@{ant-prefix}-rate-star-first,
+        .@{ant-prefix}-rate-star-second {
           align-items: center;
           display: flex;
         }
 
         &.default {
-          .ant-form-item-label,
-          .ant-form-item-control,
+          .@{ant-prefix}-form-item-label,
+          .@{ant-prefix}-form-item-control,
           .control-text,
-          .ant-radio-group,
-          .ant-checkbox-group {
+          .@{ant-prefix}-radio-group,
+          .@{ant-prefix}-checkbox-group {
             height: 32px;
             line-height: 32px;
           }
         }
 
         &.large {
-          .ant-form-item-label,
-          .ant-form-item-control,
+          .@{ant-prefix}-form-item-label,
+          .@{ant-prefix}-form-item-control,
           .control-text,
-          .ant-radio-group,
-          .ant-checkbox-group {
+          .@{ant-prefix}-radio-group,
+          .@{ant-prefix}-checkbox-group {
             height: 40px;
             line-height: 40px;
           }
         }
 
         &.small {
-          .ant-form-item-label,
-          .ant-form-item-control,
+          .@{ant-prefix}-form-item-label,
+          .@{ant-prefix}-form-item-control,
           .control-text,
-          .ant-radio-group,
-          .ant-checkbox-group {
+          .@{ant-prefix}-radio-group,
+          .@{ant-prefix}-checkbox-group {
             height: 24px;
             line-height: 24px;
           }
@@ -50,7 +50,7 @@
 
         // 组件高度自动，不做限制
         &.component-height-auto {
-          .ant-form-item-control {
+          .@{ant-prefix}-form-item-control {
             height: auto;
           }
         }

@@ -23,6 +23,8 @@ export default class DateRangePicker extends Mixins(mixin) {
   })
   allConfig!: any;
 
+  private antPrefix = 'ant';
+
   // 阅读模式下数据转换显示，每种控件在阅读模式下在转换成显示值时所需要的函数是不同的
   get transValue() {
     const fieldProperties = this.config.fieldProperties;
@@ -77,7 +79,7 @@ export default class DateRangePicker extends Mixins(mixin) {
 
   private startDisabled() {
     this.$nextTick(() => {
-      const table = document.getElementsByClassName('ant-calendar-year-panel-tbody');
+      const table = document.getElementsByClassName(`${this.antPrefix}-calendar-year-panel-tbody`);
       // 所有开始年份
       const startList = table[0].querySelectorAll('td');
       startList.forEach((item: any) => {
@@ -92,7 +94,7 @@ export default class DateRangePicker extends Mixins(mixin) {
 
   private endDisabled() {
     this.$nextTick(() => {
-      const table = document.getElementsByClassName('ant-calendar-year-panel-tbody');
+      const table = document.getElementsByClassName(`${this.antPrefix}-calendar-year-panel-tbody`);
       // 所有结束年份
       const endList = table[1].querySelectorAll('td');
       endList.forEach((item: any) => {
@@ -107,8 +109,12 @@ export default class DateRangePicker extends Mixins(mixin) {
 
   private yearPanelPageChange() {
     this.$nextTick(() => {
-      const nextBtn = document.querySelectorAll('.ant-calendar-year-panel-next-decade-btn');
-      const prevBtn = document.querySelectorAll('.ant-calendar-year-panel-prev-decade-btn');
+      const nextBtn = document.querySelectorAll(
+        `.${this.antPrefix}-calendar-year-panel-next-decade-btn`,
+      );
+      const prevBtn = document.querySelectorAll(
+        `.${this.antPrefix}-calendar-year-panel-prev-decade-btn`,
+      );
       const that = this;
       function addClick(domList: any) {
         domList.forEach((dom: any) => {
