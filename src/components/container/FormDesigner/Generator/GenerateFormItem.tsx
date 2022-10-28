@@ -768,6 +768,13 @@ export default class GenerateFormItem extends Vue {
                 autoSearch={widget.options.autoSearch}
                 count={widget.options.count}
                 size={this.globalConfig.size}
+                onChange={() => {
+                  (this.$refs as any)[widget.model].onFieldChange();
+
+                  if (this.remote[widget.options.onchange]) {
+                    this.remote[widget.options.onchange](this.current, this.models, this.value);
+                  }
+                }}
               />
             )}
 
