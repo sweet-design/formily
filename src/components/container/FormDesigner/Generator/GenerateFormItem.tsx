@@ -276,7 +276,13 @@ export default class GenerateFormItem extends Vue {
               : null}
             {widgetType == 'checkbox' || widgetType == 'select'
               ? (widget.options.remote ? widget.options.remoteOptions : widget.options.options)
-                  .filter((item: any) => this.current.includes(item.value))
+                  .filter((item: any) => {
+                    if (Array.isArray(this.current)) {
+                      return this.current.includes(item.value);
+                    } else {
+                      return this.current === item.value;
+                    }
+                  })
                   .map((sub: any) => sub.label)
                   .join(',')
               : null}
