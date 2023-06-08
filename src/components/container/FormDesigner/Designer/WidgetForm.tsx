@@ -123,7 +123,6 @@ export default class WidgetForm extends Vue {
     const newIndex = $event.newIndex;
     const oldIndex = $event.oldIndex;
     const item = $event.item; // DOM对象
-
     // 防止布局元素的嵌套拖拽
     if (item.className.indexOf('data-grid') >= 0) {
       // 如果是列表中拖拽的元素需要还原到原来位置
@@ -143,7 +142,9 @@ export default class WidgetForm extends Vue {
       },
       key,
       // 绑定键值
-      model: row.columns[colIndex].list[newIndex].type + '_' + key,
+      model:
+        row.columns[colIndex].list[newIndex].model ||
+        row.columns[colIndex].list[newIndex].type + '_' + key,
       rules: [],
     });
 
