@@ -133,12 +133,11 @@ export default class WidgetForm extends Vue {
     }
 
     const key = Dayjs().valueOf();
-
     this.$set(row.columns[colIndex].list, newIndex, {
       ...row.columns[colIndex].list[newIndex],
       options: {
         ...row.columns[colIndex].list[newIndex].options,
-        remoteFunc: 'func_' + key,
+        remoteFunc: row.columns[colIndex].list[newIndex].options.remoteFunc || 'func_' + key,
       },
       key,
       // 绑定键值
