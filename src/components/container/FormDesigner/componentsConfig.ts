@@ -773,6 +773,10 @@ export const advanceComponents = [
       length: 3,
       // 是否支持多选
       multiple: false,
+      // 是否支持相机拍照上传
+      isCamera: true,
+      // 是否支持使用相册上传
+      isAlbum: true,
       // 是否使用阿里云上传
       isAliyun: false,
       // 是否支持删除
