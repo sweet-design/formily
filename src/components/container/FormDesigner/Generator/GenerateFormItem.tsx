@@ -86,6 +86,11 @@ export default class GenerateFormItem extends Vue {
   type!: boolean;
 
   private current = this.models[this.widget.model]; // 当前字段值
+  private treeObj = {
+    value: this.models[this.widget.model],
+    label: this.widget.options.assistField ? this.models[this.widget.options.assistField] : '',
+  }; // 懒加载树绑定值 - 单个
+  private treeList: any[] = []; // 懒加载树绑定值 - 多个
   private userVisible = false; // 是否显示人员选择器
   private options: any[] = []; // 人员选择器临时存储对象
   private previewVisible = false; // 是否显示附件预览
@@ -96,7 +101,12 @@ export default class GenerateFormItem extends Vue {
 
   @Watch('models', { deep: true })
   private modelsChange(newVal: any) {
+    console.log('models监听', newVal);
     this.current = newVal[this.widget.model];
+    this.treeObj.value = newVal[this.widget.model];
+    this.treeObj.label = this.widget.options.assistField
+      ? newVal[this.widget.options.assistField]
+      : '';
   }
 
   @Emit('checked')
@@ -119,8 +129,9 @@ export default class GenerateFormItem extends Vue {
    */
   @Watch('current', { deep: true })
   private currentChange(newVal: any) {
+    console.log('监听进来', newVal);
     this.models[this.widget.model] = newVal;
-
+    this.treeObj.value = newVal;
     this.updateModels({
       ...this.models,
       [this.widget.model]: newVal,
@@ -148,11 +159,13 @@ export default class GenerateFormItem extends Vue {
      */
     if (this.widget.options.remote && this.remote[this.widget.options.remoteFunc]) {
       this.remote[this.widget.options.remoteFunc]((data: any) => {
+        console.log('初始化', data);
         if (this.widget.type === 'treeSelect' && !this.widget.options.asyncLoad) {
           this.widget.options.remoteOptions = data;
 
           if (this.widget.options.assistField !== '') {
             this.treeSelected = this.value[this.widget.options.assistField];
+            this.treeObj.label = this.value[this.widget.options.assistField];
           }
         } else if (this.widget.type === 'html') {
           this.current = data;
@@ -172,6 +185,28 @@ export default class GenerateFormItem extends Vue {
               children: item[this.widget.options.props.children],
             };
           });
+        }
+        // 树懒加载
+        if (this.widget.type === 'treeSelect' && this.widget.options.asyncLoad) {
+          if (this.widget.options.assistField !== '') {
+            if (this.widget.options.multiple) {
+              const ids = this.models[this.widget.model] || [];
+              const test = this.widget.options.assistField
+                ? this.value[this.widget.options.assistField] || []
+                : [];
+              console.log('ddd', test);
+              ids.map((r: string, idx: number) => {
+                this.treeList.push({
+                  value: r,
+                  label: test[idx] || '',
+                });
+              });
+              console.log('树2', JSON.parse(JSON.stringify(this.treeList)));
+            } else {
+              this.treeObj.label = this.value[this.widget.options.assistField];
+              console.log('树', JSON.parse(JSON.stringify(this.treeObj)));
+            }
+          }
         }
       });
     }
@@ -204,10 +239,11 @@ export default class GenerateFormItem extends Vue {
             value: item[this.widget.options.props.value],
             label: item[this.widget.options.props.label],
             children: item[this.widget.options.props.children],
+            isLeaf: item.isLeaf,
           };
         });
-
-        this.widget.options.remoteOptions = this.widget.options.remoteOptions.concat(temp);
+        treeNode.dataRef.children = temp;
+        // this.widget.options.remoteOptions = this.widget.options.remoteOptions.concat(temp);
         resolve();
       }, treeNode);
     });
@@ -784,39 +820,124 @@ export default class GenerateFormItem extends Vue {
               />
             )}
 
-            {widget.type == 'treeSelect' && (
-              <a-tree-select
-                vModel={this.current}
-                placeholder={this.$t(widget.options.placeholder)}
-                multiple={widget.options.multiple}
-                treeCheckable={widget.options.multiple}
-                tree-data-simple-mode={widget.options.asyncLoad}
-                replaceFields={{
-                  children: widget.options.props.children,
-                  title: widget.options.props.label,
-                  key: widget.options.props.value,
-                  value: widget.options.props.value,
-                }}
-                dropdownStyle={{ maxHeight: '300px' }}
-                getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                showSearch={widget.options.filterable}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                treeNodeFilterProp="title"
-                style={{ width: widget.options.width }}
-                treeData={widget.options.remoteOptions}
-                treeDefaultExpandedKeys={[
-                  widget.options.remoteOptions.length > 0 &&
-                    widget.options.remoteOptions[0][widget.options.props.value],
-                ]}
-                size={this.globalConfig.size}
-                showCheckedStrategy={widget.options.showCheckedStrategy}
-                onChange={(value: string | string[], label: Array<string>, extra: any) => {
-                  this.treeSelected = label;
-                }}
-                props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
-              ></a-tree-select>
-            )}
+            {widget.type == 'treeSelect' &&
+              (widget.options.asyncLoad ? (
+                widget.options.multiple ? (
+                  <a-tree-select
+                    v-model={this.treeList}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    multiple={widget.options.multiple}
+                    treeCheckable={widget.options.multiple}
+                    tree-data-simple-mode={widget.options.asyncLoad}
+                    replaceFields={{
+                      children: widget.options.props.children,
+                      title: widget.options.props.label,
+                      key: widget.options.props.value,
+                      value: widget.options.props.value,
+                    }}
+                    dropdownStyle={{ maxHeight: '300px' }}
+                    getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                    showSearch={widget.options.filterable}
+                    disabled={widget.options.disabled}
+                    allowClear={widget.options.clearable}
+                    treeNodeFilterProp="title"
+                    style={{ width: widget.options.width }}
+                    treeData={widget.options.remoteOptions}
+                    treeDefaultExpandedKeys={[
+                      widget.options.remoteOptions.length > 0 &&
+                        widget.options.remoteOptions[0][widget.options.props.value],
+                    ]}
+                    labelInValue
+                    size={this.globalConfig.size}
+                    showCheckedStrategy={widget.options.showCheckedStrategy}
+                    onChange={(value: string | string[], label: Array<string>, extra: any) => {
+                      this.treeSelected = (value as any).map((o: any) => o.label);
+                      // this.treeObj.label = extra.triggerNode.label;
+                      this.models[this.widget.model] = (value as any).map((o: any) => o.value);
+                      this.widget.options.assistField
+                        ? (this.models[this.widget.options.assistField] = this.treeSelected)
+                        : '';
+                      console.log('书回调', value, label, extra, this.treeList);
+                    }}
+                    props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
+                  ></a-tree-select>
+                ) : (
+                  <a-tree-select
+                    v-model={this.treeObj}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    multiple={widget.options.multiple}
+                    treeCheckable={widget.options.multiple}
+                    // tree-data-simple-mode={widget.options.asyncLoad}
+                    replaceFields={{
+                      children: widget.options.props.children,
+                      title: widget.options.props.label,
+                      key: widget.options.props.value,
+                      value: widget.options.props.value,
+                    }}
+                    dropdownStyle={{ maxHeight: '300px' }}
+                    getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                    showSearch={widget.options.filterable}
+                    disabled={widget.options.disabled}
+                    allowClear={widget.options.clearable}
+                    treeNodeFilterProp="title"
+                    style={{ width: widget.options.width }}
+                    treeData={widget.options.remoteOptions}
+                    treeDefaultExpandedKeys={[
+                      widget.options.remoteOptions.length > 0 &&
+                        widget.options.remoteOptions[0][widget.options.props.value],
+                    ]}
+                    labelInValue
+                    size={this.globalConfig.size}
+                    showCheckedStrategy={widget.options.showCheckedStrategy}
+                    onChange={(value: string | string[], label: Array<string>, extra: any) => {
+                      this.treeSelected = extra.triggerNode.label;
+                      this.treeObj.label = extra.triggerNode.label;
+                      this.models[this.widget.model] = this.treeObj.value;
+                      this.widget.options.assistField
+                        ? (this.models[this.widget.options.assistField] = this.treeObj.label)
+                        : '';
+                      console.log(
+                        '书回调',
+                        JSON.parse(JSON.stringify(this.models)),
+                        JSON.parse(JSON.stringify(this.current)),
+                      );
+                    }}
+                    props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
+                  ></a-tree-select>
+                )
+              ) : (
+                <a-tree-select
+                  v-model={this.current}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  multiple={widget.options.multiple}
+                  treeCheckable={widget.options.multiple}
+                  tree-data-simple-mode={widget.options.asyncLoad}
+                  replaceFields={{
+                    children: widget.options.props.children,
+                    title: widget.options.props.label,
+                    key: widget.options.props.value,
+                    value: widget.options.props.value,
+                  }}
+                  dropdownStyle={{ maxHeight: '300px' }}
+                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                  showSearch={widget.options.filterable}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  treeNodeFilterProp="title"
+                  style={{ width: widget.options.width }}
+                  treeData={widget.options.remoteOptions}
+                  treeDefaultExpandedKeys={[
+                    widget.options.remoteOptions.length > 0 &&
+                      widget.options.remoteOptions[0][widget.options.props.value],
+                  ]}
+                  size={this.globalConfig.size}
+                  showCheckedStrategy={widget.options.showCheckedStrategy}
+                  onChange={(value: string | string[], label: Array<string>, extra: any) => {
+                    this.treeSelected = label;
+                  }}
+                  props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
+                ></a-tree-select>
+              ))}
 
             {widget.type == 'customSelector' && (
               <a-select
