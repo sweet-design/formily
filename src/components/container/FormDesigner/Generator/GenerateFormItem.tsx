@@ -194,17 +194,18 @@ export default class GenerateFormItem extends Vue {
               const test = this.widget.options.assistField
                 ? this.value[this.widget.options.assistField] || []
                 : [];
-              console.log('ddd', test);
               ids.map((r: string, idx: number) => {
                 this.treeList.push({
                   value: r,
                   label: test[idx] || '',
                 });
               });
-              console.log('树2', JSON.parse(JSON.stringify(this.treeList)));
+              this.treeSelected = test;
+              // console.log('树2', JSON.parse(JSON.stringify(this.treeList)));
             } else {
               this.treeObj.label = this.value[this.widget.options.assistField];
-              console.log('树', JSON.parse(JSON.stringify(this.treeObj)));
+              this.treeSelected = this.value[this.widget.options.assistField];
+              // console.log('树', JSON.parse(JSON.stringify(this.treeObj)));
             }
           }
         }
