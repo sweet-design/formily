@@ -100,6 +100,33 @@ export default class DropDownList extends tsx.Component<DropDownListOptions, Eve
   width!: string;
 
   /**
+   * 是否开启自定义远端搜索
+   */
+  @Prop({
+    type: Boolean,
+    default: false,
+  })
+  filterfetch!: boolean;
+
+  /**
+   * 自定义远端搜索方法
+   */
+  @Prop({
+    type: String,
+    default: '',
+  })
+  fetchFun!: string;
+
+  /**
+   * 表单获取数据远端方法，需内置
+   */
+  @Prop({
+    type: Object,
+    default: () => ({}),
+  })
+  remote!: Record<string, any>;
+
+  /**
    * 搜索类型，默认人员列表
    * SysRole -> 系统角色
    * HrEmp -> 人员列表
@@ -185,24 +212,37 @@ export default class DropDownList extends tsx.Component<DropDownListOptions, Eve
     this.fetching = true;
 
     if (fetchId !== this.lastFetchId) return;
-
-    (async () => {
-      const res = await DropDownSelectSearch({
-        entity: { type: this.searchType, keyword: value, takeCount: this.count },
+    if (this.filterfetch) {
+      return new Promise((resolve: Function) => {
+        this.remote[this.fetchFun]((data: any) => {
+          this.data = data.map((item: any) => {
+            return {
+              label: item[this.replaceFields.label],
+              key: item[this.replaceFields.key],
+            };
+          });
+          resolve();
+        }, value);
       });
-
-      if (res.code === 200) {
-        const data = res.data.map((item: any) => {
-          return {
-            label: item[this.replaceFields.label],
-            key: item[this.replaceFields.key],
-          };
+    } else {
+      (async () => {
+        const res = await DropDownSelectSearch({
+          entity: { type: this.searchType, keyword: value, takeCount: this.count },
         });
 
-        this.data = data;
-        this.fetching = false;
-      }
-    })();
+        if (res.code === 200) {
+          const data = res.data.map((item: any) => {
+            return {
+              label: item[this.replaceFields.label],
+              key: item[this.replaceFields.key],
+            };
+          });
+
+          this.data = data;
+          this.fetching = false;
+        }
+      })();
+    }
   }
 
   /**

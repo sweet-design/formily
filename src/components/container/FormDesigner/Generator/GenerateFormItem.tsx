@@ -150,6 +150,7 @@ export default class GenerateFormItem extends Vue {
 
   created() {
     this.excuteOption();
+    console.log('初始化fff', this.remote);
   }
 
   excuteOption() {
@@ -159,7 +160,6 @@ export default class GenerateFormItem extends Vue {
      */
     if (this.widget.options.remote && this.remote[this.widget.options.remoteFunc]) {
       this.remote[this.widget.options.remoteFunc]((data: any) => {
-        console.log('初始化', data);
         if (this.widget.type === 'treeSelect' && !this.widget.options.asyncLoad) {
           this.widget.options.remoteOptions = data;
 
@@ -248,6 +248,31 @@ export default class GenerateFormItem extends Vue {
         resolve();
       }, treeNode);
     });
+  }
+  /**
+   * 下拉数据远端搜索
+   */
+  selectLoad(value: any) {
+    return new Promise((resolve: Function) => {
+      this.remote[this.widget.options.remoteFunc]((data: any) => {
+        this.widget.options.remoteOptions = data.map((item: any) => {
+          return {
+            id: item[this.widget.options.props.value],
+            key: item[this.widget.options.props.value],
+            value: item[this.widget.options.props.value],
+            label: item[this.widget.options.props.label],
+            children: item[this.widget.options.props.children],
+          };
+        });
+        resolve();
+      }, value);
+    });
+  }
+  /**
+   * 下拉数据选项进行搜索
+   */
+  selectfilterOption(input: any, option: any) {
+    return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0;
   }
 
   /**
@@ -740,59 +765,114 @@ export default class GenerateFormItem extends Vue {
               ></a-range-picker>
             )}
 
-            {widget.type == 'select' && (
-              <a-select
-                vModel={this.current}
-                placeholder={this.$t(widget.options.placeholder)}
-                mode={widget.options.multiple ? 'multiple' : 'default'}
-                disabled={widget.options.disabled}
-                showSearch={widget.options.filterable}
-                allowClear={widget.options.clearable}
-                optionFilterProp="title"
-                getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
+            {widget.type == 'select' &&
+              (widget.options.filterfetch ? (
+                <a-select
+                  vModel={this.current}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  mode={widget.options.multiple ? 'multiple' : 'default'}
+                  disabled={widget.options.disabled}
+                  showSearch={widget.options.filterfetch}
+                  allowClear={widget.options.clearable}
+                  optionFilterProp="title"
+                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  filter-option={false}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
 
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              >
-                {(widget.options.remote
-                  ? widget.options.remoteOptions
-                  : widget.options.options
-                ).map((item: any) => {
-                  return (
-                    <a-select-option
-                      key={item.value}
-                      value={item.value}
-                      title={
-                        widget.options.remote
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                  onSearch={this.selectLoad}
+                >
+                  {(widget.options.remote
+                    ? widget.options.remoteOptions
+                    : widget.options.options
+                  ).map((item: any) => {
+                    return (
+                      <a-select-option
+                        key={item.value}
+                        value={item.value}
+                        title={
+                          widget.options.remote
+                            ? widget.options.showLabel
+                              ? this.$t(item.label)
+                              : item.value
+                            : widget.options.showLabel
+                            ? this.$t(item.label)
+                            : item.value
+                        }
+                      >
+                        {widget.options.remote
                           ? widget.options.showLabel
                             ? this.$t(item.label)
                             : item.value
                           : widget.options.showLabel
                           ? this.$t(item.label)
-                          : item.value
-                      }
-                    >
-                      {widget.options.remote
-                        ? widget.options.showLabel
+                          : item.value}
+                      </a-select-option>
+                    );
+                  })}
+                </a-select>
+              ) : (
+                <a-select
+                  vModel={this.current}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  mode={widget.options.multiple ? 'multiple' : 'default'}
+                  disabled={widget.options.disabled}
+                  showSearch={widget.options.filterable}
+                  allowClear={widget.options.clearable}
+                  optionFilterProp="title"
+                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                >
+                  {(widget.options.remote
+                    ? widget.options.remoteOptions
+                    : widget.options.options
+                  ).map((item: any) => {
+                    return (
+                      <a-select-option
+                        key={item.value}
+                        value={item.value}
+                        title={
+                          widget.options.remote
+                            ? widget.options.showLabel
+                              ? this.$t(item.label)
+                              : item.value
+                            : widget.options.showLabel
+                            ? this.$t(item.label)
+                            : item.value
+                        }
+                      >
+                        {widget.options.remote
+                          ? widget.options.showLabel
+                            ? this.$t(item.label)
+                            : item.value
+                          : widget.options.showLabel
                           ? this.$t(item.label)
-                          : item.value
-                        : widget.options.showLabel
-                        ? this.$t(item.label)
-                        : item.value}
-                    </a-select-option>
-                  );
-                })}
-              </a-select>
-            )}
+                          : item.value}
+                      </a-select-option>
+                    );
+                  })}
+                </a-select>
+              ))}
 
             {widget.type == 'ddList' && (
               <this.plugins.DropDownList
@@ -803,6 +883,9 @@ export default class GenerateFormItem extends Vue {
                 placeholder={this.$t(widget.options.placeholder)}
                 allowClear={widget.options.clearable}
                 searchType={widget.options.searchType}
+                filterfetch={widget.options.filterfetch}
+                remote={this.remote}
+                fetchFun={widget.options.remoteFunc}
                 searchParams={
                   widget.options.searchParams && widget.options.searchParams.trim() !== ''
                     ? JSON.parse(widget.options.searchParams)
@@ -979,6 +1062,13 @@ export default class GenerateFormItem extends Vue {
                 vModel={this.current}
                 disabled={widget.options.disabled}
                 size={this.globalConfig.size}
+                onChange={() => {
+                  (this.$refs as any)[widget.model].onFieldChange();
+
+                  if (this.remote[widget.options.onchange]) {
+                    this.remote[widget.options.onchange](this.current, this.models, this.value);
+                  }
+                }}
               />
             )}
 
@@ -1114,6 +1204,8 @@ export default class GenerateFormItem extends Vue {
         )}
       </a-form-model-item>
     );
+
+    console.log('item', this.remote, JSON.parse(JSON.stringify(widget.options)));
     return (
       <div class="generate-form-item">
         {this.filterKeys.length > 0 && this.filterKeysState ? temp : null}
