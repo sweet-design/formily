@@ -419,7 +419,6 @@ export default class GenerateForm extends Vue {
             this.models[genList[i].model] = genList[i].options.defaultValue;
           }
         }
-
         if (this.rules[genList[i].model]) {
           this.rules[genList[i].model] = [
             ...this.rules[genList[i].model],
@@ -429,6 +428,19 @@ export default class GenerateForm extends Vue {
               } else if (item.required) {
                 return {
                   ...item,
+                  // 自定义验证函数去除空格
+                  validator: (rule: any, value: any, callback: any) => {
+                    const trimmedValue = value.trim();
+                    if (!trimmedValue) {
+                      // 验证失败
+                      callback(
+                        new Error(`${this.$t(genList[i].name)}${this.$t('component.check.null')}`),
+                      );
+                    } else {
+                      // 验证成功
+                      callback();
+                    }
+                  },
                   message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
                 };
               } else {
@@ -447,6 +459,19 @@ export default class GenerateForm extends Vue {
                 return { ...item, pattern: eval(item.pattern) };
               } else if (item.required) {
                 return {
+                  // 自定义验证函数去除空格
+                  validator: (rule: any, value: any, callback: any) => {
+                    const trimmedValue = value.trim();
+                    if (!trimmedValue) {
+                      // 验证失败
+                      callback(
+                        new Error(`${this.$t(genList[i].name)}${this.$t('component.check.null')}`),
+                      );
+                    } else {
+                      // 验证成功
+                      callback();
+                    }
+                  },
                   ...item,
                   message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
                 };

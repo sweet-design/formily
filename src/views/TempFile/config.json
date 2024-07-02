@@ -19,7 +19,7 @@
                 "isControl": false,
                 "controlCondition": "",
                 "defaultValue": "",
-                "required": false,
+                "required": true,
                 "dataType": "string",
                 "advanceRuleType": "",
                 "driveList": [],
@@ -35,6 +35,7 @@
               "model": "input",
               "rules": [
                 {
+                  "required": true,
                   "type": "string",
                   "message": "姓名格式不正确",
                   "trigger": ["blur", "change"]
@@ -57,7 +58,7 @@
                 "isControl": false,
                 "controlCondition": "",
                 "defaultValue": "",
-                "required": false,
+                "required": true,
                 "disabled": false,
                 "advanceRuleType": "",
                 "driveList": [],
@@ -70,7 +71,14 @@
               },
               "key": 1619319405676,
               "model": "textarea",
-              "rules": []
+              "rules": [
+                {
+                  "required": true,
+                  "type": "string",
+                  "message": "多行文本",
+                  "trigger": ["blur", "change"]
+                }
+              ]
             }
           ]
         }
@@ -366,16 +374,16 @@
                 "isControl": false,
                 "controlCondition": "",
                 "defaultValue": [],
-                "multiple": true,
+                "multiple": false,
                 "disabled": false,
                 "clearable": false,
                 "placeholder": "",
-                "required": false,
+                "required": true,
                 "assistField": "treeSelectText",
                 "advanceRuleType": "",
                 "driveList": [],
                 "customRuleFunc": "",
-                "asyncLoad": false,
+                "asyncLoad": true,
                 "width": "100%",
                 "filterable": true,
                 "showCheckedStrategy": "SHOW_PARENT",
@@ -391,7 +399,13 @@
               },
               "key": 1619319520870,
               "model": "treeSelect",
-              "rules": []
+              "rules": [
+                {
+                  "required": true,
+                  "message": "所属组织 不能为空",
+                  "trigger": ["blur", "change"]
+                }
+              ]
             }
           ]
         }
@@ -403,6 +417,109 @@
         "remoteFunc": "func_1619319499034"
       },
       "key": 1619319499034,
+      "model": "grid_1619319499034",
+      "rules": []
+    },
+    {
+      "type": "grid",
+      "name": "栅格布局",
+      "icon": "icon-grid-",
+      "columns": [
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "date",
+              "name": "日期",
+              "icon": "icon-date",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": "",
+                "readonly": false,
+                "disabled": false,
+                "clearable": true,
+                "placeholder": "",
+                "startPlaceholder": "",
+                "endPlaceholder": "",
+                "type": "date",
+                "advanceRuleType": "",
+                "driveList": [],
+                "rangeRuleObj": {
+                  "field": "",
+                  "condition": "",
+                  "target": 0,
+                  "unit": "default",
+                  "message": ""
+                },
+                "customRuleFunc": "",
+                "format": "YYYY-MM-DD",
+                "required": false,
+                "width": "100%",
+                "remoteFunc": "func_1619319501860",
+                "hourStep": 1,
+                "minuteStep": 1,
+                "secondStep": 1,
+                "onchange": ""
+              },
+              "key": 1619319501860,
+              "model": "date",
+              "rules": []
+            }
+          ]
+        },
+        {
+          "span": 12,
+          "list": [
+            {
+              "type": "treeSelect",
+              "name": "下拉树多选",
+              "icon": "icon-select",
+              "options": {
+                "labelControl": false,
+                "labelCol": 6,
+                "isControl": false,
+                "controlCondition": "",
+                "defaultValue": [],
+                "multiple": true,
+                "disabled": false,
+                "clearable": false,
+                "placeholder": "",
+                "required": false,
+                "assistField": "treeSelectText2",
+                "advanceRuleType": "",
+                "driveList": [],
+                "customRuleFunc": "",
+                "asyncLoad": true,
+                "width": "100%",
+                "filterable": true,
+                "showCheckedStrategy": "SHOW_PARENT",
+                "remote": true,
+                "remoteOptions": [],
+                "props": {
+                  "value": "id",
+                  "label": "title",
+                  "children": "children"
+                },
+                "remoteFunc": "loadTree2",
+                "onchange": ""
+              },
+              "key": 1619319520870,
+              "model": "treeSelect2",
+              "rules": []
+            }
+          ]
+        }
+      ],
+      "options": {
+        "gutter": 0,
+        "justify": "start",
+        "align": "top",
+        "remoteFunc": "func_1619319499034"
+      },
+      "key": 16193194990334,
       "model": "grid_1619319499034",
       "rules": []
     },
@@ -448,15 +565,16 @@
                     "label": "选择3"
                   }
                 ],
-                "remote": false,
-                "filterable": true,
+                "remote": true,
+                "filterable": false,
+                "filterfetch": true,
                 "remoteOptions": [],
                 "props": {
                   "value": "value",
                   "label": "label"
                 },
-                "remoteFunc": "func_1619319568270",
-                "onchange": ""
+                "remoteFunc": "loadselect",
+                "onchange": "loadselect2"
               },
               "key": 1619319568270,
               "model": "select",
@@ -489,8 +607,16 @@
                 "searchType": "HrEmp",
                 "autoSearch": false,
                 "count": 10,
-                "remoteFunc": "func_1619319650694",
-                "onchange": ""
+                "options": [],
+                "remote": true,
+                "remoteFunc": "selectDD",
+                "onchange": "",
+                "remoteOptions": [],
+                "props": {
+                  "value": "value",
+                  "label": "label"
+                },
+                "filterfetch": true
               },
               "key": 1619319650694,
               "model": "ddList",
@@ -537,7 +663,7 @@
                 "customRuleFunc": "",
                 "disabled": false,
                 "remoteFunc": "func_1619320257210",
-                "onchange": ""
+                "onchange": "handswitch"
               },
               "key": 1619320257210,
               "model": "switch",

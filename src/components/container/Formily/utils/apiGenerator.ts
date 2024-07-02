@@ -1,6 +1,6 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import { message } from 'ant-design-vue';
-import { isObject, merge } from 'lodash';
+import { isObject } from 'lodash';
 
 const tranform = (data: any[]) => {
   return data.reduce((a, b) => {
@@ -84,7 +84,7 @@ export const singleApiGenerator = (item: any, data?: any): Promise<any> => {
   );
 
   if (isObject(data)) {
-    merge(body, data);
+    // merge(body, data);
   }
 
   return service({ url: item.url, params: tranform(item.params), data: body });
