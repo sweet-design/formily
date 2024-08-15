@@ -426,23 +426,24 @@ export default class GenerateForm extends Vue {
               if (item.pattern) {
                 return { ...item, pattern: eval(item.pattern) };
               } else if (item.required) {
-                return {
-                  ...item,
-                  // 自定义验证函数去除空格
-                  validator: (rule: any, value: any, callback: any) => {
-                    const trimmedValue = value.trim();
-                    if (!trimmedValue) {
-                      // 验证失败
-                      callback(
-                        new Error(`${this.$t(genList[i].name)}${this.$t('component.check.null')}`),
-                      );
-                    } else {
-                      // 验证成功
-                      callback();
+                return genList[i].type == 'textarea'
+                  ? {
+                      ...item,
+                      // 针对多行文本自定义验证函数去除空格
+                      validator: (rule: any, value: any, callback: any) => {
+                        const trimmedValue = value?.trim();
+                        if (!trimmedValue) {
+                          callback(new Error());
+                        } else {
+                          callback();
+                        }
+                      },
+                      message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
                     }
-                  },
-                  message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
-                };
+                  : {
+                      ...item,
+                      message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
+                    };
               } else {
                 return {
                   ...item,
@@ -458,23 +459,24 @@ export default class GenerateForm extends Vue {
               if (item.pattern) {
                 return { ...item, pattern: eval(item.pattern) };
               } else if (item.required) {
-                return {
-                  // 自定义验证函数去除空格
-                  validator: (rule: any, value: any, callback: any) => {
-                    const trimmedValue = value.trim();
-                    if (!trimmedValue) {
-                      // 验证失败
-                      callback(
-                        new Error(`${this.$t(genList[i].name)}${this.$t('component.check.null')}`),
-                      );
-                    } else {
-                      // 验证成功
-                      callback();
+                return genList[i].type == 'textarea'
+                  ? {
+                      ...item,
+                      // 针对多行文本自定义验证函数去除空格
+                      validator: (rule: any, value: any, callback: any) => {
+                        const trimmedValue = value?.trim();
+                        if (!trimmedValue) {
+                          callback(new Error());
+                        } else {
+                          callback();
+                        }
+                      },
+                      message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
                     }
-                  },
-                  ...item,
-                  message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
-                };
+                  : {
+                      ...item,
+                      message: `${this.$t(genList[i].name)}${this.$t('component.check.null')}`,
+                    };
               } else {
                 return {
                   ...item,

@@ -34,6 +34,7 @@ export default class FormDesigner extends Vue {
       'rate',
       'cascader',
       'treeSelect',
+      'inputSelect',
       'slider',
     ],
   })

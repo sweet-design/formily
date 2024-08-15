@@ -3,7 +3,7 @@ import { CohoComponent } from './component';
 export declare class FormDesigner extends CohoComponent {
   /**
    * basic field
-   * @default ['input','textarea','number','radio','checkbox','time','date','rate','color','ddList','treeSelect','customSelector','select','switch','slider','text','button','html']
+   * @default ['input','textarea','number','radio','checkbox','time','date','rate','color','ddList','treeSelect','inputSelect','customSelector','select','switch','slider','text','button','html']
    */
   basicFields?: Array<string>;
 

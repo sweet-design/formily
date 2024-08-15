@@ -95,6 +95,12 @@ export default class GenerateFormItem extends Vue {
   private options: any[] = []; // 人员选择器临时存储对象
   private previewVisible = false; // 是否显示附件预览
   private treeShowName = ''; // 树懒加载查询搜索字段
+  private selectObj: any = {
+    label: this.widget.options.assistField ? this.models[this.widget.options.assistField] : '',
+    key: this.models[this.widget.model],
+    type: '',
+  }; // 查询组件懒加载绑定值
+  private treeTypes: any = {}; // 查询组件懒加载绑定值
   $refs!: {
     selector: any;
   };
@@ -107,6 +113,12 @@ export default class GenerateFormItem extends Vue {
     this.treeObj.label = this.widget.options.assistField
       ? newVal[this.widget.options.assistField]
       : '';
+    if (this.selectObj) {
+      this.selectObj.key = newVal[this.widget.model];
+      this.selectObj.label = this.widget.options.assistField
+        ? newVal[this.widget.options.assistField]
+        : '';
+    }
   }
 
   @Emit('checked')
@@ -180,15 +192,18 @@ export default class GenerateFormItem extends Vue {
             this.cascaderSelected = this.value[this.widget.options.assistField].join('/');
           }
         } else {
-          this.widget.options.remoteOptions = data.map((item: any) => {
-            return {
-              id: item[this.widget.options.props.value],
-              key: item[this.widget.options.props.value],
-              value: item[this.widget.options.props.value],
-              label: item[this.widget.options.props.label],
-              children: item[this.widget.options.props.children],
-            };
-          });
+          this.widget.options.remoteOptions =
+            this.widget.type === 'inputSelect'
+              ? data
+              : data.map((item: any) => {
+                  return {
+                    id: item[this.widget.options.props.value],
+                    key: item[this.widget.options.props.value],
+                    value: item[this.widget.options.props.value],
+                    label: item[this.widget.options.props.label],
+                    children: item[this.widget.options.props.children],
+                  };
+                });
         }
         // 树懒加载
         if (this.widget.type === 'treeSelect' && this.widget.options.asyncLoad) {
@@ -205,13 +220,48 @@ export default class GenerateFormItem extends Vue {
                 });
               });
               this.treeSelected = test;
-              this.models[this.widget.options.assistField] = test;
               // console.log('树2', JSON.parse(JSON.stringify(this.treeList)));
             } else {
               this.treeObj.label = this.value[this.widget.options.assistField];
               this.treeSelected = this.value[this.widget.options.assistField];
-              this.models[this.widget.options.assistField] = this.treeObj.label;
               // console.log('树', JSON.parse(JSON.stringify(this.treeObj)));
+            }
+          }
+        }
+        // 查询下拉
+        if (this.widget.type === 'inputSelect') {
+          if (this.widget.options.assistField !== '') {
+            if (this.widget.options.multiple) {
+              const ids = this.models[this.widget.model] || [];
+              const test = this.widget.options.assistField
+                ? this.value[this.widget.options.assistField] || []
+                : [];
+              ids.map((r: string, idx: number) => {
+                this.treeList.push({
+                  value: r,
+                  key: r,
+                  label: test[idx] || '',
+                });
+              });
+              this.treeSelected = test;
+              this.models[this.widget.options.assistField] = test;
+              // console.log('inputSelect', JSON.parse(JSON.stringify(this.treeList)));
+            } else {
+              console.log(
+                'inputSelect',
+                this.widget.options.assistField,
+                this.value,
+                this.widget.options.placeholder,
+              );
+              if (this.value[this.widget.options.assistField]) {
+                this.selectObj.label = this.value[this.widget.options.assistField];
+                this.treeSelected = this.value[this.widget.options.assistField];
+                this.models[this.widget.options.assistField] = this.selectObj.label;
+                this.selectObj.key = this.value[this.widget.model];
+              } else {
+                this.selectObj = undefined;
+              }
+              //
             }
           }
         }
@@ -287,6 +337,25 @@ export default class GenerateFormItem extends Vue {
     });
   }
   /**
+   * 查询下拉数据远端搜索
+   */
+  inputLoad(value: any) {
+    return new Promise((resolve: Function) => {
+      this.remote[this.widget.options.remoteFunc]((data: any) => {
+        this.widget.options.remoteOptions = data;
+        resolve();
+      }, value);
+    });
+  }
+  findNodeByKey(nodes: Array<any>) {
+    return nodes.map(node => {
+      const newNode = {
+        ...node,
+      };
+      return newNode;
+    });
+  }
+  /**
    * 下拉数据选项进行搜索
    */
   selectfilterOption(input: any, option: any) {
@@ -314,534 +383,349 @@ export default class GenerateFormItem extends Vue {
   render() {
     const widget = this.widget;
     const widgetType = widget.type;
-    const temp = (
-      <a-form-model-item
-        label={widget.type == 'button' ? null : this.$t(widget.name)}
-        prop={widget.model}
-        ref={widget.model}
-        autoLink={false}
-        props={
-          widget.options.labelControl
-            ? {
-                labelCol: { span: widget.options.labelCol },
-                wrapperCol: { span: 24 - widget.options.labelCol },
-              }
-            : null
-        }
-      >
-        {this.type ? (
-          <div>
-            {widgetType == 'input' || widgetType == 'textarea' || widgetType == 'text' ? (
-              <span>
-                {widget.options.valueFormatter && widget.options.valueFormatter.trim() !== ''
-                  ? this.valueTransform(widget.options.valueFormatter.trim(), this.current)
-                  : this.current}
-              </span>
-            ) : null}
-
-            {widgetType == 'time' || widgetType == 'date' || widgetType == 'number' ? (
-              <span>{Array.isArray(this.current) ? this.current.join(',') : this.current}</span>
-            ) : null}
-
-            {widgetType == 'switch'
-              ? this.current
-                ? this.$t('pageDesign.action.yes')
-                : this.$t('pageDesign.action.no')
-              : null}
-            {widgetType == 'radio'
-              ? (widget.options.remote
-                  ? widget.options.remoteOptions
-                  : widget.options.options
-                ).find((item: any) => item.value == this.current)?.label
-              : null}
-            {widgetType == 'checkbox' || widgetType == 'select'
-              ? (widget.options.remote ? widget.options.remoteOptions : widget.options.options)
-                  .filter((item: any) => {
-                    if (Array.isArray(this.current)) {
-                      return this.current.includes(item.value);
-                    } else {
-                      return this.current === item.value;
+    const loadAntd = (type: boolean) => {
+      switch (type) {
+        case false:
+          return (
+            <a-select
+              show-search
+              v-model={this.selectObj}
+              placeholder={this.$t(widget.options.placeholder)}
+              style={{ width: widget.options.width }}
+              default-active-first-option={false}
+              // show-arrow={false}
+              filter-option={false}
+              labelInValue
+              allowClear={widget.options.clearable}
+              getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+              option-label-prop="label"
+              onSearch={this.inputLoad}
+              on-select={(value: any) => {
+                if (this.selectObj) {
+                  if (this.selectObj.key) {
+                    this.treeSelected = this.selectObj.label;
+                    this.models[this.widget.model] = this.selectObj.key;
+                    this.current = this.selectObj.key;
+                    if (this.widget.options.assistField) {
+                      this.models[this.widget.options.assistField] = this.selectObj.label;
                     }
-                  })
-                  .map((sub: any) => sub.label)
-                  .join(',')
-              : null}
+                    (this.$refs as any)[widget.model].onFieldChange();
 
-            {widgetType == 'treeSelect'
-              ? widget.options.multiple
-                ? this.treeSelected.join(',')
-                : this.treeSelected
-              : null}
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }
+                }
+              }}
+              on-change={(value: any) => {
+                if (!value) {
+                  if (this.selectObj) {
+                    this.selectObj.label = '';
+                    this.selectObj.key = '';
+                    this.treeSelected = this.selectObj.label;
+                    this.models[this.widget.model] = this.selectObj.key;
+                    this.current = this.selectObj.key;
+                    if (this.widget.options.assistField) {
+                      this.models[this.widget.options.assistField] = this.selectObj.label;
+                    }
+                  } else {
+                    this.models[this.widget.model] = '';
+                    this.current = '';
+                    if (this.widget.options.assistField) {
+                      this.models[this.widget.options.assistField] = '';
+                    }
+                  }
 
-            {widgetType == 'cascader' && this.cascaderSelected}
+                  (this.$refs as any)[widget.model].onFieldChange();
 
-            {widgetType == 'customSelector'
-              ? this.current.map((item: any) => item.label).join(',')
-              : null}
-            {widgetType == 'ddList' ? this.current.map((item: any) => item.name).join(',') : null}
-            {widgetType == 'imgupload' &&
-              this.current &&
-              this.current.map((item: any) => {
-                return (
-                  <span style="margin-right: 10px;">
-                    <img
-                      alt={item.name}
-                      src={item.url}
-                      style="width: 100px; display: block; cursor: pointer;"
-                      onClick={() => {
-                        this.imgViewObj.visible = true;
-                        this.imgViewObj.url = item.url;
-                      }}
-                    />
-                    <a-icon type="paper-clip" style="margin-right: 5px;" />
-                    <a target="_blank" href={item.url}>
-                      {item.name}
-                    </a>
-                  </span>
-                );
-              })}
-            <a-modal
-              visible={this.imgViewObj.visible}
-              footer={null}
-              title="预览"
-              wrapClassName="component-pop-upload-preview"
-              onCancel={() => {
-                this.imgViewObj.visible = false;
+                  if (this.remote[widget.options.onchange]) {
+                    this.remote[widget.options.onchange](this.current, this.models, this.value);
+                  }
+                }
               }}
             >
-              <a-carousel
-                arrows
-                scopedSlots={{
-                  prevArrow: (props: any) => {
-                    return (
-                      <div class="custom-slick-arrow" style="left: 10px; z-index: 1;">
-                        <a-icon type="left-circle" />
-                      </div>
-                    );
-                  },
-                  nextArrow: (props: any) => {
-                    return (
-                      <div class="custom-slick-arrow" style="right: 10px">
-                        <a-icon type="right-circle" />
-                      </div>
-                    );
-                  },
+              {(widget.options.remoteOptions || []).map((item: any) => {
+                return (
+                  <a-select-option
+                    disabled={item.disabled}
+                    key={item[widget.options.props.value]}
+                    value={item[widget.options.props.value]}
+                    label={item[widget.options.props.label]}
+                  >
+                    <p class={{ orgitem: true, disabled: item.disabled }} title={item.description}>
+                      <span class="orgitem-text">
+                        {item.name}
+                        <font>({item.code})</font>
+                      </span>
+                      <font class="layer">{item.description}</font>
+                    </p>
+                  </a-select-option>
+                );
+              })}
+            </a-select>
+          );
+        default:
+          return (
+            <a-select
+              show-search
+              mode="multiple"
+              style={{ width: widget.options.width }}
+              v-model={this.treeList}
+              placeholder={this.$t(widget.options.placeholder)}
+              default-active-first-option={false}
+              show-arrow={true}
+              filter-option={false}
+              labelInValue
+              maxTagCount={1}
+              allowClear={widget.options.clearable}
+              getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+              option-label-prop="label"
+              onSearch={this.inputLoad}
+              on-select={(value: any) => {
+                this.treeList.map((r: any) => {
+                  r.type = this.treeTypes[r.key];
+                  r.value = r.key;
+                });
+              }}
+              on-deselect={() => {
+                // this.handleCallback();
+              }}
+              on-change={(value: any) => {
+                this.treeSelected = this.treeList.map((o: any) => o.label);
+                // this.treeObj.label = extra.triggerNode.label;
+                this.models[this.widget.model] = this.treeList.map((o: any) => o.key);
+                this.current = this.treeList.map((o: any) => o.key);
+                if (this.widget.options.assistField) {
+                  this.models[this.widget.options.assistField] = this.treeSelected;
+                }
+                (this.$refs as any)[widget.model].onFieldChange();
+
+                if (this.remote[widget.options.onchange]) {
+                  this.remote[widget.options.onchange](this.current, this.models, this.value);
+                }
+              }}
+            >
+              {(widget.options.remoteOptions || []).map((item: any) => {
+                return (
+                  <a-select-option
+                    disabled={item.disabled}
+                    key={item[widget.options.props.value]}
+                    value={item[widget.options.props.value]}
+                    label={item[widget.options.props.label]}
+                  >
+                    <p class={{ orgitem: true, disabled: item.disabled }} title={item.description}>
+                      <span class="orgitem-text">
+                        {item.name}
+                        <font>({item.code})</font>
+                      </span>
+                      <font class="layer">{item.description}</font>
+                    </p>
+                  </a-select-option>
+                );
+              })}
+            </a-select>
+          );
+      }
+    };
+    const temp = () => {
+      return (
+        <a-form-model-item
+          label={widget.type == 'button' ? null : this.$t(widget.name)}
+          prop={widget.model}
+          ref={widget.model}
+          autoLink={false}
+          props={
+            widget.options.labelControl
+              ? {
+                  labelCol: { span: widget.options.labelCol },
+                  wrapperCol: { span: 24 - widget.options.labelCol },
+                }
+              : null
+          }
+        >
+          {this.type ? (
+            <div>
+              {widgetType == 'input' || widgetType == 'textarea' || widgetType == 'text' ? (
+                <span>
+                  {widget.options.valueFormatter && widget.options.valueFormatter.trim() !== ''
+                    ? this.valueTransform(widget.options.valueFormatter.trim(), this.current)
+                    : this.current}
+                </span>
+              ) : null}
+
+              {widgetType == 'time' || widgetType == 'date' || widgetType == 'number' ? (
+                <span>{Array.isArray(this.current) ? this.current.join(',') : this.current}</span>
+              ) : null}
+
+              {widgetType == 'switch'
+                ? this.current
+                  ? this.$t('pageDesign.action.yes')
+                  : this.$t('pageDesign.action.no')
+                : null}
+              {widgetType == 'radio'
+                ? (widget.options.remote
+                    ? widget.options.remoteOptions
+                    : widget.options.options
+                  ).find((item: any) => item.value == this.current)?.label
+                : null}
+              {widgetType == 'checkbox' || widgetType == 'select'
+                ? (widget.options.remote ? widget.options.remoteOptions : widget.options.options)
+                    .filter((item: any) => {
+                      if (Array.isArray(this.current)) {
+                        return this.current.includes(item.value);
+                      } else {
+                        return this.current === item.value;
+                      }
+                    })
+                    .map((sub: any) => sub.label)
+                    .join(',')
+                : null}
+
+              {widgetType == 'treeSelect'
+                ? widget.options.multiple
+                  ? this.treeSelected.join(',')
+                  : this.treeSelected
+                : null}
+
+              {widgetType == 'cascader' && this.cascaderSelected}
+
+              {widgetType == 'customSelector'
+                ? this.current.map((item: any) => item.label).join(',')
+                : null}
+              {widgetType == 'ddList' ? this.current.map((item: any) => item.name).join(',') : null}
+              {widgetType == 'imgupload' &&
+                this.current &&
+                this.current.map((item: any) => {
+                  return (
+                    <span style="margin-right: 10px;">
+                      <img
+                        alt={item.name}
+                        src={item.url}
+                        style="width: 100px; display: block; cursor: pointer;"
+                        onClick={() => {
+                          this.imgViewObj.visible = true;
+                          this.imgViewObj.url = item.url;
+                        }}
+                      />
+                      <a-icon type="paper-clip" style="margin-right: 5px;" />
+                      <a target="_blank" href={item.url}>
+                        {item.name}
+                      </a>
+                    </span>
+                  );
+                })}
+              <a-modal
+                visible={this.imgViewObj.visible}
+                footer={null}
+                title="预览"
+                wrapClassName="component-pop-upload-preview"
+                onCancel={() => {
+                  this.imgViewObj.visible = false;
                 }}
               >
-                <div style="height: 200px;">
-                  <img
-                    src={this.imgViewObj.url}
-                    style="object-fit: scale-down; width: 100%; height: 100%;"
+                <a-carousel
+                  arrows
+                  scopedSlots={{
+                    prevArrow: (props: any) => {
+                      return (
+                        <div class="custom-slick-arrow" style="left: 10px; z-index: 1;">
+                          <a-icon type="left-circle" />
+                        </div>
+                      );
+                    },
+                    nextArrow: (props: any) => {
+                      return (
+                        <div class="custom-slick-arrow" style="right: 10px">
+                          <a-icon type="right-circle" />
+                        </div>
+                      );
+                    },
+                  }}
+                >
+                  <div style="height: 200px;">
+                    <img
+                      src={this.imgViewObj.url}
+                      style="object-fit: scale-down; width: 100%; height: 100%;"
+                    />
+                  </div>
+                </a-carousel>
+              </a-modal>
+            </div>
+          ) : (
+            <div>
+              {widget.type == 'input' &&
+                (widget.options.dataType == 'number' ||
+                widget.options.dataType == 'integer' ||
+                widget.options.dataType == 'float' ? (
+                  <a-input-number
+                    vModel={this.current}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    style={{ width: widget.options.width }}
+                    disabled={widget.options.disabled}
+                    size={this.globalConfig.size}
+                    onBlur={() => {
+                      (this.$refs as any)[widget.model].onFieldBlur();
+                    }}
+                    onChange={() => {
+                      (this.$refs as any)[widget.model].onFieldChange();
+                    }}
                   />
-                </div>
-              </a-carousel>
-            </a-modal>
-          </div>
-        ) : (
-          <div>
-            {widget.type == 'input' &&
-              (widget.options.dataType == 'number' ||
-              widget.options.dataType == 'integer' ||
-              widget.options.dataType == 'float' ? (
+                ) : (
+                  <a-input
+                    vModel={this.current}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    style={{ width: widget.options.width }}
+                    disabled={widget.options.disabled}
+                    size={this.globalConfig.size}
+                    onBlur={() => {
+                      (this.$refs as any)[widget.model].onFieldBlur();
+                    }}
+                    onChange={() => {
+                      (this.$refs as any)[widget.model].onFieldChange();
+                    }}
+                  />
+                ))}
+
+              {/* {widget.type == 'button' && (
+            <a-button
+              style={{ width: widget.options.width }}
+              disabled={widget.options.disabled}
+              size={this.globalConfig.size}
+              type={widget.options.type}
+              icon={widget.options.icon}
+            >
+              {this.widget.name}
+            </a-button>
+          )} */}
+
+              {widget.type == 'textarea' && (
+                <a-input
+                  vModel={this.current}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  disabled={widget.options.disabled}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  type="textarea"
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+                  }}
+                />
+              )}
+
+              {widget.type == 'number' && (
                 <a-input-number
                   vModel={this.current}
                   placeholder={this.$t(widget.options.placeholder)}
                   style={{ width: widget.options.width }}
                   disabled={widget.options.disabled}
+                  step={widget.options.step}
+                  min={widget.options.min}
+                  max={widget.options.max}
                   size={this.globalConfig.size}
-                  onBlur={() => {
-                    (this.$refs as any)[widget.model].onFieldBlur();
-                  }}
-                  onChange={() => {
-                    (this.$refs as any)[widget.model].onFieldChange();
-                  }}
-                />
-              ) : (
-                <a-input
-                  vModel={this.current}
-                  placeholder={this.$t(widget.options.placeholder)}
-                  style={{ width: widget.options.width }}
-                  disabled={widget.options.disabled}
-                  size={this.globalConfig.size}
-                  onBlur={() => {
-                    (this.$refs as any)[widget.model].onFieldBlur();
-                  }}
-                  onChange={() => {
-                    (this.$refs as any)[widget.model].onFieldChange();
-                  }}
-                />
-              ))}
-
-            {/* {widget.type == 'button' && (
-					<a-button
-						style={{ width: widget.options.width }}
-						disabled={widget.options.disabled}
-						size={this.globalConfig.size}
-						type={widget.options.type}
-						icon={widget.options.icon}
-					>
-						{this.widget.name}
-					</a-button>
-				)} */}
-
-            {widget.type == 'textarea' && (
-              <a-input
-                vModel={this.current}
-                placeholder={this.$t(widget.options.placeholder)}
-                disabled={widget.options.disabled}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                type="textarea"
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-                }}
-              />
-            )}
-
-            {widget.type == 'number' && (
-              <a-input-number
-                vModel={this.current}
-                placeholder={this.$t(widget.options.placeholder)}
-                style={{ width: widget.options.width }}
-                disabled={widget.options.disabled}
-                step={widget.options.step}
-                min={widget.options.min}
-                max={widget.options.max}
-                size={this.globalConfig.size}
-                precision={widget.options.precision}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              />
-            )}
-
-            {widget.type == 'radio' && (
-              <a-radio-group
-                vModel={this.current}
-                style={{ width: widget.options.width }}
-                disabled={widget.options.disabled}
-                size={this.globalConfig.size}
-                onChange={() => {
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              >
-                {(widget.options.remote
-                  ? widget.options.remoteOptions
-                  : widget.options.options
-                ).map((item: any, index: number) => {
-                  return (
-                    <a-radio
-                      style={{
-                        display: widget.options.inline ? 'inline-block' : 'block',
-                      }}
-                      value={item.value}
-                      key={index}
-                    >
-                      {widget.options.remote
-                        ? widget.options.showLabel
-                          ? this.$t(item.label)
-                          : item.value
-                        : widget.options.showLabel
-                        ? this.$t(item.label)
-                        : item.value}
-                    </a-radio>
-                  );
-                })}
-              </a-radio-group>
-            )}
-
-            {widget.type == 'checkbox' && (
-              <a-checkbox-group
-                vModel={this.current}
-                style={{ width: widget.options.width }}
-                disabled={widget.options.disabled}
-                onChange={() => {
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              >
-                {(widget.options.remote
-                  ? widget.options.remoteOptions
-                  : widget.options.options
-                ).map((item: any, index: number) => {
-                  return (
-                    <a-checkbox
-                      style={{
-                        display: widget.options.inline ? 'inline-block' : 'block',
-                      }}
-                      value={item.value}
-                      key={index}
-                    >
-                      {widget.options.remote
-                        ? widget.options.showLabel
-                          ? this.$t(item.label)
-                          : item.value
-                        : widget.options.showLabel
-                        ? this.$t(item.label)
-                        : item.value}
-                    </a-checkbox>
-                  );
-                })}
-              </a-checkbox-group>
-            )}
-
-            {widget.type == 'time' && !widget.options.isRange && (
-              <a-time-picker
-                vModel={this.current}
-                inputReadOnly={widget.options.readonly}
-                allowClear={widget.options.clearable}
-                disabled={widget.options.disabled}
-                hourStep={widget.options.hourStep}
-                minuteStep={widget.options.minuteStep}
-                secondStep={widget.options.secondStep}
-                placeholder={this.$t(widget.options.placeholder)}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-time-picker>
-            )}
-
-            {widget.type == 'time' && widget.options.isRange && (
-              <TimePickerRange
-                vModel={this.current}
-                placeholder={[
-                  this.$t(widget.options.startPlaceholder),
-                  this.$t(widget.options.endPlaceholder),
-                ]}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                hourStep={widget.options.hourStep}
-                minuteStep={widget.options.minuteStep}
-                secondStep={widget.options.secondStep}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></TimePickerRange>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'year' && (
-              <a-date-picker
-                vModel={this.current}
-                mode="year"
-                placeholder={this.$t(widget.options.placeholder)}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onPanelChange={(value: any) => {
-                  this.current = value.format(widget.options.format);
-                }}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-date-picker>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'month' && (
-              <a-date-picker
-                vModel={this.current}
-                mode="month"
-                getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={this.$t(widget.options.placeholder)}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onPanelChange={(value: any) => {
-                  this.current = value.format(widget.options.format);
-                }}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-date-picker>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'date' && (
-              <a-date-picker
-                vModel={this.current}
-                getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={this.$t(widget.options.placeholder)}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-date-picker>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'datetime' && (
-              <a-date-picker
-                vModel={this.current}
-                show-time={{
-                  format: widget.options.format.split(' ')[1],
-                  hourStep: widget.options.hourStep,
-                  minuteStep: widget.options.minuteStep,
-                  secondStep: widget.options.secondStep,
-                }}
-                getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={this.$t(widget.options.placeholder)}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-date-picker>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'datetimerange' && (
-              <a-range-picker
-                vModel={this.current}
-                show-time={{
-                  format: widget.options.format.split(' ')[1],
-                  hourStep: widget.options.hourStep,
-                  minuteStep: widget.options.minuteStep,
-                  secondStep: widget.options.secondStep,
-                }}
-                placeholder={[
-                  this.$t(widget.options.startPlaceholder),
-                  this.$t(widget.options.endPlaceholder),
-                ]}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-range-picker>
-            )}
-
-            {widget.type == 'date' && widget.options.type == 'daterange' && (
-              <a-range-picker
-                vModel={this.current}
-                placeholder={[
-                  this.$t(widget.options.startPlaceholder),
-                  this.$t(widget.options.endPlaceholder),
-                ]}
-                inputReadOnly={widget.options.readonly}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                style={{ width: widget.options.width }}
-                size={this.globalConfig.size}
-                format={widget.options.format}
-                valueFormat={widget.options.format}
-                onBlur={() => {
-                  (this.$refs as any)[widget.model].onFieldBlur();
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-range-picker>
-            )}
-
-            {widget.type == 'select' &&
-              (widget.options.filterfetch ? (
-                <a-select
-                  vModel={this.current}
-                  placeholder={this.$t(widget.options.placeholder)}
-                  mode={widget.options.multiple ? 'multiple' : 'default'}
-                  disabled={widget.options.disabled}
-                  showSearch={widget.options.filterfetch}
-                  allowClear={widget.options.clearable}
-                  optionFilterProp="title"
-                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                  style={{ width: widget.options.width }}
-                  size={this.globalConfig.size}
-                  filter-option={false}
+                  precision={widget.options.precision}
                   onBlur={() => {
                     (this.$refs as any)[widget.model].onFieldBlur();
                   }}
@@ -852,25 +736,32 @@ export default class GenerateFormItem extends Vue {
                       this.remote[widget.options.onchange](this.current, this.models, this.value);
                     }
                   }}
-                  onSearch={this.selectLoad}
+                />
+              )}
+
+              {widget.type == 'radio' && (
+                <a-radio-group
+                  vModel={this.current}
+                  style={{ width: widget.options.width }}
+                  disabled={widget.options.disabled}
+                  size={this.globalConfig.size}
+                  onChange={() => {
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
                 >
                   {(widget.options.remote
                     ? widget.options.remoteOptions
                     : widget.options.options
-                  ).map((item: any) => {
+                  ).map((item: any, index: number) => {
                     return (
-                      <a-select-option
-                        key={item.value}
+                      <a-radio
+                        style={{
+                          display: widget.options.inline ? 'inline-block' : 'block',
+                        }}
                         value={item.value}
-                        title={
-                          widget.options.remote
-                            ? widget.options.showLabel
-                              ? this.$t(item.label)
-                              : item.value
-                            : widget.options.showLabel
-                            ? this.$t(item.label)
-                            : item.value
-                        }
+                        key={index}
                       >
                         {widget.options.remote
                           ? widget.options.showLabel
@@ -879,22 +770,62 @@ export default class GenerateFormItem extends Vue {
                           : widget.options.showLabel
                           ? this.$t(item.label)
                           : item.value}
-                      </a-select-option>
+                      </a-radio>
                     );
                   })}
-                </a-select>
-              ) : (
-                <a-select
+                </a-radio-group>
+              )}
+
+              {widget.type == 'checkbox' && (
+                <a-checkbox-group
                   vModel={this.current}
-                  placeholder={this.$t(widget.options.placeholder)}
-                  mode={widget.options.multiple ? 'multiple' : 'default'}
+                  style={{ width: widget.options.width }}
                   disabled={widget.options.disabled}
-                  showSearch={widget.options.filterable}
+                  onChange={() => {
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                >
+                  {(widget.options.remote
+                    ? widget.options.remoteOptions
+                    : widget.options.options
+                  ).map((item: any, index: number) => {
+                    return (
+                      <a-checkbox
+                        style={{
+                          display: widget.options.inline ? 'inline-block' : 'block',
+                        }}
+                        value={item.value}
+                        key={index}
+                      >
+                        {widget.options.remote
+                          ? widget.options.showLabel
+                            ? this.$t(item.label)
+                            : item.value
+                          : widget.options.showLabel
+                          ? this.$t(item.label)
+                          : item.value}
+                      </a-checkbox>
+                    );
+                  })}
+                </a-checkbox-group>
+              )}
+
+              {widget.type == 'time' && !widget.options.isRange && (
+                <a-time-picker
+                  vModel={this.current}
+                  inputReadOnly={widget.options.readonly}
                   allowClear={widget.options.clearable}
-                  optionFilterProp="title"
-                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                  disabled={widget.options.disabled}
+                  hourStep={widget.options.hourStep}
+                  minuteStep={widget.options.minuteStep}
+                  secondStep={widget.options.secondStep}
+                  placeholder={this.$t(widget.options.placeholder)}
                   style={{ width: widget.options.width }}
                   size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
                   onBlur={() => {
                     (this.$refs as any)[widget.model].onFieldBlur();
                   }}
@@ -905,73 +836,473 @@ export default class GenerateFormItem extends Vue {
                       this.remote[widget.options.onchange](this.current, this.models, this.value);
                     }
                   }}
-                >
-                  {(widget.options.remote
-                    ? widget.options.remoteOptions
-                    : widget.options.options
-                  ).map((item: any) => {
-                    return (
-                      <a-select-option
-                        key={item.value}
-                        value={item.value}
-                        title={
-                          widget.options.remote
+                ></a-time-picker>
+              )}
+
+              {widget.type == 'time' && widget.options.isRange && (
+                <TimePickerRange
+                  vModel={this.current}
+                  placeholder={[
+                    this.$t(widget.options.startPlaceholder),
+                    this.$t(widget.options.endPlaceholder),
+                  ]}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  hourStep={widget.options.hourStep}
+                  minuteStep={widget.options.minuteStep}
+                  secondStep={widget.options.secondStep}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></TimePickerRange>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'year' && (
+                <a-date-picker
+                  vModel={this.current}
+                  mode="year"
+                  placeholder={this.$t(widget.options.placeholder)}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onPanelChange={(value: any) => {
+                    this.current = value.format(widget.options.format);
+                  }}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-date-picker>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'month' && (
+                <a-date-picker
+                  vModel={this.current}
+                  mode="month"
+                  getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onPanelChange={(value: any) => {
+                    this.current = value.format(widget.options.format);
+                  }}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-date-picker>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'date' && (
+                <a-date-picker
+                  vModel={this.current}
+                  getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-date-picker>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'datetime' && (
+                <a-date-picker
+                  vModel={this.current}
+                  show-time={{
+                    format: widget.options.format.split(' ')[1],
+                    hourStep: widget.options.hourStep,
+                    minuteStep: widget.options.minuteStep,
+                    secondStep: widget.options.secondStep,
+                  }}
+                  getCalendarContainer={(triggerNode: any) => triggerNode.parentNode}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-date-picker>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'datetimerange' && (
+                <a-range-picker
+                  vModel={this.current}
+                  show-time={{
+                    format: widget.options.format.split(' ')[1],
+                    hourStep: widget.options.hourStep,
+                    minuteStep: widget.options.minuteStep,
+                    secondStep: widget.options.secondStep,
+                  }}
+                  placeholder={[
+                    this.$t(widget.options.startPlaceholder),
+                    this.$t(widget.options.endPlaceholder),
+                  ]}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-range-picker>
+              )}
+
+              {widget.type == 'date' && widget.options.type == 'daterange' && (
+                <a-range-picker
+                  vModel={this.current}
+                  placeholder={[
+                    this.$t(widget.options.startPlaceholder),
+                    this.$t(widget.options.endPlaceholder),
+                  ]}
+                  inputReadOnly={widget.options.readonly}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  style={{ width: widget.options.width }}
+                  size={this.globalConfig.size}
+                  format={widget.options.format}
+                  valueFormat={widget.options.format}
+                  onBlur={() => {
+                    (this.$refs as any)[widget.model].onFieldBlur();
+                  }}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-range-picker>
+              )}
+
+              {widget.type == 'select' &&
+                (widget.options.filterfetch ? (
+                  <a-select
+                    vModel={this.current}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    mode={widget.options.multiple ? 'multiple' : 'default'}
+                    disabled={widget.options.disabled}
+                    showSearch={widget.options.filterfetch}
+                    allowClear={widget.options.clearable}
+                    optionFilterProp="title"
+                    getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                    style={{ width: widget.options.width }}
+                    size={this.globalConfig.size}
+                    filter-option={false}
+                    onBlur={() => {
+                      (this.$refs as any)[widget.model].onFieldBlur();
+                    }}
+                    onChange={() => {
+                      (this.$refs as any)[widget.model].onFieldChange();
+
+                      if (this.remote[widget.options.onchange]) {
+                        this.remote[widget.options.onchange](this.current, this.models, this.value);
+                      }
+                    }}
+                    onSearch={this.selectLoad}
+                  >
+                    {(widget.options.remote
+                      ? widget.options.remoteOptions
+                      : widget.options.options
+                    ).map((item: any) => {
+                      return (
+                        <a-select-option
+                          key={item.value}
+                          value={item.value}
+                          title={
+                            widget.options.remote
+                              ? widget.options.showLabel
+                                ? this.$t(item.label)
+                                : item.value
+                              : widget.options.showLabel
+                              ? this.$t(item.label)
+                              : item.value
+                          }
+                        >
+                          {widget.options.remote
                             ? widget.options.showLabel
                               ? this.$t(item.label)
                               : item.value
                             : widget.options.showLabel
                             ? this.$t(item.label)
-                            : item.value
-                        }
-                      >
-                        {widget.options.remote
-                          ? widget.options.showLabel
+                            : item.value}
+                        </a-select-option>
+                      );
+                    })}
+                  </a-select>
+                ) : (
+                  <a-select
+                    vModel={this.current}
+                    placeholder={this.$t(widget.options.placeholder)}
+                    mode={widget.options.multiple ? 'multiple' : 'default'}
+                    disabled={widget.options.disabled}
+                    showSearch={widget.options.filterable}
+                    allowClear={widget.options.clearable}
+                    optionFilterProp="title"
+                    getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                    style={{ width: widget.options.width }}
+                    size={this.globalConfig.size}
+                    onBlur={() => {
+                      (this.$refs as any)[widget.model].onFieldBlur();
+                    }}
+                    onChange={() => {
+                      (this.$refs as any)[widget.model].onFieldChange();
+
+                      if (this.remote[widget.options.onchange]) {
+                        this.remote[widget.options.onchange](this.current, this.models, this.value);
+                      }
+                    }}
+                  >
+                    {(widget.options.remote
+                      ? widget.options.remoteOptions
+                      : widget.options.options
+                    ).map((item: any) => {
+                      return (
+                        <a-select-option
+                          key={item.value}
+                          value={item.value}
+                          title={
+                            widget.options.remote
+                              ? widget.options.showLabel
+                                ? this.$t(item.label)
+                                : item.value
+                              : widget.options.showLabel
+                              ? this.$t(item.label)
+                              : item.value
+                          }
+                        >
+                          {widget.options.remote
+                            ? widget.options.showLabel
+                              ? this.$t(item.label)
+                              : item.value
+                            : widget.options.showLabel
                             ? this.$t(item.label)
-                            : item.value
-                          : widget.options.showLabel
-                          ? this.$t(item.label)
-                          : item.value}
-                      </a-select-option>
-                    );
-                  })}
-                </a-select>
-              ))}
+                            : item.value}
+                        </a-select-option>
+                      );
+                    })}
+                  </a-select>
+                ))}
 
-            {widget.type == 'ddList' && (
-              <this.plugins.DropDownList
-                vModel={this.current}
-                multiple={widget.options.multiple}
-                style={{ width: widget.options.width }}
-                disabled={widget.options.disabled}
-                placeholder={this.$t(widget.options.placeholder)}
-                allowClear={widget.options.clearable}
-                searchType={widget.options.searchType}
-                filterfetch={widget.options.filterfetch}
-                remote={this.remote}
-                fetchFun={widget.options.remoteFunc}
-                searchParams={
-                  widget.options.searchParams && widget.options.searchParams.trim() !== ''
-                    ? JSON.parse(widget.options.searchParams)
-                    : {}
-                }
-                autoSearch={widget.options.autoSearch}
-                count={widget.options.count}
-                size={this.globalConfig.size}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
+              {widget.type == 'ddList' && (
+                <this.plugins.DropDownList
+                  vModel={this.current}
+                  multiple={widget.options.multiple}
+                  style={{ width: widget.options.width }}
+                  disabled={widget.options.disabled}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  allowClear={widget.options.clearable}
+                  searchType={widget.options.searchType}
+                  filterfetch={widget.options.filterfetch}
+                  remote={this.remote}
+                  fetchFun={widget.options.remoteFunc}
+                  searchParams={
+                    widget.options.searchParams && widget.options.searchParams.trim() !== ''
+                      ? JSON.parse(widget.options.searchParams)
+                      : {}
                   }
-                }}
-              />
-            )}
+                  autoSearch={widget.options.autoSearch}
+                  count={widget.options.count}
+                  size={this.globalConfig.size}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
 
-            {widget.type == 'treeSelect' &&
-              (widget.options.asyncLoad ? (
-                widget.options.multiple ? (
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                />
+              )}
+
+              {widget.type == 'treeSelect' &&
+                (widget.options.asyncLoad ? (
+                  widget.options.multiple ? (
+                    <a-tree-select
+                      v-model={this.treeList}
+                      placeholder={this.$t(widget.options.placeholder)}
+                      multiple={widget.options.multiple}
+                      treeCheckable={widget.options.multiple}
+                      tree-data-simple-mode={widget.options.asyncLoad}
+                      replaceFields={{
+                        children: widget.options.props.children,
+                        title: widget.options.props.label,
+                        key: widget.options.props.value,
+                        value: widget.options.props.value,
+                      }}
+                      dropdownStyle={{ maxHeight: '300px' }}
+                      getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                      showSearch={widget.options.filterable}
+                      disabled={widget.options.disabled}
+                      allowClear={widget.options.clearable}
+                      treeNodeFilterProp="title"
+                      style={{ width: widget.options.width }}
+                      treeData={widget.options.remoteOptions}
+                      treeDefaultExpandedKeys={[
+                        widget.options.remoteOptions.length > 0 &&
+                          widget.options.remoteOptions[0][widget.options.props.value],
+                      ]}
+                      labelInValue
+                      size={this.globalConfig.size}
+                      showCheckedStrategy={widget.options.showCheckedStrategy}
+                      onChange={(value: string | string[], label: Array<string>, extra: any) => {
+                        this.treeSelected = (value as any).map((o: any) => o.label);
+                        // this.treeObj.label = extra.triggerNode.label;
+                        this.models[this.widget.model] = (value as any).map((o: any) => o.value);
+                        this.current = (value as any).map((o: any) => o.value);
+                        this.widget.options.assistField
+                          ? (this.models[this.widget.options.assistField] = this.treeSelected)
+                          : '';
+                        (this.$refs as any)[widget.model].onFieldChange();
+
+                        if (this.remote[widget.options.onchange]) {
+                          this.remote[widget.options.onchange](
+                            this.current,
+                            this.models,
+                            this.value,
+                          );
+                        }
+                      }}
+                      filterTreeNode={(inputValue: string, treeNode: any) => {
+                        return true;
+                      }}
+                      searchValue={this.treeShowName}
+                      on-search={(value: string) => {
+                        this.treeShowName = value;
+                        this.treeSelectLoad({}, widget.options, value);
+                      }}
+                      load-data={(treeNode: any) =>
+                        this.treeSelectLoad(treeNode, widget.options, '')
+                      }
+                    ></a-tree-select>
+                  ) : (
+                    <a-tree-select
+                      v-model={this.treeObj}
+                      placeholder={this.$t(widget.options.placeholder)}
+                      multiple={widget.options.multiple}
+                      treeCheckable={widget.options.multiple}
+                      // tree-data-simple-mode={widget.options.asyncLoad}
+                      replaceFields={{
+                        children: widget.options.props.children,
+                        title: widget.options.props.label,
+                        key: widget.options.props.value,
+                        value: widget.options.props.value,
+                      }}
+                      dropdownStyle={{ maxHeight: '300px' }}
+                      getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                      showSearch={widget.options.filterable}
+                      disabled={widget.options.disabled}
+                      allowClear={widget.options.clearable}
+                      treeNodeFilterProp="title"
+                      style={{ width: widget.options.width }}
+                      treeData={widget.options.remoteOptions}
+                      treeDefaultExpandedKeys={[
+                        widget.options.remoteOptions.length > 0 &&
+                          widget.options.remoteOptions[0][widget.options.props.value],
+                      ]}
+                      labelInValue
+                      size={this.globalConfig.size}
+                      showCheckedStrategy={widget.options.showCheckedStrategy}
+                      onChange={(value: string | string[], label: Array<string>, extra: any) => {
+                        this.treeSelected = extra.triggerNode.label;
+                        this.treeObj.label = extra.triggerNode.label;
+                        this.models[this.widget.model] = this.treeObj.value;
+                        this.current = this.treeObj.value;
+                        this.widget.options.assistField
+                          ? (this.models[this.widget.options.assistField] = this.treeObj.label)
+                          : '';
+                        (this.$refs as any)[widget.model].onFieldChange();
+
+                        if (this.remote[widget.options.onchange]) {
+                          this.remote[widget.options.onchange](
+                            this.current,
+                            this.models,
+                            this.value,
+                          );
+                        }
+                      }}
+                      filterTreeNode={(inputValue: string, treeNode: any) => {
+                        return true;
+                      }}
+                      searchValue={this.treeShowName}
+                      on-search={(value: string) => {
+                        this.treeShowName = value;
+                        this.treeSelectLoad({}, widget.options, value);
+                      }}
+                      load-data={(treeNode: any) =>
+                        this.treeSelectLoad(treeNode, widget.options, '')
+                      }
+                    ></a-tree-select>
+                  )
+                ) : (
                   <a-tree-select
-                    v-model={this.treeList}
+                    v-model={this.current}
                     placeholder={this.$t(widget.options.placeholder)}
                     multiple={widget.options.multiple}
                     treeCheckable={widget.options.multiple}
@@ -994,317 +1325,214 @@ export default class GenerateFormItem extends Vue {
                       widget.options.remoteOptions.length > 0 &&
                         widget.options.remoteOptions[0][widget.options.props.value],
                     ]}
-                    labelInValue
                     size={this.globalConfig.size}
                     showCheckedStrategy={widget.options.showCheckedStrategy}
                     onChange={(value: string | string[], label: Array<string>, extra: any) => {
-                      this.treeSelected = (value as any).map((o: any) => o.label);
-                      // this.treeObj.label = extra.triggerNode.label;
-                      this.models[this.widget.model] = (value as any).map((o: any) => o.value);
-                      this.current = (value as any).map((o: any) => o.value);
-                      if (this.widget.options.assistField) {
-                        this.models[this.widget.options.assistField] = this.treeSelected;
-                      }
+                      this.treeSelected = label;
                       (this.$refs as any)[widget.model].onFieldChange();
 
                       if (this.remote[widget.options.onchange]) {
                         this.remote[widget.options.onchange](this.current, this.models, this.value);
                       }
                     }}
-                    filterTreeNode={(inputValue: string, treeNode: any) => {
-                      return true;
-                    }}
-                    searchValue={this.treeShowName}
-                    on-search={(value: string) => {
-                      this.treeShowName = value;
-                      this.treeSelectLoad({}, widget.options, value);
-                    }}
-                    load-data={(treeNode: any) => this.treeSelectLoad(treeNode, widget.options, '')}
+                    props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
                   ></a-tree-select>
-                ) : (
-                  <a-tree-select
-                    v-model={this.treeObj}
-                    placeholder={this.$t(widget.options.placeholder)}
-                    multiple={widget.options.multiple}
-                    treeCheckable={widget.options.multiple}
-                    // tree-data-simple-mode={widget.options.asyncLoad}
-                    replaceFields={{
-                      children: widget.options.props.children,
-                      title: widget.options.props.label,
-                      key: widget.options.props.value,
-                      value: widget.options.props.value,
-                    }}
-                    dropdownStyle={{ maxHeight: '300px' }}
-                    getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                    showSearch={widget.options.filterable}
-                    disabled={widget.options.disabled}
-                    allowClear={widget.options.clearable}
-                    treeNodeFilterProp="title"
-                    style={{ width: widget.options.width }}
-                    treeData={widget.options.remoteOptions}
-                    treeDefaultExpandedKeys={[
-                      widget.options.remoteOptions.length > 0 &&
-                        widget.options.remoteOptions[0][widget.options.props.value],
-                    ]}
-                    labelInValue
-                    size={this.globalConfig.size}
-                    showCheckedStrategy={widget.options.showCheckedStrategy}
-                    onChange={(value: string | string[], label: Array<string>, extra: any) => {
-                      this.treeSelected = extra.triggerNode.label;
-                      this.treeObj.label = extra.triggerNode.label;
-                      this.models[this.widget.model] = this.treeObj.value;
-                      this.current = this.treeObj.value;
-                      if (this.widget.options.assistField) {
-                        this.models[this.widget.options.assistField] = this.treeObj.label;
-                      }
-                      (this.$refs as any)[widget.model].onFieldChange();
+                ))}
+              {widget.type == 'inputSelect' && loadAntd(widget.options.multiple)}
 
-                      if (this.remote[widget.options.onchange]) {
-                        this.remote[widget.options.onchange](this.current, this.models, this.value);
-                      }
-                    }}
-                    filterTreeNode={(inputValue: string, treeNode: any) => {
-                      return true;
-                    }}
-                    searchValue={this.treeShowName}
-                    on-search={(value: string) => {
-                      this.treeShowName = value;
-                      this.treeSelectLoad({}, widget.options, value);
-                    }}
-                    load-data={(treeNode: any) => this.treeSelectLoad(treeNode, widget.options, '')}
-                  ></a-tree-select>
-                )
-              ) : (
-                <a-tree-select
-                  v-model={this.current}
-                  placeholder={this.$t(widget.options.placeholder)}
-                  multiple={widget.options.multiple}
-                  treeCheckable={widget.options.multiple}
-                  tree-data-simple-mode={widget.options.asyncLoad}
-                  replaceFields={{
-                    children: widget.options.props.children,
-                    title: widget.options.props.label,
-                    key: widget.options.props.value,
-                    value: widget.options.props.value,
-                  }}
-                  dropdownStyle={{ maxHeight: '300px' }}
-                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                  showSearch={widget.options.filterable}
-                  disabled={widget.options.disabled}
-                  allowClear={widget.options.clearable}
-                  treeNodeFilterProp="title"
+              {widget.type == 'customSelector' && (
+                <a-select
+                  ref="selector"
+                  vModel={this.current}
+                  label-in-value
                   style={{ width: widget.options.width }}
-                  treeData={widget.options.remoteOptions}
-                  treeDefaultExpandedKeys={[
-                    widget.options.remoteOptions.length > 0 &&
-                      widget.options.remoteOptions[0][widget.options.props.value],
-                  ]}
+                  open={false}
+                  getPopupContainer={() => document.querySelector('.generate-form-item')}
+                  mode={widget.options.multiple ? 'multiple' : 'default'}
+                  disabled={widget.options.disabled}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  allowClear={widget.options.clearable}
                   size={this.globalConfig.size}
-                  showCheckedStrategy={widget.options.showCheckedStrategy}
-                  onChange={(value: string | string[], label: Array<string>, extra: any) => {
-                    this.treeSelected = label;
+                  options={this.options}
+                  onDropdownVisibleChange={() => {
+                    this.$refs.selector.blur();
+                    switch (widget.options.type) {
+                      case 'user-selector': // 人员选择器
+                        this.userVisible = true;
+                        break;
+                      case 'list-selector': // 列表选择器
+                        break;
+                    }
+                  }}
+                  onChange={() => {
                     (this.$refs as any)[widget.model].onFieldChange();
 
                     if (this.remote[widget.options.onchange]) {
                       this.remote[widget.options.onchange](this.current, this.models, this.value);
                     }
                   }}
-                  props={widget.options.asyncLoad ? { loadData: this.treeSelectLoad } : null}
-                ></a-tree-select>
-              ))}
+                ></a-select>
+              )}
 
-            {widget.type == 'customSelector' && (
-              <a-select
-                ref="selector"
-                vModel={this.current}
-                label-in-value
-                style={{ width: widget.options.width }}
-                open={false}
-                getPopupContainer={() => document.querySelector('.generate-form-item')}
-                mode={widget.options.multiple ? 'multiple' : 'default'}
-                disabled={widget.options.disabled}
-                placeholder={this.$t(widget.options.placeholder)}
-                allowClear={widget.options.clearable}
-                size={this.globalConfig.size}
-                options={this.options}
-                onDropdownVisibleChange={() => {
-                  this.$refs.selector.blur();
-                  switch (widget.options.type) {
-                    case 'user-selector': // 人员选择器
-                      this.userVisible = true;
-                      break;
-                    case 'list-selector': // 列表选择器
-                      break;
-                  }
-                }}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
+              {widget.type == 'switch' && (
+                <a-switch
+                  vModel={this.current}
+                  disabled={widget.options.disabled}
+                  size={this.globalConfig.size}
+                  onChange={() => {
+                    (this.$refs as any)[widget.model].onFieldChange();
 
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-select>
-            )}
-
-            {widget.type == 'switch' && (
-              <a-switch
-                vModel={this.current}
-                disabled={widget.options.disabled}
-                size={this.globalConfig.size}
-                onChange={() => {
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              />
-            )}
-
-            {widget.type == 'text' && <span>{this.current}</span>}
-            {widget.type == 'html' && <div domProps-innerHTML={this.current}></div>}
-            {widget.type == 'imgupload' && [
-              <this.plugins.Upload
-                accept={widget.options.accept}
-                showType="1"
-                maxSize={widget.options.maxSize * 1024 * 1024}
-                multiUploadSize={100 * 1024 * 1024}
-                style={{ width: widget.options.width }}
-                length={widget.options.length}
-                data={{ module: widget.options.module }}
-                fileList={this.current}
-                singleUrl={widget.options.action}
-                del={widget.options.isDelete}
-                disabled={widget.options.disabled}
-                multiple={widget.options.multiple}
-                alise={this.$t(widget.options.alise)}
-                onSuccess={(data: any[]) => {
-                  this.current = data.map(file => ({
-                    key: widget.model,
-                    keyName: widget.name,
-                    uid: file.id || file.uid,
-                    url: file.url,
-                    name: file.name,
-                    status: file.status,
-                    path: file.path,
-                    storageId: file.id || file.storageId,
-                    storageName: file.name,
-                    storageType: file.contentType || file.storageType,
-                    storageUrl: file.url,
-                  }));
-
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-                onRemove={(data: any) => {
-                  this.current = this.current.filter((item: any) => item.path != data.path);
-
-                  (this.$refs as any)[widget.model].onFieldChange();
-
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-                onError={(error: any) => {
-                  console.log(error);
-                }}
-              />,
-              widget.options.fileExample?.length > 0 && (
-                <div
-                  style="width: 106px; text-align: center; position: relative; top: -10px;"
-                  onClick={() => {
-                    this.previewVisible = true;
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
                   }}
-                >
-                  <a-button type="link">预览</a-button>
-                </div>
-              ),
-              widget.options.fileExample?.length > 0 && (
-                <a-modal
-                  visible={this.previewVisible}
-                  footer={null}
-                  title="预览"
-                  wrapClassName="component-pop-upload-preview"
-                  onCancel={() => {
-                    this.previewVisible = false;
+                />
+              )}
+
+              {widget.type == 'text' && <span>{this.current}</span>}
+              {widget.type == 'html' && <div domProps-innerHTML={this.current}></div>}
+              {widget.type == 'imgupload' && [
+                <this.plugins.Upload
+                  accept={widget.options.accept}
+                  showType="1"
+                  maxSize={widget.options.maxSize * 1024 * 1024}
+                  multiUploadSize={100 * 1024 * 1024}
+                  style={{ width: widget.options.width }}
+                  length={widget.options.length}
+                  data={{ module: widget.options.module }}
+                  fileList={this.current}
+                  singleUrl={widget.options.action}
+                  del={widget.options.isDelete}
+                  disabled={widget.options.disabled}
+                  multiple={widget.options.multiple}
+                  alise={this.$t(widget.options.alise)}
+                  onSuccess={(data: any[]) => {
+                    this.current = data.map(file => ({
+                      key: widget.model,
+                      keyName: widget.name,
+                      uid: file.id || file.uid,
+                      url: file.url,
+                      name: file.name,
+                      status: file.status,
+                      path: file.path,
+                      storageId: file.id || file.storageId,
+                      storageName: file.name,
+                      storageType: file.contentType || file.storageType,
+                      storageUrl: file.url,
+                    }));
+
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
                   }}
-                >
-                  <a-carousel
-                    arrows
-                    scopedSlots={{
-                      prevArrow: (props: any) => {
-                        return (
-                          <div class="custom-slick-arrow" style="left: 10px; z-index: 1;">
-                            <a-icon type="left-circle" />
-                          </div>
-                        );
-                      },
-                      nextArrow: (props: any) => {
-                        return (
-                          <div class="custom-slick-arrow" style="right: 10px">
-                            <a-icon type="right-circle" />
-                          </div>
-                        );
-                      },
+                  onRemove={(data: any) => {
+                    this.current = this.current.filter((item: any) => item.path != data.path);
+
+                    (this.$refs as any)[widget.model].onFieldChange();
+
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                  onError={(error: any) => {
+                    console.log(error);
+                  }}
+                />,
+                widget.options.fileExample?.length > 0 && (
+                  <div
+                    style="width: 106px; text-align: center; position: relative; top: -10px;"
+                    onClick={() => {
+                      this.previewVisible = true;
                     }}
                   >
-                    {widget.options.fileExample.map((ele: any) => {
-                      return (
-                        <div style="height: 200px;">
-                          <img
-                            src={ele.url}
-                            style="object-fit: scale-down; width: 100%; height: 100%;"
-                          />
-                        </div>
-                      );
-                    })}
-                  </a-carousel>
-                </a-modal>
-              ),
-            ]}
-            {widget.type == 'cascader' && (
-              <a-cascader
-                vModel={this.current}
-                disabled={widget.options.disabled}
-                allowClear={widget.options.clearable}
-                getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
-                placeholder={this.$t(widget.options.placeholder)}
-                fieldNames={widget.options.props}
-                style={{ width: widget.options.width }}
-                options={widget.options.remoteOptions}
-                size={this.globalConfig.size}
-                onChange={(value: Array<string>, selectedOptions: Array<any>) => {
-                  this.cascaderSelected = selectedOptions
-                    .map((item: any) => {
-                      return item[widget.options.props['label']];
-                    })
-                    .join('/');
+                    <a-button type="link">预览</a-button>
+                  </div>
+                ),
+                widget.options.fileExample?.length > 0 && (
+                  <a-modal
+                    visible={this.previewVisible}
+                    footer={null}
+                    title="预览"
+                    wrapClassName="component-pop-upload-preview"
+                    onCancel={() => {
+                      this.previewVisible = false;
+                    }}
+                  >
+                    <a-carousel
+                      arrows
+                      scopedSlots={{
+                        prevArrow: (props: any) => {
+                          return (
+                            <div class="custom-slick-arrow" style="left: 10px; z-index: 1;">
+                              <a-icon type="left-circle" />
+                            </div>
+                          );
+                        },
+                        nextArrow: (props: any) => {
+                          return (
+                            <div class="custom-slick-arrow" style="right: 10px">
+                              <a-icon type="right-circle" />
+                            </div>
+                          );
+                        },
+                      }}
+                    >
+                      {widget.options.fileExample.map((ele: any) => {
+                        return (
+                          <div style="height: 200px;">
+                            <img
+                              src={ele.url}
+                              style="object-fit: scale-down; width: 100%; height: 100%;"
+                            />
+                          </div>
+                        );
+                      })}
+                    </a-carousel>
+                  </a-modal>
+                ),
+              ]}
+              {widget.type == 'cascader' && (
+                <a-cascader
+                  vModel={this.current}
+                  disabled={widget.options.disabled}
+                  allowClear={widget.options.clearable}
+                  getPopupContainer={(triggerNode: any) => triggerNode.parentNode}
+                  placeholder={this.$t(widget.options.placeholder)}
+                  fieldNames={widget.options.props}
+                  style={{ width: widget.options.width }}
+                  options={widget.options.remoteOptions}
+                  size={this.globalConfig.size}
+                  onChange={(value: Array<string>, selectedOptions: Array<any>) => {
+                    this.cascaderSelected = selectedOptions
+                      .map((item: any) => {
+                        return item[widget.options.props['label']];
+                      })
+                      .join('/');
 
-                  if (this.remote[widget.options.onchange]) {
-                    this.remote[widget.options.onchange](this.current, this.models, this.value);
-                  }
-                }}
-              ></a-cascader>
-            )}
-          </div>
-        )}
-      </a-form-model-item>
-    );
+                    if (this.remote[widget.options.onchange]) {
+                      this.remote[widget.options.onchange](this.current, this.models, this.value);
+                    }
+                  }}
+                ></a-cascader>
+              )}
+            </div>
+          )}
+        </a-form-model-item>
+      );
+    };
 
     // console.log('item', this.remote, JSON.parse(JSON.stringify(widget.options)));
     return (
       <div class="generate-form-item">
-        {this.filterKeys.length > 0 && this.filterKeysState ? temp : null}
+        {this.filterKeys.length > 0 && this.filterKeysState ? temp() : null}
 
         {this.filterKeys.length == 0 &&
         (!widget.options.isControl ||
           (widget.options.isControl &&
             this.executeStr(widget.options.controlCondition, this.models, this.value)))
-          ? temp
+          ? temp()
           : null}
 
         {widget.options.type == 'user-selector' && (

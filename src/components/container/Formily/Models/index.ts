@@ -16,7 +16,7 @@ import timeRangePicker from './Widget/timeRangePicker';
 import treeSelect from './Widget/treeSelect';
 import grid from './Layout/grid';
 import arrayTable from './Array/arrayTable';
-
+import inputSelect from './Widget/inputSelect';
 // 导出输入组件
 export const inputComponents = [
   input,
@@ -34,6 +34,7 @@ export const inputComponents = [
   rate,
   cascader,
   treeSelect,
+  inputSelect,
   slider,
 ];
 

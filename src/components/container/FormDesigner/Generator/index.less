@@ -15,6 +15,39 @@
 
   .generate-form-item {
     position: relative;
+    .orgitem {
+      background: transparent;
+      height: 50px;
+      padding: 0 12px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      justify-content: center;
+      white-space: nowrap;
+      margin-bottom: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      &-text {
+        color: #000;
+        font-weight: 500;
+      }
+      &.selected {
+        background-color: #f5f5f5;
+      }
+      &.disabled {
+        background: #f5f5f5;
+        cursor: not-allowed;
+      }
+      .layer {
+        font-size: 12px;
+      }
+      font {
+        color: #80848f;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
   }
 }
 

@@ -311,7 +311,7 @@ export default class WidgetFormItem extends Vue {
                 size={this.globalConfig.size}
               />
             )}
-
+            {this.element.type == 'inputSelect' && <a-input placeholder="我是查询下拉" />}
             {this.element.type == 'customSelector' && (
               <a-select
                 vModel={element.options.defaultValue}

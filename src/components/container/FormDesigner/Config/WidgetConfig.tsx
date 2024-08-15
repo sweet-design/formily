@@ -478,6 +478,7 @@ export default class WidgetConfig extends Vue {
             {(this.data.type == 'select' ||
               this.data.type == 'imgupload' ||
               this.data.type == 'treeSelect' ||
+              this.data.type == 'inputSelect' ||
               this.data.type == 'customSelector' ||
               this.data.type == 'ddList') && [
               <a-divider>是否多选</a-divider>,
@@ -733,115 +734,116 @@ export default class WidgetConfig extends Vue {
                 </div>,
               ]}
 
-            {Object.keys(this.data.options).indexOf('options') >= 0 && [
-              <a-divider>选项配置</a-divider>,
-              <div class="feild-item" style="width: 100%; margin-bottom: 20px;">
-                <a-radio-group vModel={this.data.options.remote} buttonStyle="solid">
-                  <a-radio-button value={false}>静态数据</a-radio-button>
-                  <a-radio-button value={true}>远端数据</a-radio-button>
-                </a-radio-group>
-              </div>,
-              this.data.options.remote ? (
-                <div class="feild-item" style="width: 100%;">
-                  <a-input addon-before="远端方法" vModel={this.data.options.remoteFunc} />
-                  <a-input
-                    addon-before="值"
-                    vModel={this.data.options.props.value}
-                    style="margin: 10px 0;"
-                  />
-                  <a-input
-                    addon-before="标签"
-                    vModel={this.data.options.props.label}
-                    style="margin-bottom: 10px;"
-                  />
-                </div>
-              ) : this.data.type == 'radio' ||
-                (this.data.type == 'select' && !this.data.options.multiple) ? (
-                <a-radio-group vModel={this.data.options.defaultValue}>
-                  <Draggable
-                    tag="ul"
-                    list={this.data.options.options}
-                    group={{ name: 'options' }}
-                    ghostClass="ghost"
-                    handle=".drag-item"
-                    class="drag-sort"
-                  >
-                    {this.data.options.options.map((item: any, index: number) => {
-                      return (
-                        <li key={index}>
-                          <a-radio
-                            value={item.value}
-                            style="margin-right: 0; white-space: nowrap; width: 168px;"
-                          >
-                            <a-input
-                              style={{
-                                width: this.data.options.showLabel ? '68px' : '136px',
-                              }}
-                              vModel={item.value}
-                            />
-                            {this.data.options.showLabel && (
-                              <a-input style="width:68px;" vModel={item.label} />
-                            )}
-                          </a-radio>
-                          <a-icon class="drag-item" type="menu" style="margin-right: 5px;" />
-                          <a-button
-                            onClick={this.handleOptionsRemove.bind(this, index)}
-                            icon="delete"
-                            type="danger"
-                          ></a-button>
-                        </li>
-                      );
-                    })}
-                  </Draggable>
-                </a-radio-group>
-              ) : this.data.type == 'checkbox' ||
-                (this.data.type == 'select' && this.data.options.multiple) ? (
-                <a-checkbox-group vModel={this.data.options.defaultValue}>
-                  <Draggable
-                    tag="ul"
-                    list={this.data.options.options}
-                    group={{ name: 'options' }}
-                    ghostClass="ghost"
-                    handle=".drag-item"
-                    class="drag-sort"
-                  >
-                    {this.data.options.options.map((item: any, index: number) => {
-                      return (
-                        <li key={index}>
-                          <a-checkbox
-                            value={item.value}
-                            style="margin-right: 0; white-space: nowrap; width: 168px;"
-                          >
-                            <a-input
-                              style={{
-                                width: this.data.options.showLabel ? '68px' : '136px',
-                              }}
-                              vModel={item.value}
-                            />
-                            {this.data.options.showLabel && (
-                              <a-input style="width:68px;" vModel={item.label} />
-                            )}
-                          </a-checkbox>
-                          <a-icon class="drag-item" type="menu" style="margin-right: 5px;" />
-                          <a-button
-                            onClick={this.handleOptionsRemove.bind(this, index)}
-                            icon="delete"
-                            type="danger"
-                          ></a-button>
-                        </li>
-                      );
-                    })}
-                  </Draggable>
-                </a-checkbox-group>
-              ) : null,
-              !this.data.options.remote && (
-                <div style="margin-left: 22px;">
-                  <a-button type="link" onClick={this.handleAddOption}>
-                    添加选项
-                  </a-button>
-                </div>
-              ),
-            ]}
+            {Object.keys(this.data.options).indexOf('options') >= 0 &&
+              this.data.type !== 'inputSelect' && [
+                <a-divider>选项配置</a-divider>,
+                <div class="feild-item" style="width: 100%; margin-bottom: 20px;">
+                  <a-radio-group vModel={this.data.options.remote} buttonStyle="solid">
+                    <a-radio-button value={false}>静态数据</a-radio-button>
+                    <a-radio-button value={true}>远端数据</a-radio-button>
+                  </a-radio-group>
+                </div>,
+                this.data.options.remote ? (
+                  <div class="feild-item" style="width: 100%;">
+                    <a-input addon-before="远端方法" vModel={this.data.options.remoteFunc} />
+                    <a-input
+                      addon-before="值"
+                      vModel={this.data.options.props.value}
+                      style="margin: 10px 0;"
+                    />
+                    <a-input
+                      addon-before="标签"
+                      vModel={this.data.options.props.label}
+                      style="margin-bottom: 10px;"
+                    />
+                  </div>
+                ) : this.data.type == 'radio' ||
+                  (this.data.type == 'select' && !this.data.options.multiple) ? (
+                  <a-radio-group vModel={this.data.options.defaultValue}>
+                    <Draggable
+                      tag="ul"
+                      list={this.data.options.options}
+                      group={{ name: 'options' }}
+                      ghostClass="ghost"
+                      handle=".drag-item"
+                      class="drag-sort"
+                    >
+                      {this.data.options.options.map((item: any, index: number) => {
+                        return (
+                          <li key={index}>
+                            <a-radio
+                              value={item.value}
+                              style="margin-right: 0; white-space: nowrap; width: 168px;"
+                            >
+                              <a-input
+                                style={{
+                                  width: this.data.options.showLabel ? '68px' : '136px',
+                                }}
+                                vModel={item.value}
+                              />
+                              {this.data.options.showLabel && (
+                                <a-input style="width:68px;" vModel={item.label} />
+                              )}
+                            </a-radio>
+                            <a-icon class="drag-item" type="menu" style="margin-right: 5px;" />
+                            <a-button
+                              onClick={this.handleOptionsRemove.bind(this, index)}
+                              icon="delete"
+                              type="danger"
+                            ></a-button>
+                          </li>
+                        );
+                      })}
+                    </Draggable>
+                  </a-radio-group>
+                ) : this.data.type == 'checkbox' ||
+                  (this.data.type == 'select' && this.data.options.multiple) ? (
+                  <a-checkbox-group vModel={this.data.options.defaultValue}>
+                    <Draggable
+                      tag="ul"
+                      list={this.data.options.options}
+                      group={{ name: 'options' }}
+                      ghostClass="ghost"
+                      handle=".drag-item"
+                      class="drag-sort"
+                    >
+                      {this.data.options.options.map((item: any, index: number) => {
+                        return (
+                          <li key={index}>
+                            <a-checkbox
+                              value={item.value}
+                              style="margin-right: 0; white-space: nowrap; width: 168px;"
+                            >
+                              <a-input
+                                style={{
+                                  width: this.data.options.showLabel ? '68px' : '136px',
+                                }}
+                                vModel={item.value}
+                              />
+                              {this.data.options.showLabel && (
+                                <a-input style="width:68px;" vModel={item.label} />
+                              )}
+                            </a-checkbox>
+                            <a-icon class="drag-item" type="menu" style="margin-right: 5px;" />
+                            <a-button
+                              onClick={this.handleOptionsRemove.bind(this, index)}
+                              icon="delete"
+                              type="danger"
+                            ></a-button>
+                          </li>
+                        );
+                      })}
+                    </Draggable>
+                  </a-checkbox-group>
+                ) : null,
+                !this.data.options.remote && (
+                  <div style="margin-left: 22px;">
+                    <a-button type="link" onClick={this.handleAddOption}>
+                      添加选项
+                    </a-button>
+                  </div>
+                ),
+              ]}
 
             {this.data.type == 'button' && [
               <a-divider>是否按钮组</a-divider>,
@@ -942,7 +944,9 @@ export default class WidgetConfig extends Vue {
               ],
             ]}
 
-            {(this.data.type == 'cascader' || this.data.type == 'treeSelect') && [
+            {(this.data.type == 'cascader' ||
+              this.data.type == 'treeSelect' ||
+              this.data.type == 'inputSelect') && [
               <a-divider>远端数据</a-divider>,
               <div class="feild-item" style="width: 100%;">
                 <a-input addon-before="远端方法" vModel={this.data.options.remoteFunc} />

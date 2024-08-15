@@ -34,6 +34,7 @@ export default class FormDesigner extends Vue {
       'select',
       'switch',
       'slider',
+      'inputSelect',
       'text',
       'button',
       'html',
