@@ -22,6 +22,7 @@ export default {
   'formily.fields.divider': 'Divider',
   'formily.fields.button': 'Button',
   'formily.fields.treeselect': 'TreeSelect',
+  'formily.fields.inputSelect': 'inputSelect',
   'formily.fields.ddlist': 'DdList',
   'formily.fields.customselector': 'Custom',
   'formily.basic.title': 'Basic Field',

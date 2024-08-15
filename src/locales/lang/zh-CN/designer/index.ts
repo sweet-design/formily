@@ -22,6 +22,7 @@ export default {
   'pageDesign.fields.divider': '分割线',
   'pageDesign.fields.button': '按钮',
   'pageDesign.fields.treeselect': '下拉树',
+  'pageDesign.fields.inputSelect': '查询下拉',
   'pageDesign.fields.ddlist': '下拉列表',
   'pageDesign.fields.customselector': '自定义选择器',
   'pageDesign.basic.title': '基础字段',

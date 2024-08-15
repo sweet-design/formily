@@ -22,6 +22,7 @@ export default {
   'pageDesign.fields.divider': 'Divider',
   'pageDesign.fields.button': 'Button',
   'pageDesign.fields.treeselect': 'TreeSelect',
+  'pageDesign.fields.inputSelect': 'inputSelect',
   'pageDesign.fields.ddlist': 'DdList',
   'pageDesign.fields.customselector': 'Custom',
   'pageDesign.basic.title': 'Basic Field',

@@ -22,6 +22,7 @@ export default {
   'formily.fields.divider': '分割线',
   'formily.fields.button': '按钮',
   'formily.fields.treeselect': '下拉树',
+  'formily.fields.inputSelect': '查询下拉',
   'formily.fields.ddlist': '下拉列表',
   'formily.fields.customselector': '自定义选择器',
   'formily.basic.title': '基础字段',
