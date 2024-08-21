@@ -499,6 +499,7 @@ export default class WidgetConfig extends Vue {
                   <a-select vModel={this.data.options.searchType}>
                     <a-select-option value="SysRole">系统角色</a-select-option>
                     <a-select-option value="HrEmp">人员列表</a-select-option>
+                    <a-select-option value="WFCRRCAPPLY">人员选择器(中车权限定制)</a-select-option>
                     <a-select-option value="HrPost">岗位列表</a-select-option>
                     <a-select-option value="HrPostion">职位列表</a-select-option>
                     <a-select-option value="HrRank">职级列表</a-select-option>
