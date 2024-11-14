@@ -107,12 +107,13 @@ export default class GenerateFormItem extends Vue {
 
   @Watch('models', { deep: true })
   private modelsChange(newVal: any) {
-    console.log('models监听', newVal);
     this.current = newVal[this.widget.model];
+    if (!this.treeObj.label) {
+      this.treeObj.label = this.widget.options.assistField
+        ? newVal[this.widget.options.assistField]
+        : '';
+    }
     this.treeObj.value = newVal[this.widget.model];
-    this.treeObj.label = this.widget.options.assistField
-      ? newVal[this.widget.options.assistField]
-      : '';
     if (this.selectObj) {
       this.selectObj.key = newVal[this.widget.model];
       this.selectObj.label = this.widget.options.assistField
