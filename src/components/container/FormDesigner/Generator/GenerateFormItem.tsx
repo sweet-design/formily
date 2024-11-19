@@ -108,11 +108,19 @@ export default class GenerateFormItem extends Vue {
   @Watch('models', { deep: true })
   private modelsChange(newVal: any) {
     this.current = newVal[this.widget.model];
-    if (!this.treeObj.label) {
+
+    // console.log('biaodan', JSON.parse(JSON.stringify(newVal)));
+    if (
+      !(
+        newVal[this.widget.options.assistField] == undefined ||
+        newVal[this.widget.options.assistField] == null
+      )
+    ) {
       this.treeObj.label = this.widget.options.assistField
         ? newVal[this.widget.options.assistField]
         : '';
     }
+
     this.treeObj.value = newVal[this.widget.model];
     if (this.selectObj) {
       this.selectObj.key = newVal[this.widget.model];
