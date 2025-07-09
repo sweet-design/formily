@@ -131,13 +131,13 @@ export default class GenerateFormItem extends Vue {
   }
 
   @Emit('checked')
-  private emitChecked(field: string) {}
+  private emitChecked(field: string) { }
 
   @Emit('update:models')
-  protected updateModels(val: any) {}
+  protected updateModels(val: any) { }
 
   @Emit('inputChange')
-  private emitInputChange(val: any, key: string) {}
+  private emitInputChange(val: any, key: string) { }
 
   // 过滤当前字段是否在过滤列表中
   get filterKeysState() {
@@ -205,14 +205,14 @@ export default class GenerateFormItem extends Vue {
             this.widget.type === 'inputSelect'
               ? data
               : data.map((item: any) => {
-                  return {
-                    id: item[this.widget.options.props.value],
-                    key: item[this.widget.options.props.value],
-                    value: item[this.widget.options.props.value],
-                    label: item[this.widget.options.props.label],
-                    children: item[this.widget.options.props.children],
-                  };
-                });
+                return {
+                  id: item[this.widget.options.props.value],
+                  key: item[this.widget.options.props.value],
+                  value: item[this.widget.options.props.value],
+                  label: item[this.widget.options.props.label],
+                  children: item[this.widget.options.props.children],
+                };
+              });
         }
         // 树懒加载
         if (this.widget.type === 'treeSelect' && this.widget.options.asyncLoad) {
@@ -296,6 +296,13 @@ export default class GenerateFormItem extends Vue {
    */
   treeSelectLoad(treeNode: any, r: any, value: string) {
     return new Promise((resolve: Function) => {
+      const nodeRef = treeNode.dataRef;// 已有数据则跳过 
+      if (nodeRef) {
+        if (nodeRef.children?.length || nodeRef.isLoaded) {
+          resolve();
+          return;
+        }
+      }
       this.remote[this.widget.options.remoteFunc](
         (data: any) => {
           const temp = data.map((item: any) => {
@@ -379,7 +386,11 @@ export default class GenerateFormItem extends Vue {
    * @returns 状态
    */
   executeStr(obj: string, data: any, value: any) {
-    return Function('"use strict";return (' + obj + ')')()(data, value);
+    try {
+      return Function('"use strict";return (' + obj + ')')()(data, value);
+    } catch {
+      console.log('报错', JSON.parse(JSON.stringify(obj)))
+    }
   }
 
   /**
@@ -546,9 +557,9 @@ export default class GenerateFormItem extends Vue {
           props={
             widget.options.labelControl
               ? {
-                  labelCol: { span: widget.options.labelCol },
-                  wrapperCol: { span: 24 - widget.options.labelCol },
-                }
+                labelCol: { span: widget.options.labelCol },
+                wrapperCol: { span: 24 - widget.options.labelCol },
+              }
               : null
           }
         >
@@ -573,21 +584,21 @@ export default class GenerateFormItem extends Vue {
                 : null}
               {widgetType == 'radio'
                 ? (widget.options.remote
-                    ? widget.options.remoteOptions
-                    : widget.options.options
-                  ).find((item: any) => item.value == this.current)?.label
+                  ? widget.options.remoteOptions
+                  : widget.options.options
+                ).find((item: any) => item.value == this.current)?.label
                 : null}
               {widgetType == 'checkbox' || widgetType == 'select'
                 ? (widget.options.remote ? widget.options.remoteOptions : widget.options.options)
-                    .filter((item: any) => {
-                      if (Array.isArray(this.current)) {
-                        return this.current.includes(item.value);
-                      } else {
-                        return this.current === item.value;
-                      }
-                    })
-                    .map((sub: any) => sub.label)
-                    .join(',')
+                  .filter((item: any) => {
+                    if (Array.isArray(this.current)) {
+                      return this.current.includes(item.value);
+                    } else {
+                      return this.current === item.value;
+                    }
+                  })
+                  .map((sub: any) => sub.label)
+                  .join(',')
                 : null}
 
               {widgetType == 'treeSelect'
@@ -664,8 +675,8 @@ export default class GenerateFormItem extends Vue {
             <div>
               {widget.type == 'input' &&
                 (widget.options.dataType == 'number' ||
-                widget.options.dataType == 'integer' ||
-                widget.options.dataType == 'float' ? (
+                  widget.options.dataType == 'integer' ||
+                  widget.options.dataType == 'float' ? (
                   <a-input-number
                     vModel={this.current}
                     placeholder={this.$t(widget.options.placeholder)}
@@ -777,8 +788,8 @@ export default class GenerateFormItem extends Vue {
                             ? this.$t(item.label)
                             : item.value
                           : widget.options.showLabel
-                          ? this.$t(item.label)
-                          : item.value}
+                            ? this.$t(item.label)
+                            : item.value}
                       </a-radio>
                     );
                   })}
@@ -813,8 +824,8 @@ export default class GenerateFormItem extends Vue {
                             ? this.$t(item.label)
                             : item.value
                           : widget.options.showLabel
-                          ? this.$t(item.label)
-                          : item.value}
+                            ? this.$t(item.label)
+                            : item.value}
                       </a-checkbox>
                     );
                   })}
@@ -1091,8 +1102,8 @@ export default class GenerateFormItem extends Vue {
                                 ? this.$t(item.label)
                                 : item.value
                               : widget.options.showLabel
-                              ? this.$t(item.label)
-                              : item.value
+                                ? this.$t(item.label)
+                                : item.value
                           }
                         >
                           {widget.options.remote
@@ -1100,8 +1111,8 @@ export default class GenerateFormItem extends Vue {
                               ? this.$t(item.label)
                               : item.value
                             : widget.options.showLabel
-                            ? this.$t(item.label)
-                            : item.value}
+                              ? this.$t(item.label)
+                              : item.value}
                         </a-select-option>
                       );
                     })}
@@ -1143,8 +1154,8 @@ export default class GenerateFormItem extends Vue {
                                 ? this.$t(item.label)
                                 : item.value
                               : widget.options.showLabel
-                              ? this.$t(item.label)
-                              : item.value
+                                ? this.$t(item.label)
+                                : item.value
                           }
                         >
                           {widget.options.remote
@@ -1152,8 +1163,8 @@ export default class GenerateFormItem extends Vue {
                               ? this.$t(item.label)
                               : item.value
                             : widget.options.showLabel
-                            ? this.$t(item.label)
-                            : item.value}
+                              ? this.$t(item.label)
+                              : item.value}
                         </a-select-option>
                       );
                     })}
@@ -1215,7 +1226,7 @@ export default class GenerateFormItem extends Vue {
                       treeData={widget.options.remoteOptions}
                       treeDefaultExpandedKeys={[
                         widget.options.remoteOptions.length > 0 &&
-                          widget.options.remoteOptions[0][widget.options.props.value],
+                        widget.options.remoteOptions[0][widget.options.props.value],
                       ]}
                       labelInValue
                       size={this.globalConfig.size}
@@ -1246,8 +1257,7 @@ export default class GenerateFormItem extends Vue {
                         this.treeShowName = value;
                         this.treeSelectLoad({}, widget.options, value);
                       }}
-                      load-data={(treeNode: any) =>
-                        this.treeSelectLoad(treeNode, widget.options, '')
+                      load-data={(treeNode: any) => this.treeSelectLoad(treeNode, widget.options, '')
                       }
                     ></a-tree-select>
                   ) : (
@@ -1273,7 +1283,7 @@ export default class GenerateFormItem extends Vue {
                       treeData={widget.options.remoteOptions}
                       treeDefaultExpandedKeys={[
                         widget.options.remoteOptions.length > 0 &&
-                          widget.options.remoteOptions[0][widget.options.props.value],
+                        widget.options.remoteOptions[0][widget.options.props.value],
                       ]}
                       labelInValue
                       size={this.globalConfig.size}
@@ -1304,8 +1314,8 @@ export default class GenerateFormItem extends Vue {
                         this.treeShowName = value;
                         this.treeSelectLoad({}, widget.options, value);
                       }}
-                      load-data={(treeNode: any) =>
-                        this.treeSelectLoad(treeNode, widget.options, '')
+                      load-data={(treeNode: any) => this.treeSelectLoad(treeNode, widget.options, '')
+
                       }
                     ></a-tree-select>
                   )
@@ -1332,7 +1342,7 @@ export default class GenerateFormItem extends Vue {
                     treeData={widget.options.remoteOptions}
                     treeDefaultExpandedKeys={[
                       widget.options.remoteOptions.length > 0 &&
-                        widget.options.remoteOptions[0][widget.options.props.value],
+                      widget.options.remoteOptions[0][widget.options.props.value],
                     ]}
                     size={this.globalConfig.size}
                     showCheckedStrategy={widget.options.showCheckedStrategy}
@@ -1531,6 +1541,9 @@ export default class GenerateFormItem extends Vue {
         </a-form-model-item>
       );
     };
+    if (widget.options.isControl) {
+      console.log('json', JSON.parse(JSON.stringify(widget.options.controlCondition)))
+    }
 
     // console.log('item', this.remote, JSON.parse(JSON.stringify(widget.options)));
     return (
@@ -1538,9 +1551,9 @@ export default class GenerateFormItem extends Vue {
         {this.filterKeys.length > 0 && this.filterKeysState ? temp() : null}
 
         {this.filterKeys.length == 0 &&
-        (!widget.options.isControl ||
-          (widget.options.isControl &&
-            this.executeStr(widget.options.controlCondition, this.models, this.value)))
+          (!widget.options.isControl ||
+            (widget.options.isControl &&
+              this.executeStr(widget.options.controlCondition, this.models, this.value)))
           ? temp()
           : null}
 
@@ -1576,20 +1589,20 @@ export default class GenerateFormItem extends Vue {
                 // 下面的数据处理方式与上面的方式不一样
                 /* if (data.length <= 0) return;
 
-								if (widget.options.multiple) {
-									this.options = this.options.concat(
-										data.map((item: any) => ({ key: item.id, label: item.name }))
-									);
-									this.options = uniqby(this.options, 'key');
+                if (widget.options.multiple) {
+                  this.options = this.options.concat(
+                    data.map((item: any) => ({ key: item.id, label: item.name }))
+                  );
+                  this.options = uniqby(this.options, 'key');
 
-									this.current = JSON.parse(JSON.stringify(this.options));
-								} else {
-									this.options = data
-										.slice(-1)
-										.map((item: any) => ({ key: item.id, label: item.name }));
+                  this.current = JSON.parse(JSON.stringify(this.options));
+                } else {
+                  this.options = data
+                    .slice(-1)
+                    .map((item: any) => ({ key: item.id, label: item.name }));
 
-									this.current = this.options[0];
-								} */
+                  this.current = this.options[0];
+                } */
               },
             }}
           />
